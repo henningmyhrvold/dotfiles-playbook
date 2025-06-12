@@ -1,0 +1,14 @@
+# Create ~/.fonts directory if it does not exist of target user
+- name: fonts - Create ~/.fonts directory if it does not exist of target user
+  ansible.builtin.file:
+    path: /home/{{ target_user }}/.fonts
+    state: directory
+    mode: "0755"
+    owner: "{{ target_user }}"
+    group: "{{ target_user }}"    
+  tags: ['fonts']
+
+# Update font cache assuming package manager and nix fonts were updated
+- name: fonts - Update font cache
+  ansible.builtin.command: fc-cache -fv
+  tags: ['fonts']

@@ -1,0 +1,78 @@
+# All dotfile directories that must exist
+- name: dotfiles - Create user binaries, templates, user share apps, configuration directories for target user if they do not exist
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    # User can rwx
+    owner: "{{ target_user }}"
+    # group: "{{ target_user }}"
+    mode: "744"
+  with_items: "{{ dotfiles_directories }}"
+  tags: ["dotfiles"]
+
+# Remove any dotfiles in different locations if they exist already
+# These files might have been automatically generated when a program was run before
+# This step prevent extra dotfiles conflicting with the latest ones set up in this task
+- name: dotfiles - Remove any dotfiles in different locations if they exist already
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: absent
+  with_items: "{{ dotfiles_to_be_removed }}"
+  tags: ["dotfiles"]
+  become: true
+  become_user: "{{ target_user }}"
+
+- name: Ensure dotfiles repository is cloned locally.
+  ansible.builtin.git:
+    repo: "{{ dotfiles_repo }}"
+    dest: "{{ dotfiles_repo_local_destination }}"
+    version: "{{ dotfiles_repo_version }}"
+    accept_hostkey: "{{ dotfiles_repo_accept_hostkey }}"
+  become: true
+  become_user: "{{ target_user }}"
+  ignore_errors: true
+  tags: ["dotfiles", "dotfiles-symlink"]
+
+- name: Ensure all configured dotfiles are links.
+  ansible.builtin.command: "ls -F {{ dotfiles_home }}/{{ item }}"
+  register: existing_dotfile_info
+  failed_when: false
+  check_mode: false
+  changed_when: false
+  with_items: "{{ dotfiles_files }}"
+  tags: ["dotfiles", "dotfiles-symlink"]
+  become: true
+  become_user: "{{ target_user }}"
+
+- name: Remove existing dotfiles file if a replacement is being linked.
+  ansible.builtin.file:
+    path: "{{ dotfiles_home }}/{{ dotfiles_files[item.0] }}"
+    state: absent
+  when: "'@' not in item.1.stdout"
+  with_indexed_items: "{{ existing_dotfile_info.results }}"
+  become: true
+  become_user: "{{ target_user }}"
+  tags: ["dotfiles", "dotfiles-symlink"]
+
+- name: Link dotfiles into home folder.
+  ansible.builtin.file:
+    src: "{{ dotfiles_repo_local_destination }}/{{ item }}"
+    dest: "{{ dotfiles_home }}/{{ item }}"
+    state: link
+    mode: 0644
+  become: true
+  become_user: "{{ target_user }}"
+  with_items: "{{ dotfiles_files }}"
+  tags: ["dotfiles", "dotfiles-symlink"]
+
+- name: dotfiles - Ensure symlink scripts, binaries and directories are executable
+  ansible.builtin.file:
+    path: "{{ dotfiles_repo_local_destination }}/{{ item }}"
+    mode: "0744"
+  become: true
+  become_user: "{{ target_user }}"
+  with_items: "{{ dotfiles_files_binaries }}"
+  tags: ["dotfiles", "dotfiles-symlink-binaries"]
+
+
+

@@ -1,0 +1,79 @@
+# Variables for playbooks
+
+downloads: ~/.ansible-downloads/
+
+# Location of this repository
+dotfiles_repo: "git@github.com:henningmyhrvold/dotfiles.git"
+dotfiles_repo_version: "main"
+dotfiles_repo_accept_hostkey: false
+dotfiles_repo_local_destination: "~/src/dotfiles"
+
+dotfiles_home: "~"
+
+dotfiles_directories:
+  - "/home/{{ target_user }}/usr/bin"
+  - "/home/{{ target_user }}/.config/cool-retro-term"
+
+dotfiles_files:
+  - .bashrc
+  - .bash_aliases
+  - .bash_profile
+
+# Whether to configure certain build items
+configure_dotfiles: true
+
+# User for which set up is being done for
+target_user: user
+
+# Other Git Repositories to be cloned, synchronized
+git_repositories_external:
+  # defaults
+  - https://aur.archlinux.org/paru.git
+
+pacman_installed_packages:
+  # Wayland and Hyprland
+  - wayland
+  - hyprland
+  - libinput
+  - qt5-wayland 
+  - qt6-wayland
+  - xdg-desktop-portal-hyprland
+
+  # --- Graphics Drivers ---
+  # Universal open-source drivers for Intel and AMD
+  - mesa
+  # For NVIDIA users, uncomment the following lines.
+  # nvidia-dkms
+  # nvidia-utils
+
+  # --- Audio ---
+  # Modern audio server
+  - pipewire
+  - wireplumber
+  - pipewire-pulse
+  - pipewire-alsa
+
+  # --- Essential Utilities & Fonts ---
+  # A lightweight Wayland-native terminal is crucial
+  - foot
+  # A bar, launcher, and wallpaper utility for Hyprland
+  - waybar
+  - wofi
+  - swaybg
+  # A screen locker
+  - swaylock
+  # For handling authentication prompts
+  - polkit-kde-agent
+  # Basic font support
+  - noto-fonts
+  - noto-fonts-emoji
+  - ttf-cascadia-code-nerd
+
+  # --- Useful CLI Tools ---
+  - neovim
+  - zsh
+  - tmux
+  - wget
+  - fzf
+  - bat
+  - ripgrep

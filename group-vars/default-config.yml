@@ -1,0 +1,59 @@
+# Variables for playbooks
+
+# Whether to set up certain software, configurations
+configure_dotfiles: true
+configure_extras: true
+configure_repos: true
+
+downloads: ~/.ansible-downloads/
+
+# Location of this repository
+dotfiles_repo: "git@github.com:henningmyhrvold/dotfiles.git"
+dotfiles_repo_version: "main"
+dotfiles_repo_accept_hostkey: false
+dotfiles_repo_local_destination: "~/src/dotfiles"
+
+dotfiles_home: "~"
+
+dotfiles_directories:
+  - "/home/{{ target_user }}/.config/cool-retro-term"
+  - "/home/{{ target_user }}/.config/lazyvim"
+  - "/home/{{ target_user }}/.config/lazyvim/lua/config"
+  - "/home/{{ target_user }}/.config/lazyvim/lua/plugins"
+  - "/home/{{ target_user }}/.config/nvim"
+  - "/home/{{ target_user }}/.config/nvim/lua/custom/plugins"
+  - "/home/{{ target_user }}/.config/tmux"
+  - "/home/{{ target_user }}/.config/wezterm"
+  - "/home/{{ target_user }}/.local/share/applications"
+  - "/home/{{ target_user }}/Templates"
+  - "/home/{{ target_user }}/usr/bin"
+
+dotfiles_files:
+  - .bash_aliases
+  - .bash_profile
+  - .bashrc
+  - .config/cool-retro-term/cool-retro-term-my-futuristic.json
+  - .config/lazyvim/lazyvim.json
+  - .config/lazyvim/lua/config/keymaps.lua
+  - .config/lazyvim/lua/config/lazy.lua
+  - .config/lazyvim/lua/config/options.lua
+  - .config/lazyvim/lua/plugins/extend-lazyvim.lua
+  - .config/lazyvim/lua/plugins/extend-neo-tree.lua
+  - .config/lazyvim/lua/plugins/extend-which-key-with-legendary.lua
+  - .config/lazyvim/lua/plugins/org-mode.lua
+  - .config/nvim/init.lua
+  - .config/nvim/lua/custom/plugins/init.lua
+  - .config/tmux/tmux.conf
+  - .config/wezterm/wezterm.lua
+  - .gitconfig
+
+# User for which set up is being done for
+target_user: user
+
+# Personal Repositories to be cloned, synchronized
+git_repositories:
+  # Value of dotfiles_repo variable
+  - "{{ dotfiles_repo }}"
+
+apt_installed_packages:
+  - curl

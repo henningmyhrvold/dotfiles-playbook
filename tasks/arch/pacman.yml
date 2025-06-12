@@ -1,0 +1,34 @@
+- name: Run the equivalent of "pacman -Sy" as a separate step
+  community.general.pacman:
+    update_cache: true
+
+- name: pacman - Update listing and install packages
+  community.general.pacman:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ pacman_installed_packages }}"
+  tags: ['pacman', 'workstation-arch', 'package']
+
+- name: pacman - enable color
+  lineinfile:
+    path: /etc/pacman.conf
+    regexp: '^#Color$'
+    line: 'Color'
+
+- name: pacman - enable ParallelDownloads = 5
+  lineinfile:
+    path: /etc/pacman.conf
+    regexp: '#ParallelDownloads = 5'
+    line: 'ParallelDownloads = 5'
+
+- name: pacman - enable multilib
+  lineinfile:
+    path: /etc/pacman.conf
+    regexp: '#[multilib]'
+    line: '[multilib]'
+
+- name: pacman - enable multilib
+  lineinfile:
+    path: /etc/pacman.conf
+    regexp: '#Include = /etc/pacman.d/mirrorlist'
+    line: 'Include = /etc/pacman.d/mirrorlist'

@@ -1,0 +1,12 @@
+[workstation_debian]
+127.0.0.1 ansible_connection=local
+
+[workstation_fedora]
+127.0.0.1 ansible_connection=local
+
+[workstation_arch]
+127.0.0.1 ansible_connection=local
+
+[workstation_macos]
+127.0.0.1 ansible_connection=local
+

@@ -1,0 +1,28 @@
+# Variables for playbooks
+
+downloads: ~/.ansible-downloads/
+
+# Location of this repository
+dotfiles_repo: "git@github.com:henningmyhrvold/dotfiles.git"
+dotfiles_repo_version: "main"
+dotfiles_repo_accept_hostkey: false
+dotfiles_repo_local_destination: "~/src/dotfiles"
+
+dotfiles_home: "~"
+
+dotfiles_directories:
+  - "/home/{{ target_user }}/.config/tmux"
+
+dotfiles_files:
+  - .bashrc
+
+# Whether to configure certain build items
+configure_dotfiles: true
+
+# User for which set up is being done for
+target_user: user
+
+dnf_installed_packages:
+  - git
+  - tmux
+

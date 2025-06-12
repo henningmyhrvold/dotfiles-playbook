@@ -1,0 +1,32 @@
+# Variables for playbooks
+
+downloads: ~/.ansible-downloads/
+
+# Location of this repository
+dotfiles_repo: "git@github.com:henningmyhrvold/dotfiles.git"
+dotfiles_repo_version: "main"
+dotfiles_repo_accept_hostkey: false
+dotfiles_repo_local_destination: "~/src/dotfiles"
+
+dotfiles_home: "~"
+
+# Optional location of dotfile overlay to override or add to existing dotfiles in this repository
+dotfiles_overlay_dir: "{{ playbook_dir }}/../dotfiles-overlay"
+
+# User for which set up is being done for
+target_user: user
+
+dotfiles_directories:
+  - "/Users/{{ target_user }}/usr/bin"
+  - "/Users/{{ target_user }}/.config/wezterm"
+
+dotfiles_files:
+  - .config/wezterm/wezterm.lua
+
+# Whether to configure certain build items
+configure_dotfiles: true
+
+homebrew_installed_casks:
+  - homebrew/cask/wezterm
+  - homebrew/cask/visual-studio-code
+

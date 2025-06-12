@@ -1,0 +1,55 @@
+- name: Git - Sychronize target user's personal repositories
+  ansible.builtin.git:
+    repo: "{{ item }}"
+    dest: "/home/{{ target_user }}/src/{{ item.split('/')[-1].split('.')[0] }}"
+    force: no
+  with_items: "{{ git_repositories }}"
+  become: true
+  become_user: "{{ target_user }}"
+  tags: ["workstation-debian", "repos", "repos-personal", "workstation-arch"]
+  ignore_errors: true
+
+- name: Git - Create directories ~/src/External and ~/usr/Reference
+  file:
+    path: "/home/{{ target_user }}/src/External"
+    state: directory
+    owner: "{{ target_user }}"
+    group: "{{ target_user }}"
+    mode: 0755
+  become: true
+  become_user: "{{ target_user }}"
+  tags: ["workstation-debian", "repos", "repos-external", "workstation-arch"]
+
+- name: Git - Create directories ~/src/External and ~/usr/Reference
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    # User can rwx
+    owner: "{{ target_user }}"
+    # group: "{{ target_user }}"
+    mode: "744"
+  with_items:
+    ["/home/{{ target_user }}/usr/reference", "/home/{{ target_user }}/usr/bin"]
+  tags: ["workstation-debian", "repos", "repos-external", "workstation-arch"]
+
+- name: Git - Sychronize other external repositories
+  ansible.builtin.git:
+    repo: "{{ item }}"
+    dest: "/home/{{ target_user }}/src/External/{{ item.split('/')[-1].split('.git')[0] }}"
+    force: no
+  with_items: "{{ git_repositories_external }}"
+  become: true
+  become_user: "{{ target_user }}"
+  tags: ["workstation-debian", "repos", "repos-external", "workstation-arch"]
+  ignore_errors: true
+
+- name: Git - Sychronize repositories for reference
+  ansible.builtin.git:
+    repo: "{{ item }}"
+    dest: "/home/{{ target_user }}/usr/reference/{{ item.split('/')[-1].split('.git')[0] }}"
+    force: no
+  with_items: "{{ git_repositories_reference }}"
+  become: true
+  become_user: "{{ target_user }}"
+  tags: ["workstation-debian", "repos", "repos-reference", "workstation-arch"]
+  ignore_errors: true
