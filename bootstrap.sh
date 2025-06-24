@@ -1,11 +1,10 @@
 #!/usr/bin/env bash
 
-# Script to run on a new Linux system to configure it or
-# run on a new WSL Windows system to configure Windows:
-# 1. First, check if the Linux distribution is Ubuntu, Fedora, or WSL Ubuntu. If it is not one of those, the script exits.
-# 2. Installs any prequisites needed for the Ansible playbook and software more easily installed in command line
-# 3. Checks if an SSH RSA key exists. If it doesn't, the create one
-# 4. If the bootstrap script has an argument "-r" and there are Ansible requirements, install them
+# Script to run on a new system to configure it.
+# 1. First, check if the distribution is Arch, Debian, Fedora, or MacOS. If it is not one of those, the script exits.
+# 2. Installs any prequisites needed for the Ansible playbook and software more easily installed in command line.
+# 3. Checks if an SSH RSA key exists. If it doesn't, create one.
+# 4. If the bootstrap script has an argument "-r" and there are Ansible requirements, install them.
 # 5. Run the Ansible playbook.
 
 # Exit immediately if any command the script executes fails (returns a non-zero status).
@@ -18,48 +17,36 @@ set -e
 DOTFILES="$HOME/Code/dotfiles-playbook"
 DOTSSH="$HOME/.ssh"
 
-# System Flag
-isUbuntu="false"
+# System Flags
+isDebian="false"
 isFedora="false"
-isWSLUbuntu="false"
 isArch="false"
 isMacOS="false"
 
 # Restart shell flag
 restartShell="false"
 
-# If Linux distribution is Ubuntu, set isUbuntu variable to "true"
+# Check the OS
 if [ -f /etc/os-release ]; then
   # Get os-release variables
   # shellcheck source=/dev/null
   . /etc/os-release
-  if [ "$ID" = "ubuntu" ]; then
-    isUbuntu="true"
+  if [ "$ID" = "debian" ]; then
+    isDebian="true"
+  elif [ "$ID" = "fedora" ]; then
+    isFedora="true"
+  elif [ "$ID" = "arch" ]; then
+    isArch="true"
   fi
-fi
-
-if [ -f /mnt/c/Windows/System32/wsl.exe ]; then
-  isWSLUbuntu="true"
-fi
-
-# If Linux distribution is Fedora, set isFedora variable to "true"
-if [ -f /etc/fedora-release ]; then
-  isFedora="true"
-fi
-
-# If Linux distribution is Arch, set isArch variable to "true"
-if [ -f /etc/arch-release ]; then
-  isArch="true"
-fi
-
 # Detect MacOS
-if [[ "$OSTYPE" == "darwin"* ]]; then
+elif [[ "$OSTYPE" == "darwin"* ]]; then
   isMacOS="true"
 fi
 
-# If Linux distribution supported distributions, exit
-if [ "$isUbuntu" = "false" ] && [ "$isFedora" = "false" ] && [ "$isWSLUbuntu" = "false" ] && [ "$isArch" = "false" ] && [ "$isMacOS" = "false" ]; then
-  echo "This Linux/Unix distribution is not supported by this script."
+
+# If the distribution is not one of the supported ones, exit.
+if [ "$isDebian" = "false" ] && [ "$isFedora" = "false" ] && [ "$isArch" = "false" ] && [ "$isMacOS" = "false" ]; then
+  echo "This distribution is not supported by this script. Only Arch, Debian, Fedora, and MacOS are supported."
   exit 1
 fi
 
@@ -67,16 +54,14 @@ fi
 ## Functions
 ##########################################
 
+# Installs Ansible using pipx if it's not already installed.
 install_ansible() {
-
-  # Check if Ansible if installed
-  # If Ansible is not installed, install it, assumes python3/python is installed already
-  # per https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html
-  # as of 2023-03-25
+  # Check if Ansible is installed
   if ! [ -x "$(command -v ansible)" ]; then
     echo "Ansible is not installed. Installing Ansible using pipx..."
 
-    if [ "$isUbuntu" = "true" ]; then
+    if [ "$isDebian" = "true" ]; then
+      sudo apt update
       sudo apt install pipx -y
     fi
 
@@ -89,97 +74,59 @@ install_ansible() {
     fi
 
     if [ "$isMacOS" = "true" ]; then
-      echo "Installing Homebrew and pipx"
-      echo "*** Run last commands in Homebrew install manually to add it to path ***"
-      # Install Brew package manager
-      /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+      echo "Installing Homebrew and pipx..."
+      # Install Brew package manager if not found
+      if ! [ -x "$(command -v brew)" ]; then
+          /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+      fi
       # from https://github.com/pypa/pipx
       brew install pipx
       pipx ensurepath
-
+      echo "*** You may need to manually add Homebrew to your path. ***"
     fi
 
     pipx install --include-deps ansible
     # Add pipx bin path to shell
     echo "export PATH=$PATH:$HOME/.local/bin" >>~/.bashrc
     restartShell="true"
-
   fi
-
 }
 
-install_nix_home_manager() {
-
-  if [ -x "$(command -v nix-env)" ]; then
-    # Install nix home manager per https://nix-community.github.io/home-manager/index.xhtml#sec-install-standalone
-    if ! [ -x "$(command -v home-manager)" ]; then
-      echo "Installing Nix: home-manager..."
-      if [ "$isMacOS" = "true" ]; then
-        if [ -f "$HOME/Code/dotfiles-nix/minimal/home.nix" ]; then
-          echo "Symlinking minimal home.nix to ~/.config/home-manager/home.nix"
-          ln -s ~/Code/dotfiles-nix/minimal/home.nix ~/.config/home-manager/home.nix
-        else
-          echo "Download dotfiles-nix's minimal home.nix before the home-manager install, exiting"
-          exit 1
-        fi
-      fi
-      scripts/install-nix-home-manager.sh
-    fi
-  fi
-
-}
-
-# Installs commands that the Ansible playbook needs
+# Installs commands and tools that the Ansible playbook needs.
 install_prequisites() {
-
-  if ! [ -x "$(command -v nix-env)" ]; then
-    echo "Nix is not installed, running install"
-    scripts/install-nix.sh
-    echo "Restart shell and re-run this script"
-    exit 1
-  fi
-
   install_ansible
-
-  install_nix_home_manager
 
   # if restartShell is true, tell user to restart shell and exit script
   if [ "$restartShell" = "true" ]; then
-    # Since sourcing does not work for some programs and need shell restart to get PATH changes
-    echo "Restart shell to get PATH changes"
-    echo "and re-run with bootstrap.sh -r"
+    # Sourcing does not work for some programs and a shell restart is needed to get PATH changes
+    echo "Restart shell to get PATH changes for Ansible."
+    echo "Then re-run with: bootstrap.sh -r"
     exit 0
   fi
-
 }
 
-# Install Ansible requirements in directory
+# Install Ansible requirements from a requirements file.
 install_ansible_requirements() {
   if [ -f requirements.yml ]; then
-    echo "Ansible requirements exist. Installing Ansible requirements..."
-    if [ "$isWSLUbuntu" = "true" ]; then
-      ansible-galaxy install -r requirements-windows.yml
-      # else install requirements.yml
-    else
-      ansible-galaxy install -r requirements.yml
-    fi
+    echo "Ansible requirements file found. Installing Ansible requirements..."
+    ansible-galaxy install -r requirements.yml
+  else
+    echo "No 'requirements.yml' file found. Skipping."
   fi
 }
 
+# Creates an SSH RSA key if one doesn't already exist.
 setup_RSA_key() {
-
   # Check if SSH RSA key exists
-  # If SSH RSA key does not exist, create it
-  # Ensure keys are are only readable by user
   if [ ! -f "$DOTSSH/id_rsa" ]; then
-    echo "SSH RSA key does not exist. Creating SSH RSA key..."
+    echo "SSH RSA key does not exist. Creating a 4096-bit SSH RSA key..."
     mkdir -p "$DOTSSH"
     chmod 700 "$DOTSSH"
-    ssh-keygen -b 4096 -t rsa -f "$DOTSSH/id_rsa" -N "" -C "$USER@$HOSTNAME"
+    ssh-keygen -b 4096 -t rsa -f "$DOTSSH/id_rsa" -N "" -C "$USER@$(hostname)"
     cat "$DOTSSH/id_rsa.pub" >>"$DOTSSH/authorized_keys"
     chmod 600 "$DOTSSH/authorized_keys"
+    echo "SSH key created and added to authorized_keys."
   fi
-
 }
 
 #################################
@@ -187,7 +134,8 @@ setup_RSA_key() {
 #################################
 
 install_prequisites
-# Check if shell script has an argument "-r" (has requirements), if yes, check requirements
+
+# Check if shell script has an argument "-r" (for requirements), if yes, install them.
 if [ "$1" = "-r" ]; then
   install_ansible_requirements
 fi
@@ -197,29 +145,33 @@ setup_RSA_key
 cd "$DOTFILES"
 
 # ==== Run Ansible Playbook ====
+echo "Running Ansible playbook..."
 
 if [ -f "$DOTFILES/vault-password.txt" ]; then
-  ansible-playbook --diff --vault-password-file "$DOTFILES/vault-password.txt" "$DOTFILES/ubuntu.yml" -v
+  VAULT_ARGS="--vault-password-file $DOTFILES/vault-password.txt"
 else
-
-  if [ "$isUbuntu" = "true" ]; then
-    # per https://docs.ansible.com/ansible/latest/cli/ansible-playbook.html
-    # --diff : when changing files/templates, show the differences in files
-    # --ask-become-pass : ask for privilege escalation password
-    # -v : low verbose mode, can increase with -vvv...
-    ansible-playbook --diff "$DOTFILES/ubuntu.yml" --ask-become-pass -v
-  fi
-
-  if [ "$isFedora" = "true" ]; then
-    ansible-playbook --diff "$DOTFILES/fedora.yml" --ask-become-pass -v
-  fi
-
-  if [ "$isArch" = "true" ]; then
-    ansible-playbook --diff "$DOTFILES/arch.yml" --ask-become-pass -v --tags 'pacman','nix','repos','emacs','dotfiles'
-  fi
-
-  if [ "$isMacOS" = "true" ]; then
-    ansible-playbook --diff "$DOTFILES/macos.yml" --ask-become-pass -v
-  fi
-
+  # --ask-become-pass : ask for privilege escalation password
+  VAULT_ARGS="--ask-become-pass"
 fi
+
+# --diff : when changing files/templates, show the differences in files
+# -v : low verbose mode, can increase with -vvv...
+COMMON_ARGS="--diff -v"
+
+if [ "$isDebian" = "true" ]; then
+  ansible-playbook $COMMON_ARGS "$DOTFILES/debian.yml" $VAULT_ARGS
+fi
+
+if [ "$isFedora" = "true" ]; then
+  ansible-playbook $COMMON_ARGS "$DOTFILES/fedora.yml" $VAULT_ARGS
+fi
+
+if [ "$isArch" = "true" ]; then
+  ansible-playbook $COMMON_ARGS "$DOTFILES/arch.yml" $VAULT_ARGS
+fi
+
+if [ "$isMacOS" = "true" ]; then
+  ansible-playbook $COMMON_ARGS "$DOTFILES/macos.yml" $VAULT_ARGS
+fi
+
+echo "Script finished."
