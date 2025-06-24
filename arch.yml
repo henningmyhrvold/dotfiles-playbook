@@ -13,14 +13,14 @@
       include_vars: "{{ item }}"
       with_fileglob:
         - "{{ playbook_dir }}/config.yml"
-      tags: ['always']
+      tags: ["always"]
     - name: Include overlay configuration
       include_vars: "{{ item }}"
       with_fileglob:
         - "{{ dotfiles_overlay_dir }}/config-arch.yml"
-      tags: ['always']
+      tags: ["always"]
 
   tasks:
     - name: Set up Linux desktop
       import_tasks: tasks/linux.yml
-      tags: ['workstation-arch']
+      tags: ["workstation-linux", "linux", "desktop"]

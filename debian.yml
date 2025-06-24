@@ -5,7 +5,7 @@
 
   # Load default variables
   vars_files:
-    - group-vars/default-config.yml
+    - host-vars/debian-config.yml
 
   # Load override
   pre_tasks:
@@ -17,12 +17,13 @@
     - name: Include overlay configuration
       include_vars: "{{ item }}"
       with_fileglob:
-        - "{{ dotfiles_overlay_dir }}/config.yml"
+        - "{{ dotfiles_overlay_dir }}/config-debian.yml"
       tags: ["always"]
 
   tasks:
     - name: Set up Linux desktop
       import_tasks: tasks/linux.yml
+      tags: ["workstation-linux", "linux", "desktop"]
     - name: Set up and synchronize dotfiles with custom destinations
       import_tasks: tasks/dotfiles-custom.yml
-      tags: ["workstation-debian", "dotfiles", "dotfiles-custom"]
+      tags: ["workstation-linux", "dotfiles", "dotfiles-custom"]
