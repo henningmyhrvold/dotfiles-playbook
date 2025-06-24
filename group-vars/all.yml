@@ -1,0 +1,37 @@
+# Variables for playbooks
+
+# Whether to set up certain software, configurations
+configure_dotfiles: true
+configure_extras: true
+configure_repos: true
+
+downloads: ~/.ansible-downloads/
+
+# Location of this repository
+dotfiles_repo: "git@github.com:henningmyhrvold/dotfiles.git"
+dotfiles_repo_version: "main"
+dotfiles_repo_accept_hostkey: false
+dotfiles_repo_local_destination: "~/src/dotfiles"
+
+dotfiles_home: "~"
+
+dotfiles_directories:
+  - "{{ dotfiles_home }}/.config/nvim"
+  - "{{ dotfiles_home }}/.config/nvim/lua/custom/plugins"
+  - "{{ dotfiles_home }}/.config/tmux"
+  - "{{ dotfiles_home }}/.config/wezterm"
+
+dotfiles_files:
+  - .config/nvim/init.lua
+  - .config/nvim/lua/custom/plugins/init.lua
+  - .config/tmux/tmux.conf
+  - .config/wezterm/wezterm.lua
+  - .gitconfig
+
+# User for which set up is being done for
+target_user: user
+
+# Personal Repositories to be cloned, synchronized
+git_repositories:
+  # Value of dotfiles_repo variable
+  - "{{ dotfiles_repo }}"
