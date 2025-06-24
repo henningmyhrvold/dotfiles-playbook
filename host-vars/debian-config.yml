@@ -10,22 +10,21 @@ dotfiles_repo_local_destination: "~/src/dotfiles"
 
 dotfiles_home: "~"
 
-# Optional location of dotfile overlay to override or add to existing dotfiles in this repository
-dotfiles_overlay_dir: "{{ playbook_dir }}/../dotfiles-overlay"
-
-# User for which set up is being done for
-target_user: user
-
 dotfiles_directories:
-  - "/Users/{{ target_user }}/usr/bin"
-  - "/Users/{{ target_user }}/.config/wezterm"
+  - "/home/{{ target_user }}/usr/bin"
+  - "/home/{{ target_user }}/.config/cool-retro-term"
 
 dotfiles_files:
-  - .config/wezterm/wezterm.lua
+  - .bashrc
+  - .bash_aliases
+  - .bash_profile
 
 # Whether to configure certain build items
 configure_dotfiles: true
 
-homebrew_installed_casks:
-  - homebrew/cask/tmux
+# User for which set up is being done for
+target_user: user
 
+apt_installed_packages:
+  - git
+  - tmux
