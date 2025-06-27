@@ -1,7 +1,17 @@
-- name: Run the equivalent of "pacman -Sy" as a separate step
+--- 
+- name: pacman - Update package database
   community.general.pacman:
     update_cache: true
+  tags: ['pacman', 'workstation-arch', 'package']
 
+- name: pacman - Install base-devel and git for AUR support
+  community.general.pacman:
+    name:
+      - base-devel
+      - git
+    state: present
+  tags: ['pacman', 'workstation-arch', 'package']
+ 
 - name: pacman - Update listing and install packages
   community.general.pacman:
     name: "{{ item }}"
@@ -21,14 +31,15 @@
     regexp: '#ParallelDownloads = 5'
     line: 'ParallelDownloads = 5'
 
-- name: pacman - enable multilib
+- name: pacman - enable multilib repository
   lineinfile:
     path: /etc/pacman.conf
-    regexp: '#[multilib]'
+    regexp: '#\\[multilib\\]'
     line: '[multilib]'
 
-- name: pacman - enable multilib
+- name: pacman - enable multilib mirrorlist include
   lineinfile:
     path: /etc/pacman.conf
     regexp: '#Include = /etc/pacman.d/mirrorlist'
     line: 'Include = /etc/pacman.d/mirrorlist'
+    insertafter: '\\[multilib\\]'

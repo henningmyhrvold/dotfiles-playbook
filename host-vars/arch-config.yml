@@ -1,35 +1,6 @@
-# Variables for playbooks
+# Variables for playbooks for Arch Linux
 
-downloads: ~/.ansible-downloads/
-
-# Location of this repository
-dotfiles_repo: "git@github.com:henningmyhrvold/dotfiles.git"
-dotfiles_repo_version: "main"
-dotfiles_repo_accept_hostkey: false
-dotfiles_repo_local_destination: "~/src/dotfiles"
-
-dotfiles_home: "~"
-
-dotfiles_directories:
-  - "/home/{{ target_user }}/usr/bin"
-  - "/home/{{ target_user }}/.config/cool-retro-term"
-
-dotfiles_files:
-  - .bashrc
-  - .bash_aliases
-  - .bash_profile
-
-# Whether to configure certain build items
-configure_dotfiles: true
-
-# User for which set up is being done for
-target_user: user
-
-# Other Git Repositories to be cloned, synchronized
-git_repositories_external:
-  # defaults
-  - https://aur.archlinux.org/paru.git
-
+# --- Pacman Packages ---
 pacman_installed_packages:
   # Wayland and Hyprland
   - wayland
@@ -38,38 +9,25 @@ pacman_installed_packages:
   - qt5-wayland 
   - qt6-wayland
   - xdg-desktop-portal-hyprland
-
   # --- Graphics Drivers ---
-  # Universal open-source drivers for Intel and AMD
   - mesa
-  # For NVIDIA users, uncomment the following lines.
-  # nvidia-dkms
-  # nvidia-utils
-
   # --- Audio ---
-  # Modern audio server
   - pipewire
   - wireplumber
   - pipewire-pulse
   - pipewire-alsa
-
-  # --- Essential Utilities & Fonts ---
-  # A lightweight Wayland-native terminal is crucial
-  - foot
-  # A bar, launcher, and wallpaper utility for Hyprland
+  # --- Display & Theming ---
   - waybar
   - wofi
   - swaybg
-  # A screen locker
   - swaylock
-  # For handling authentication prompts
+  - dunst
+  - ranger
   - polkit-kde-agent
-  # Basic font support
   - noto-fonts
   - noto-fonts-emoji
   - ttf-cascadia-code-nerd
-
-  # --- Useful CLI Tools ---
+  # --- CLI Tools & Shell ---
   - neovim
   - zsh
   - tmux
@@ -77,3 +35,75 @@ pacman_installed_packages:
   - fzf
   - bat
   - ripgrep
+
+# --- AUR Packages ---
+aur_installed_packages:
+  - eww-wayland
+  - cool-retro-term
+
+# --- Dotfiles Configuration ---
+configure_dotfiles: true
+
+# These directories will be created if they don't exist.
+dotfiles_directories:
+  - "{{ dotfiles_home }}/.config/nvim"
+  - "{{ dotfiles_home }}/.config/tmux"
+  - "{{ dotfiles_home }}/.config/wezterm"
+  - "{{ dotfiles_home }}/.config/hypr"
+  - "{{ dotfiles_home }}/.config/waybar"
+  - "{{ dotfiles_home }}/.config/wofi"
+  - "{{ dotfiles_home }}/.config/dunst"
+  - "{{ dotfiles_home }}/.config/eww"
+  - "{{ dotfiles_home }}/.config/ranger"
+  - "{{ dotfiles_home }}/.config/cool-retro-term"
+
+# Defines symlinks from the dotfiles repo to the home directory.
+dotfiles_links:
+  - { src: "zsh/.zshrc", dest: ".zshrc" }
+  - { src: "zsh/.p10k.zsh", dest: ".p10k.zsh" }
+  - { src: "nvim/init.vim", dest: ".config/nvim/init.vim" }
+  - { src: "nvim/keymappings.lua", dest: ".config/nvim/keymappings.lua" }
+  - { src: "tmux/tmux.conf", dest: ".config/tmux/tmux.conf" }
+  - { src: "wezterm/wezterm.lua", dest: ".config/wezterm/wezterm.lua" }
+  - { src: "hypr/hyprland.conf", dest: ".config/hypr/hyprland.conf" }
+  - { src: "hypr/hyprpaper.conf", dest: ".config/hypr/hyprpaper.conf" }
+  - { src: "waybar/desktop-bar/config", dest: ".config/waybar/config" }
+  - { src: "waybar/desktop-bar/style.css", dest: ".config/waybar/style.css" }
+  - { src: "wofi/config", dest: ".config/wofi/config" }
+  - { src: "wofi/style.css", dest: ".config/wofi/style.css" }
+  - { src: "dunst/dunstrc", dest: ".config/dunst/dunstrc" }
+  - { src: "eww/eww.yuck", dest: ".config/eww/eww.yuck" }
+  - { src: "eww/eww.scss", dest: ".config/eww/eww.scss" }
+  - { src: "ranger/rc.conf", dest: ".config/ranger/rc.conf" }
+  - { src: "ranger/rifle.conf", dest: ".config/ranger/rifle.conf" }
+  - { src: "ranger/commands.py", dest: ".config/ranger/commands.py" }
+  - { src: "ranger/scope.sh", dest: ".config/ranger/scope.sh" }
+  - { src: "cool-retro-term/cool-retro-term-my-futuristic.json", dest: ".config/cool-retro-term/cool-retro-term-my-futuristic.json"}
+
+# --- Git Repositories ---
+git_repositories_external:
+  - https://aur.archlinux.org/paru.git
+
+# --- Scripts to make executable ---
+dotfiles_files_binaries:
+  - "hypr/scripts/focused-window"
+  - "hypr/scripts/get-last-focused-window.sh"
+  - "hypr/toggle-gaps.sh"
+  - "waybar/scripts/dunst.sh"
+  - "waybar/scripts/mediaplayer.py"
+  - "waybar/scripts/power-menu/powermenu.sh"
+  - "waybar/scripts/rofi-wifi-menu.sh"
+  - "waybar/scripts/spotify.sh"
+  - "waybar/scripts/weather.py"
+  - "wofi/powermenu.sh"
+  - "wofi/wifimenu.sh"
+  - "eww/scripts/activewin"
+  - "eww/scripts/activews"
+  - "eww/scripts/focuswindow"
+  - "eww/scripts/get-icon.py"
+  - "eww/scripts/overview1"
+  - "eww/scripts/overview2"
+  - "eww/scripts/selectwindow"
+  - "eww/scripts/winlist"
+  - "eww/scripts/winnumbers"
+  - "eww/scripts/workspaces"

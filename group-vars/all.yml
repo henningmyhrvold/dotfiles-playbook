@@ -5,28 +5,16 @@ configure_dotfiles: true
 configure_extras: true
 configure_repos: true
 
-downloads: ~/.ansible-downloads/
+downloads: "{{ dotfiles_home }}/.ansible-downloads"
 
 # Location of this repository
 dotfiles_repo: "git@github.com:henningmyhrvold/dotfiles.git"
 dotfiles_repo_version: "main"
 dotfiles_repo_accept_hostkey: false
-dotfiles_repo_local_destination: "~/src/dotfiles"
+dotfiles_repo_local_destination: "{{ dotfiles_home }}/src/dotfiles"
 
-dotfiles_home: "~"
-
-dotfiles_directories:
-  - "{{ dotfiles_home }}/.config/nvim"
-  - "{{ dotfiles_home }}/.config/nvim/lua/custom/plugins"
-  - "{{ dotfiles_home }}/.config/tmux"
-  - "{{ dotfiles_home }}/.config/wezterm"
-
-dotfiles_files:
-  - .config/nvim/init.lua
-  - .config/nvim/lua/custom/plugins/init.lua
-  - .config/tmux/tmux.conf
-  - .config/wezterm/wezterm.lua
-  - .gitconfig
+# Define the home directory for the target user explicitly.
+dotfiles_home: "/home/{{ target_user }}"
 
 # User for which set up is being done for
 target_user: hm

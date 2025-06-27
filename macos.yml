@@ -20,14 +20,11 @@
         - "{{ dotfiles_overlay_dir }}/config-macos.yml"
       tags: ["always"]
 
-  tasks:
-    - name: Set up brew packages
-      import_tasks: tasks/macos/homebrew.yml
-      tags: ["workstation-macos", "homebrew", "package"]
-    - name: Set up and synchronize dotfiles
-      import_tasks: tasks/dotfiles.yml
-      when: configure_dotfiles
-      tags: ["workstation-macos", "dotfiles"]
-    - name: Set up and synchronize dotfiles with custom destinations
-      import_tasks: tasks/dotfiles-custom.yml
-      tags: ["workstation-macos", "dotfiles", "dotfiles-custom"]
+  roles:
+    - macos
+    - { role: dotfiles, when: configure_dotfiles, tags: ["dotfiles"] }
+    - { role: repos, when: configure_repos, tags: ["repos"] }
+    - { role: rust, tags: ["rust"] }
+    - { role: nvim, tags: ["nvim"] }
+    - { role: tmux, tags: ["tmux"] }
+    - { role: fonts, tags: ["fonts"] }

@@ -1,0 +1,44 @@
+---
+# All dotfile directories that must exist
+- name: dotfiles - Create configuration directories for target user
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ target_user }}"
+    mode: "0755"
+  with_items: "{{ dotfiles_directories }}"
+  tags: ["dotfiles", "dotfiles-setup"]
+
+- name: dotfiles - Ensure dotfiles repository is cloned locally
+  ansible.builtin.git:
+    repo: "{{ dotfiles_repo }}"
+    dest: "{{ dotfiles_repo_local_destination }}"
+    version: "{{ dotfiles_repo_version }}"
+    accept_hostkey: "{{ dotfiles_repo_accept_hostkey }}"
+  become: true
+  become_user: "{{ target_user }}"
+  ignore_errors: true
+  tags: ["dotfiles", "dotfiles-setup"]
+
+- name: dotfiles - Link dotfiles into home folder
+  ansible.builtin.file:
+    src: "{{ dotfiles_repo_local_destination }}/{{ item.src }}"
+    dest: "{{ dotfiles_home }}/{{ item.dest }}"
+    state: link
+    force: true 
+    owner: "{{ target_user }}"
+    mode: "0644"
+  loop: "{{ dotfiles_links }}"
+  become: true
+  become_user: "{{ target_user }}"
+  tags: ["dotfiles", "dotfiles-symlink"]
+
+- name: dotfiles - Ensure specified scripts are executable
+  ansible.builtin.file:
+    path: "{{ dotfiles_repo_local_destination }}/{{ item }}"
+    mode: "0755"
+  with_items: "{{ dotfiles_files_binaries }}"
+  when: dotfiles_files_binaries is defined
+  become: true
+  become_user: "{{ target_user }}"
+  tags: ["dotfiles", "dotfiles-symlink-binaries"]

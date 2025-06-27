@@ -1,6 +1,0 @@
-[defaults]
-inventory = inventory
-# human-readable stdout/stderr results display
-callback_result_format = yaml
-# Additional directories beyond the ‘roles/’ subdirectory of a playbook project to search to find Ansible roles.
-roles_path = ./roles:/etc/ansible/roles
