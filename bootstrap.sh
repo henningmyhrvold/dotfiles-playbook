@@ -14,7 +14,7 @@ set -e
 ## Variables
 ##########################################
 
-DOTFILES="$HOME/Code/dotfiles-playbook"
+DOTFILES="$HOME/src/dotfiles-playbook"
 DOTSSH="$HOME/.ssh"
 
 # System Flags
