@@ -5,7 +5,7 @@
 
   # Load default variables
   vars_files:
-    - host-vars/arch-config.yml
+    - host_vars/arch-config.yml
 
   # Load override
   pre_tasks:

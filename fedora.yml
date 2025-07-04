@@ -5,7 +5,7 @@
 
   # Load default variables
   vars_files:
-    - host-vars/fedora-config.yml
+    - host_vars/fedora-config.yml
 
   # Load override
   pre_tasks:

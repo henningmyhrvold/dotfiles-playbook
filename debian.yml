@@ -5,7 +5,7 @@
 
   # Load default variables
   vars_files:
-    - host-vars/debian-config.yml
+    - host_vars/debian-config.yml
 
   # Load override
   pre_tasks:
