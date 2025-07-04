@@ -11,7 +11,7 @@
     creates: /usr/bin/paru
 
 - name: AUR - Install packages from aur_installed_packages list
-  kewlfft.aur:
+  kewlfft.aur.aur:
     name: "{{ item }}"
     use: paru
     state: present
