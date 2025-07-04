@@ -82,7 +82,7 @@ dotfiles_links:
 
 # --- Git Repositories ---
 git_repositories_external:
-  - https://aur.archlinux.org/paru.git
+  - https://aur.archlinux.org/paru-git.git
 
 # --- Scripts to make executable ---
 dotfiles_files_binaries:
