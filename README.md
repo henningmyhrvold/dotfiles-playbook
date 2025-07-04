@@ -4,7 +4,7 @@ Ansible playbooks for Managing my Linux (Debian, Fedora, Arch), and MacOS Machin
 
 ## Usage
 
-Run `bootstrap.sh`.
+Run `bootstrap.sh -r`.
 
 ### What the Script Does
 
