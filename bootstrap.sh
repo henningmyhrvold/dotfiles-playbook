@@ -107,11 +107,10 @@ install_prequisites() {
 
 # Install Ansible requirements from a requirements file.
 install_ansible_requirements() {
-  if [ -f requirements.yml ]; then
-    echo "Ansible requirements file found. Installing Ansible requirements..."
-    ansible-galaxy install -r requirements.yml
+  if [ "$isArch" = "true" ]; then
+    ansible-galaxy install -r requirements-arch.yml
   else
-    echo "No 'requirements.yml' file found. Skipping."
+    ansible-galaxy install -r requirements-common.yml
   fi
 }
 
