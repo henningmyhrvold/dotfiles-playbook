@@ -9,7 +9,7 @@
   tags: ["workstation-debian", "repos", "repos-personal", "workstation-arch"]
   ignore_errors: true
 
-- name: Git - Create directories ~/src/external and ~/usr/Reference
+- name: Git - Create directory ~/src/external
   file:
     path: "/home/{{ target_user }}/src/external"
     state: directory
@@ -20,7 +20,7 @@
   become_user: "{{ target_user }}"
   tags: ["workstation-debian", "repos", "repos-external", "workstation-arch"]
 
-- name: Git - Create directories ~/src/external and ~/usr/Reference
+- name: Git - Create additional user directories
   ansible.builtin.file:
     path: "{{ item }}"
     state: directory
@@ -29,7 +29,7 @@
     # group: "{{ target_user }}"
     mode: "744"
   with_items:
-    ["/home/{{ target_user }}/usr/reference", "/home/{{ target_user }}/usr/bin"]
+    - "/home/{{ target_user }}/usr/bin"
   tags: ["workstation-debian", "repos", "repos-external", "workstation-arch"]
 
 - name: Git - Sychronize other external repositories
@@ -42,15 +42,3 @@
   become_user: "{{ target_user }}"
   tags: ["workstation-debian", "repos", "repos-external", "workstation-arch"]
   ignore_errors: true
-
-- name: Git - Sychronize repositories for reference
-  ansible.builtin.git:
-    repo: "{{ item }}"
-    dest: "/home/{{ target_user }}/usr/reference/{{ item.split('/')[-1].split('.git')[0] }}"
-    force: no
-  with_items: "{{ git_repositories_reference }}"
-  become: true
-  become_user: "{{ target_user }}"
-  tags: ["workstation-debian", "repos", "repos-reference", "workstation-arch"]
-  ignore_errors: true
-  when: git_repositories_reference is defined

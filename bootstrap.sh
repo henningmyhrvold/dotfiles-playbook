@@ -4,8 +4,8 @@
 # 1. First, check if the distribution is Arch, Debian, Fedora, or MacOS. If it is not one of those, the script exits.
 # 2. Checks if Ansible is installed; exits with an error if not (Ansible is expected to be installed by post_install.sh).
 # 3. Checks if an SSH RSA key exists. If it doesn't, create one.
-# 4. If the bootstrap script has an argument "-r" and there are Ansible requirements, install them.
-# 5. Run the Ansible playbook.
+# 4. Installs Ansible requirements based on the distribution.
+# 5. Runs the Ansible playbook, prompting for sudo password.
 
 # Exit immediately if any command the script executes fails (returns a non-zero status).
 set -e
@@ -96,31 +96,26 @@ cd "$DOTFILES"
 # ==== Run Ansible Playbook ====
 echo "Running Ansible playbook..."
 
-if [ -f "$DOTFILES/vault-password.txt" ]; then
-  VAULT_ARGS="--vault-password-file $DOTFILES/vault-password.txt"
-else
-  # --ask-become-pass : ask for privilege escalation password
-  VAULT_ARGS="--ask-become-pass"
-fi
-
-# --diff : when changing files/templates, show the differences in files
-# -v : low verbose mode, can increase with -vvv...
+# Common arguments for ansible-playbook
 COMMON_ARGS="--diff -v"
 
+# Arguments for privilege escalation (sudo)
+BECOME_ARGS="--ask-become-pass"
+
 if [ "$isDebian" = "true" ]; then
-  ansible-playbook $COMMON_ARGS "$DOTFILES/debian.yml" $VAULT_ARGS
+  ansible-playbook $COMMON_ARGS $BECOME_ARGS "$DOTFILES/debian.yml"
 fi
 
 if [ "$isFedora" = "true" ]; then
-  ansible-playbook $COMMON_ARGS "$DOTFILES/fedora.yml" $VAULT_ARGS
+  ansible-playbook $COMMON_ARGS $BECOME_ARGS "$DOTFILES/fedora.yml"
 fi
 
 if [ "$isArch" = "true" ]; then
-  ansible-playbook $COMMON_ARGS "$DOTFILES/arch.yml" $VAULT_ARGS
+  ansible-playbook $COMMON_ARGS $BECOME_ARGS "$DOTFILES/arch.yml"
 fi
 
 if [ "$isMacOS" = "true" ]; then
-  ansible-playbook $COMMON_ARGS "$DOTFILES/macos.yml" $VAULT_ARGS
+  ansible-playbook $COMMON_ARGS $BECOME_ARGS "$DOTFILES/macos.yml"
 fi
 
 echo "Script finished."
