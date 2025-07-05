@@ -4,7 +4,10 @@
 pacman_installed_packages:
   # Wayland and Hyprland
   - wayland
+  - wlr-randr
+  - xorg-xwayland
   - hyprland
+  - hyprpaper
   - libinput
   - qt5-wayland 
   - qt6-wayland
@@ -23,7 +26,7 @@ pacman_installed_packages:
   - swaylock
   - dunst
   - ranger
-  - polkit-kde-agent
+  - polkit
   - noto-fonts
   - noto-fonts-emoji
   - ttf-cascadia-code-nerd
@@ -54,7 +57,6 @@ dotfiles_directories:
   - "{{ dotfiles_home }}/.config/wofi"
   - "{{ dotfiles_home }}/.config/dunst"
   - "{{ dotfiles_home }}/.config/eww"
-  - "{{ dotfiles_home }}/.config/ranger"
   - "{{ dotfiles_home }}/.config/cool-retro-term"
 
 # Defines symlinks from the dotfiles repo to the home directory.
@@ -74,10 +76,6 @@ dotfiles_links:
   - { src: "dunst/dunstrc", dest: ".config/dunst/dunstrc" }
   - { src: "eww/eww.yuck", dest: ".config/eww/eww.yuck" }
   - { src: "eww/eww.scss", dest: ".config/eww/eww.scss" }
-  - { src: "ranger/rc.conf", dest: ".config/ranger/rc.conf" }
-  - { src: "ranger/rifle.conf", dest: ".config/ranger/rifle.conf" }
-  - { src: "ranger/commands.py", dest: ".config/ranger/commands.py" }
-  - { src: "ranger/scope.sh", dest: ".config/ranger/scope.sh" }
   - { src: "cool-retro-term/cool-retro-term-my-futuristic.json", dest: ".config/cool-retro-term/cool-retro-term-my-futuristic.json"}
 
 # --- Git Repositories ---

@@ -10,8 +10,4 @@
   roles:
     - { role: repos, when: configure_repos, tags: ["repos"] }
     - fedora
-    - { role: rust, tags: ["rust"] }
-    - { role: nvim, tags: ["nvim"] }
     - { role: tmux, tags: ["tmux"] }
-    - { role: fonts, tags: ["fonts"] }
-    - { role: dotfiles, when: configure_dotfiles, tags: ["dotfiles"] }

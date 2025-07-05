@@ -10,6 +10,7 @@
   roles:
     - { role: repos, when: configure_repos, tags: ["repos"] }
     - arch
+    - { role: hyprland, tags: ["hyprland"] }
     - { role: rust, tags: ["rust"] }
     - { role: nvim, tags: ["nvim"] }
     - { role: tmux, tags: ["tmux"] }

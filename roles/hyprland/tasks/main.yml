@@ -1,0 +1,16 @@
+- name: Add Wayland environment variables to .zshrc
+  lineinfile:
+    path: "/home/{{ target_user }}/.zshrc"
+    line: 'export XDG_SESSION_TYPE=wayland'
+    create: yes
+  become: true
+  become_user: "{{ target_user }}"
+  
+- name: Display instructions to start Hyprland
+  debug:
+    msg: |
+      Hyprland setup is complete. To start it:
+      1. Source your shell config: 'source ~/.zshrc' (or restart your shell).
+      2. Switch to a TTY with Ctrl+Alt+F2.
+      3. Run 'Hyprland'.
+      If it doesn’t start, check logs in '~/.config/hypr/hyprland.log' or the console output.
