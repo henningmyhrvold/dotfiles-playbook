@@ -7,19 +7,6 @@
   vars_files:
     - host_vars/arch-config.yml
 
-  # Load override
-  pre_tasks:
-    - name: Include playbook configuration
-      include_vars: "{{ item }}"
-      with_fileglob:
-        - "{{ playbook_dir }}/config.yml"
-      tags: ["always"]
-    - name: Include overlay configuration
-      include_vars: "{{ item }}"
-      with_fileglob:
-        - "{{ dotfiles_overlay_dir }}/config-arch.yml"
-      tags: ["always"]
-
   roles:
     - { role: repos, when: configure_repos, tags: ["repos"] }
     - arch

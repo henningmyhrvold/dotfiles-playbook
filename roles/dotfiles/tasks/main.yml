@@ -9,17 +9,6 @@
   with_items: "{{ dotfiles_directories }}"
   tags: ["dotfiles", "dotfiles-setup"]
 
-- name: dotfiles - Ensure dotfiles repository is cloned locally
-  ansible.builtin.git:
-    repo: "{{ dotfiles_repo }}"
-    dest: "{{ dotfiles_repo_local_destination }}"
-    version: "{{ dotfiles_repo_version }}"
-    accept_hostkey: "{{ dotfiles_repo_accept_hostkey }}"
-  become: true
-  become_user: "{{ target_user }}"
-  ignore_errors: true
-  tags: ["dotfiles", "dotfiles-setup"]
-
 - name: dotfiles - Link dotfiles into home folder
   ansible.builtin.file:
     src: "{{ dotfiles_repo_local_destination }}/{{ item.src }}"

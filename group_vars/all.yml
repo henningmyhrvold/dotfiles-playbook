@@ -19,9 +19,6 @@ dotfiles_home: "/home/{{ target_user }}"
 # User for which set up is being done for
 target_user: hm
 
-# Optional location of dotfile overlay
-dotfiles_overlay_dir: "{{ playbook_dir }}/../dotfiles-overlay"
-
 # Personal Repositories to be cloned, synchronized
 git_repositories:
   # Value of dotfiles_repo variable
