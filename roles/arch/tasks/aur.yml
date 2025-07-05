@@ -1,13 +1,20 @@
 # tasks/arch/aur.yml
 ---
-- name: AUR - Build and install paru from cloned source
+- name: AUR - Build paru from cloned source
   ansible.builtin.shell:
-    cmd: "makepkg -si --noconfirm"
+    cmd: "makepkg -s --noconfirm"
     chdir: "/home/{{ target_user }}/src/external/paru-git"
-  become: true
-  become_user: "{{ target_user }}"
+  become: false
+  when: not ansible_check_mode
+  register: build_result
+
+- name: AUR - Install paru
+  ansible.builtin.shell:
+    cmd: "pacman -U --noconfirm /home/{{ target_user }}/src/external/paru-git/*.pkg.tar.zst"
+    become: true
+    become_user: root
+  when: build_result.changed and not ansible_check_mode
   args:
-    # This task should only run if the paru binary does not already exist
     creates: /usr/bin/paru
 
 - name: AUR - Install packages from aur_installed_packages list
