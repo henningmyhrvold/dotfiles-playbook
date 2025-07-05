@@ -25,7 +25,6 @@ pacman_installed_packages:
   - swaybg
   - swaylock
   - dunst
-  - ranger
   - polkit
   - noto-fonts
   - noto-fonts-emoji
@@ -42,6 +41,9 @@ pacman_installed_packages:
 # --- AUR Packages ---
 aur_installed_packages:
   - eww-git
+  - oh-my-zsh-git
+  - zsh-theme-powerlevel10k-git
+  - ttf-meslo-nerd-font-powerlevel10k
   - cool-retro-term
 
 # --- Dotfiles Configuration ---
@@ -58,11 +60,13 @@ dotfiles_directories:
   - "{{ dotfiles_home }}/.config/dunst"
   - "{{ dotfiles_home }}/.config/eww"
   - "{{ dotfiles_home }}/.config/cool-retro-term"
+  - "{{ dotfiles_home }}/.zsh"
 
 # Defines symlinks from the dotfiles repo to the home directory.
 dotfiles_links:
   - { src: "zsh/.zshrc", dest: ".zshrc" }
   - { src: "zsh/.p10k.zsh", dest: ".p10k.zsh" }
+  - { src: "zsh/catppuccin_mocha-zsh-syntax-highlighting.zsh", dest: "zsh/catppuccin_mocha-zsh-syntax-highlighting.zsh" }
   - { src: "nvim/init.vim", dest: ".config/nvim/init.vim" }
   - { src: "nvim/keymappings.lua", dest: ".config/nvim/keymappings.lua" }
   - { src: "tmux/tmux.conf", dest: ".config/tmux/tmux.conf" }

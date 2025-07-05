@@ -1,0 +1,28 @@
+---
+- name: Check if Zsh is installed
+  command: which zsh
+  register: zsh_check
+  changed_when: false
+  failed_when: false
+
+- name: Install Zsh if not present
+  pacman:
+    name: zsh
+    state: present
+  become: true
+  when: zsh_check.rc != 0
+
+- name: Set Zsh as the default shell for the user
+  user:
+    name: "{{ target_user }}"
+    shell: /bin/zsh
+  become: true
+
+- name: Ensure .zshrc is symlinked from dotfiles
+  file:
+    src: "/home/{{ target_user }}/src/dotfiles/zsh/.zshrc"
+    dest: "/home/{{ target_user }}/.zshrc"
+    state: link
+  become: true
+  become_user: "{{ target_user }}"
+  when: dotfiles_repo_cloned is defined and dotfiles_repo_cloned
