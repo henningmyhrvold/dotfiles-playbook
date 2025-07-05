@@ -13,7 +13,7 @@
 - name: pacman - Populate mirrorlist if empty or missing
   ansible.builtin.command:
     cmd: reflector --latest 10 --sort rate --save /etc/pacman.d/mirrorlist
-    when: ansible_distribution == 'Archlinux' and (not mirrorlist_stat.stat.exists or mirrorlist_stat.stat.size == 0)
+  when: ansible_distribution == 'Archlinux' and (not mirrorlist_stat.stat.exists or mirrorlist_stat.stat.size == 0)
   tags: ['pacman', 'workstation-arch', 'package']
 
 - name: pacman - Ensure repository sections are enabled
