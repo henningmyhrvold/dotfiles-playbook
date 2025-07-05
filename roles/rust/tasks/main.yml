@@ -1,13 +1,10 @@
 # Install rust
-- name: rust - Check if rustup is installed
-  ansible.builtin.command: which rustup
-  register: rustup_check
-  changed_when: false
-  failed_when: false
 
-- name: rust - Add rustup, accept defaults
-  ansible.builtin.shell: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-  when: rustup_check.rc != 0
+- name: rust - add rustup, accept defaults
+  ansible.builtin.shell: "curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y"
+  tags: ["workstation-debian", "rust", "package", "workstation-fedora"]
+  become: true
+  become_user: "{{ target_user }}"
 
 - name: rust - add rust-analyzer, clippy, rustfmt
   ansible.builtin.shell: "$HOME/.cargo/bin/rustup component add rustfmt clippy rust-analyzer"
