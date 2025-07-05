@@ -1,4 +1,59 @@
---- 
+- name: pacman - Install reflector for mirrorlist management
+  community.general.pacman:
+    name: reflector
+    state: present
+  tags: ['pacman', 'workstation-arch', 'package']
+
+- name: pacman - Ensure mirrorlist is not empty
+  ansible.builtin.stat:
+    path: /etc/pacman.d/mirrorlist
+  register: mirrorlist_stat
+  tags: ['pacman', 'workstation-arch', 'package']
+
+- name: pacman - Populate mirrorlist if empty or missing
+  ansible.builtin.command:
+    cmd: reflector --latest 10 --sort rate --save /etc/pacman.d/mirrorlist
+    when: ansible_distribution == 'Archlinux' and (not mirrorlist_stat.stat.exists or mirrorlist_stat.stat.size == 0)
+  tags: ['pacman', 'workstation-arch', 'package']
+
+- name: pacman - Ensure repository sections are enabled
+  ansible.builtin.blockinfile:
+    path: /etc/pacman.conf
+    block: |
+      [core]
+      Include = /etc/pacman.d/mirrorlist
+
+      [extra]
+      Include = /etc/pacman.d/mirrorlist
+
+      [community]
+      Include = /etc/pacman.d/mirrorlist
+    marker: "# {mark} ANSIBLE MANAGED BLOCK - repositories"
+    state: present
+  tags: ['pacman', 'workstation-arch', 'package']
+
+- name: pacman - Ensure multilib repository is enabled
+  ansible.builtin.blockinfile:
+    path: /etc/pacman.conf
+    block: |
+      [multilib]
+      Include = /etc/pacman.d/mirrorlist
+    marker: "# {mark} ANSIBLE MANAGED BLOCK - multilib"
+    state: present
+  tags: ['pacman', 'workstation-arch', 'package']
+
+- name: pacman - Initialize keyring
+  ansible.builtin.command:
+    cmd: pacman-key --init
+    creates: /etc/pacman.d/gnupg/gpg.conf
+  tags: ['pacman', 'workstation-arch', 'package']
+
+- name: pacman - Populate Arch Linux keyring
+  ansible.builtin.command:
+    cmd: pacman-key --populate archlinux
+    creates: /etc/pacman.d/gnupg/archlinux.gpg
+  tags: ['pacman', 'workstation-arch', 'package']
+
 - name: pacman - Update package database
   community.general.pacman:
     update_cache: true
@@ -11,35 +66,17 @@
       - git
     state: present
   tags: ['pacman', 'workstation-arch', 'package']
- 
-- name: pacman - Update listing and install packages
-  community.general.pacman:
-    name: "{{ item }}"
-    state: present
-  loop: "{{ pacman_installed_packages }}"
-  tags: ['pacman', 'workstation-arch', 'package']
 
-- name: pacman - enable color
-  lineinfile:
+- name: pacman - Enable color
+  ansible.builtin.lineinfile:
     path: /etc/pacman.conf
     regexp: '^#Color$'
     line: 'Color'
+  tags: ['pacman', 'workstation-arch', 'package']
 
-- name: pacman - enable ParallelDownloads = 5
-  lineinfile:
+- name: pacman - Enable ParallelDownloads
+  ansible.builtin.lineinfile:
     path: /etc/pacman.conf
-    regexp: '#ParallelDownloads = 5'
+    regexp: '^#ParallelDownloads'
     line: 'ParallelDownloads = 5'
-
-- name: pacman - enable multilib repository
-  lineinfile:
-    path: /etc/pacman.conf
-    regexp: '#\\[multilib\\]'
-    line: '[multilib]'
-
-- name: pacman - enable multilib mirrorlist include
-  lineinfile:
-    path: /etc/pacman.conf
-    regexp: '#Include = /etc/pacman.d/mirrorlist'
-    line: 'Include = /etc/pacman.d/mirrorlist'
-    insertafter: '\\[multilib\\]'
+  tags: ['pacman', 'workstation-arch', 'package']

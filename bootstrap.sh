@@ -134,10 +134,7 @@ setup_RSA_key() {
 
 install_prequisites
 
-# Check if shell script has an argument "-r" (for requirements), if yes, install them.
-if [ "$1" = "-r" ]; then
-  install_ansible_requirements
-fi
+install_ansible_requirements
 
 setup_RSA_key
 
