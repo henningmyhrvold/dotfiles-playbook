@@ -10,7 +10,7 @@ downloads: "{{ dotfiles_home }}/.ansible-downloads"
 # Location of this repository
 dotfiles_repo: "git@github.com:henningmyhrvold/dotfiles.git"
 dotfiles_repo_version: "main"
-dotfiles_repo_accept_hostkey: false
+dotfiles_repo_accept_hostkey: true
 dotfiles_repo_local_destination: "{{ dotfiles_home }}/src/dotfiles"
 
 # Define the home directory for the target user explicitly.

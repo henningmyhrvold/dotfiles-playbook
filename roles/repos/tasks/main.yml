@@ -53,3 +53,4 @@
   become_user: "{{ target_user }}"
   tags: ["workstation-debian", "repos", "repos-reference", "workstation-arch"]
   ignore_errors: true
+  when: git_repositories_reference is defined

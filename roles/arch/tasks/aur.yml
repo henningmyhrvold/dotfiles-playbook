@@ -3,7 +3,7 @@
 - name: AUR - Build and install paru from cloned source
   ansible.builtin.shell:
     cmd: "makepkg -si --noconfirm"
-    chdir: "/home/{{ target_user }}/src/External/paru-git"
+    chdir: "/home/{{ target_user }}/src/external/paru-git"
   become: true
   become_user: "{{ target_user }}"
   args:
