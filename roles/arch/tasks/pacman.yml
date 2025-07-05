@@ -16,22 +16,6 @@
   when: ansible_distribution == 'Archlinux' and (not mirrorlist_stat.stat.exists or mirrorlist_stat.stat.size == 0)
   tags: ['pacman', 'workstation-arch', 'package']
 
-- name: pacman - Ensure repository sections are enabled
-  ansible.builtin.blockinfile:
-    path: /etc/pacman.conf
-    block: |
-      [core]
-      Include = /etc/pacman.d/mirrorlist
-
-      [extra]
-      Include = /etc/pacman.d/mirrorlist
-
-      [community]
-      Include = /etc/pacman.d/mirrorlist
-    marker: "# {mark} ANSIBLE MANAGED BLOCK - repositories"
-    state: present
-  tags: ['pacman', 'workstation-arch', 'package']
-
 - name: pacman - Ensure multilib repository is enabled
   ansible.builtin.blockinfile:
     path: /etc/pacman.conf
