@@ -1,29 +1,14 @@
 # Variables for playbooks
-
-downloads: ~/.ansible-downloads/
-
-# Location of this repository
-dotfiles_repo: "git@github.com:henningmyhrvold/dotfiles.git"
-dotfiles_repo_version: "main"
-dotfiles_repo_accept_hostkey: false
-dotfiles_repo_local_destination: "~/src/dotfiles"
-
-dotfiles_home: "~"
-
-dotfiles_directories:
-  - "/home/{{ target_user }}/usr/bin"
-  - "/home/{{ target_user }}/.config/cool-retro-term"
-
-dotfiles_files:
-  - .bashrc
-  - .bash_aliases
-  - .bash_profile
-
-# Whether to configure certain build items
+# --- Dotfiles Configuration ---
 configure_dotfiles: true
 
-# User for which set up is being done for
-target_user: user
+# These directories will be created if they don't exist.
+dotfiles_directories:
+  - "{{ dotfiles_home }}/.config/tmux"
+
+# Defines symlinks from the dotfiles repo to the home directory.
+dotfiles_links:
+  - { src: "tmux/tmux.conf", dest: ".config/tmux/tmux.conf" }
 
 apt_installed_packages:
   - git

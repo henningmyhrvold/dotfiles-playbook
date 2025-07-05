@@ -1,31 +1,15 @@
 # Variables for playbooks
-
-downloads: ~/.ansible-downloads/
-
-# Location of this repository
-dotfiles_repo: "git@github.com:henningmyhrvold/dotfiles.git"
-dotfiles_repo_version: "main"
-dotfiles_repo_accept_hostkey: false
-dotfiles_repo_local_destination: "~/src/dotfiles"
-
-dotfiles_home: "~"
-
-# Optional location of dotfile overlay to override or add to existing dotfiles in this repository
-dotfiles_overlay_dir: "{{ playbook_dir }}/../dotfiles-overlay"
-
-# User for which set up is being done for
-target_user: user
-
-dotfiles_directories:
-  - "/Users/{{ target_user }}/usr/bin"
-  - "/Users/{{ target_user }}/.config/wezterm"
-
-dotfiles_files:
-  - .config/wezterm/wezterm.lua
-
-# Whether to configure certain build items
+# --- Dotfiles Configuration ---
 configure_dotfiles: true
 
+# These directories will be created if they don't exist.
+dotfiles_directories:
+  - "{{ dotfiles_home }}/.config/tmux"
+
+# Defines symlinks from the dotfiles repo to the home directory.
+dotfiles_links:
+  - { src: "tmux/tmux.conf", dest: ".config/tmux/tmux.conf" }
+  
 homebrew_installed_casks:
   - homebrew/cask/tmux
 
