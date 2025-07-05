@@ -21,8 +21,8 @@
       tags: ["always"]
 
   roles:
-    - arch
     - { role: repos, when: configure_repos, tags: ["repos"] }
+    - arch
     - { role: rust, tags: ["rust"] }
     - { role: nvim, tags: ["nvim"] }
     - { role: tmux, tags: ["tmux"] }
