@@ -2,7 +2,7 @@
 
 # Script to run on a new system to configure it.
 # 1. First, check if the distribution is Arch, Debian, Fedora, or MacOS. If it is not one of those, the script exits.
-# 2. Installs any prequisites needed for the Ansible playbook and software more easily installed in command line.
+# 2. Checks if Ansible is installed; exits with an error if not (Ansible is expected to be installed by post_install.sh).
 # 3. Checks if an SSH RSA key exists. If it doesn't, create one.
 # 4. If the bootstrap script has an argument "-r" and there are Ansible requirements, install them.
 # 5. Run the Ansible playbook.
@@ -23,9 +23,6 @@ isFedora="false"
 isArch="false"
 isMacOS="false"
 
-# Restart shell flag
-restartShell="false"
-
 # Check the OS
 if [ -f /etc/os-release ]; then
   # Get os-release variables
@@ -43,7 +40,6 @@ elif [[ "$OSTYPE" == "darwin"* ]]; then
   isMacOS="true"
 fi
 
-
 # If the distribution is not one of the supported ones, exit.
 if [ "$isDebian" = "false" ] && [ "$isFedora" = "false" ] && [ "$isArch" = "false" ] && [ "$isMacOS" = "false" ]; then
   echo "This distribution is not supported by this script. Only Arch, Debian, Fedora, and MacOS are supported."
@@ -54,54 +50,11 @@ fi
 ## Functions
 ##########################################
 
-# Installs Ansible using pipx if it's not already installed.
-install_ansible() {
-  # Check if Ansible is installed
+# Checks if Ansible is installed; exits with an error if not.
+check_ansible() {
   if ! [ -x "$(command -v ansible)" ]; then
-    echo "Ansible is not installed. Installing Ansible using pipx..."
-
-    if [ "$isDebian" = "true" ]; then
-      sudo apt update
-      sudo apt install pipx -y
-    fi
-
-    if [ "$isArch" = "true" ]; then
-      sudo pacman -S --noconfirm python python-pipx
-    fi
-
-    if [ "$isFedora" = "true" ]; then
-      sudo dnf install pipx -y
-    fi
-
-    if [ "$isMacOS" = "true" ]; then
-      echo "Installing Homebrew and pipx..."
-      # Install Brew package manager if not found
-      if ! [ -x "$(command -v brew)" ]; then
-          /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-      fi
-      # from https://github.com/pypa/pipx
-      brew install pipx
-      pipx ensurepath
-      echo "*** You may need to manually add Homebrew to your path. ***"
-    fi
-
-    pipx install --include-deps ansible
-    # Add pipx bin path to shell
-    echo "export PATH=$PATH:$HOME/.local/bin" >>~/.bashrc
-    restartShell="true"
-  fi
-}
-
-# Installs commands and tools that the Ansible playbook needs.
-install_prequisites() {
-  install_ansible
-
-  # if restartShell is true, tell user to restart shell and exit script
-  if [ "$restartShell" = "true" ]; then
-    # Sourcing does not work for some programs and a shell restart is needed to get PATH changes
-    echo "Restart shell to get PATH changes for Ansible."
-    echo "Then re-run with: bootstrap.sh -r"
-    exit 0
+    echo "Error: Ansible is not installed. Please ensure Ansible is installed before running this script."
+    exit 1
   fi
 }
 
@@ -132,7 +85,7 @@ setup_RSA_key() {
 ## Main Start of Script
 #################################
 
-install_prequisites
+check_ansible
 
 install_ansible_requirements
 

@@ -1,5 +1,5 @@
 - name: pacman - Install reflector for mirrorlist management
-  community.general.pacman:
+  ansible.builtin.pacman:
     name: reflector
     state: present
   tags: ['pacman', 'workstation-arch', 'package']
@@ -55,12 +55,12 @@
   tags: ['pacman', 'workstation-arch', 'package']
 
 - name: pacman - Update package database
-  community.general.pacman:
+  ansible.builtin.pacman:
     update_cache: true
   tags: ['pacman', 'workstation-arch', 'package']
 
 - name: pacman - Install base-devel and git for AUR support
-  community.general.pacman:
+  ansible.builtin.pacman:
     name:
       - base-devel
       - git
