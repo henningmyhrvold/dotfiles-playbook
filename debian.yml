@@ -7,24 +7,11 @@
   vars_files:
     - host_vars/debian-config.yml
 
-  # Load override
-  pre_tasks:
-    - name: Include playbook configuration
-      include_vars: "{{ item }}"
-      with_fileglob:
-        - "{{ playbook_dir }}/config.yml"
-      tags: ["always"]
-    - name: Include overlay configuration
-      include_vars: "{{ item }}"
-      with_fileglob:
-        - "{{ dotfiles_overlay_dir }}/config-debian.yml"
-      tags: ["always"]
-
   roles:
-    - debian
-    - { role: dotfiles, when: configure_dotfiles, tags: ["dotfiles"] }
     - { role: repos, when: configure_repos, tags: ["repos"] }
+    - debian
     - { role: rust, tags: ["rust"] }
     - { role: nvim, tags: ["nvim"] }
     - { role: tmux, tags: ["tmux"] }
     - { role: fonts, tags: ["fonts"] }
+    - { role: dotfiles, when: configure_dotfiles, tags: ["dotfiles"] }

@@ -6,25 +6,12 @@
   # Load default variables
   vars_files:
     - host_vars/fedora-config.yml
-
-  # Load override
-  pre_tasks:
-    - name: Include playbook configuration
-      include_vars: "{{ item }}"
-      with_fileglob:
-        - "{{ playbook_dir }}/config.yml"
-      tags: ['always']
-    - name: Include overlay configuration
-      include_vars: "{{ item }}"
-      with_fileglob:
-        - "{{ dotfiles_overlay_dir }}/config-fedora.yml"
-      tags: ['always']
     
   roles:
-    - fedora
-    - { role: dotfiles, when: configure_dotfiles, tags: ["dotfiles"] }
     - { role: repos, when: configure_repos, tags: ["repos"] }
+    - fedora
     - { role: rust, tags: ["rust"] }
     - { role: nvim, tags: ["nvim"] }
     - { role: tmux, tags: ["tmux"] }
     - { role: fonts, tags: ["fonts"] }
+    - { role: dotfiles, when: configure_dotfiles, tags: ["dotfiles"] }

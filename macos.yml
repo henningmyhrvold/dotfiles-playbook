@@ -7,24 +7,11 @@
   vars_files:
     - host_vars/macos-config.yml
 
-  # Load override
-  pre_tasks:
-    - name: Include playbook configuration
-      include_vars: "{{ item }}"
-      with_fileglob:
-        - "{{ playbook_dir }}/config.yml"
-      tags: ["always"]
-    - name: Include overlay configuration
-      include_vars: "{{ item }}"
-      with_fileglob:
-        - "{{ dotfiles_overlay_dir }}/config-macos.yml"
-      tags: ["always"]
-
   roles:
-    - macos
-    - { role: dotfiles, when: configure_dotfiles, tags: ["dotfiles"] }
     - { role: repos, when: configure_repos, tags: ["repos"] }
+    - macos
     - { role: rust, tags: ["rust"] }
     - { role: nvim, tags: ["nvim"] }
     - { role: tmux, tags: ["tmux"] }
     - { role: fonts, tags: ["fonts"] }
+    - { role: dotfiles, when: configure_dotfiles, tags: ["dotfiles"] }
