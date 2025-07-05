@@ -38,7 +38,7 @@ pacman_installed_packages:
 
 # --- AUR Packages ---
 aur_installed_packages:
-  - eww-wayland-git
+  - eww-git
   - cool-retro-term
 
 # --- Dotfiles Configuration ---
