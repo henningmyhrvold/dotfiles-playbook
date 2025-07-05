@@ -74,7 +74,7 @@ setup_RSA_key() {
     echo "SSH RSA key does not exist. Creating a 4096-bit SSH RSA key..."
     mkdir -p "$DOTSSH"
     chmod 700 "$DOTSSH"
-    ssh-keygen -b 4096 -t rsa -f "$DOTSSH/id_rsa" -N "" -C "$USER@$(hostname)"
+    ssh-keygen -b 4096 -t rsa -f "$DOTSSH/id_rsa" -N "" -C "$USER@$(uname -n)"
     cat "$DOTSSH/id_rsa.pub" >>"$DOTSSH/authorized_keys"
     chmod 600 "$DOTSSH/authorized_keys"
     echo "SSH key created and added to authorized_keys."
