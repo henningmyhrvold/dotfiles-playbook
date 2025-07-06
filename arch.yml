@@ -16,4 +16,5 @@
     - { role: nvim, tags: ["nvim"] }
     - { role: tmux, tags: ["tmux"] }
     - { role: fonts, tags: ["fonts"] }
+    - { role: links, tags: ["links"] }
     - { role: dotfiles, when: configure_dotfiles, tags: ["dotfiles"] }

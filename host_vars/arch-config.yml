@@ -102,6 +102,9 @@ dotfiles_links:
   - { src: "eww/eww.scss", dest: ".config/eww/eww.scss" }
   - { src: "cool-retro-term/cool-retro-term-my-futuristic.json", dest: ".config/cool-retro-term/cool-retro-term-my-futuristic.json"}
 
+regular_links:
+  - { src: "/usr/share/zsh-theme-powerlevel10k", dest: "/usr/share/oh-my-zsh/custom/themes/powerlevel10k" }
+
 # --- Git Repositories ---
 git_repositories_external:
   - https://aur.archlinux.org/paru-git.git
