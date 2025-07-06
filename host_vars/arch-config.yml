@@ -6,30 +6,39 @@ pacman_installed_packages:
   - wayland
   - wlr-randr
   - xorg-xwayland
-  - hyprland
-  - hyprpaper
-  - libinput
   - qt5-wayland 
   - qt6-wayland
+  - hyprland
+  - hyprpaper
   - xdg-desktop-portal-hyprland
+  - xdg-utils
   - sddm
+  - wireless_tools
+  - wpa_supplicant
   # --- Graphics Drivers ---
   - mesa
   # --- Audio ---
   - pipewire
   - wireplumber
-  - pipewire-pulse
-  - pipewire-alsa
+  #- pipewire-pulse
+  #- pipewire-alsa
   # --- Display & Theming ---
+  - libinput
   - waybar
   - wofi
   - swaybg
   - swaylock
   - dunst
-  - polkit
+  - polkit-kde-agent
+  - grim
+  - slurp
+  # --- Fonts ---
   - noto-fonts
   - noto-fonts-emoji
   - ttf-cascadia-code-nerd
+  # --- GUI File manager ---
+  #- nautilus
+  - dolphin
   # --- CLI Tools & Shell ---
   - neovim
   - zsh
@@ -38,6 +47,9 @@ pacman_installed_packages:
   - fzf
   - bat
   - ripgrep
+  - htop
+  - kitty
+  - smartmontools
 
 # --- AUR Packages ---
 aur_installed_packages:
@@ -74,6 +86,7 @@ dotfiles_links:
   - { src: "wezterm/wezterm.lua", dest: ".config/wezterm/wezterm.lua" }
   - { src: "hypr/hyprland.conf", dest: ".config/hypr/hyprland.conf" }
   - { src: "hypr/hyprpaper.conf", dest: ".config/hypr/hyprpaper.conf" }
+  - { src: "hypr/mocha.conf", dest: ".config/hypr/mocha.conf" }
   - { src: "waybar/desktop-bar/config", dest: ".config/waybar/config" }
   - { src: "waybar/desktop-bar/style.css", dest: ".config/waybar/style.css" }
   - { src: "wofi/config", dest: ".config/wofi/config" }
