@@ -2,26 +2,31 @@
 
 # --- Pacman Packages ---
 pacman_installed_packages:
-  # Wayland and Hyprland
+  # --- Wayland ---
   - wayland
   - wlr-randr
   - xorg-xwayland
-  - qt5-wayland 
-  - qt6-wayland
-  - hyprland
-  - hyprpaper
   - xdg-desktop-portal-hyprland
   - xdg-utils
+  - qt5-wayland 
+  - qt6-wayland
+  # --- Hyprland ---
+  - hyprland
+  - hyprpaper
+  - hypridle
+  - hyprlock
+  - hyprsunset
+  - hyprutils
+  # --- Auth ---
   - sddm
-  - wireless_tools
-  - wpa_supplicant
   # --- Graphics Drivers ---
   - mesa
   # --- Audio ---
   - pipewire
   - wireplumber
-  #- pipewire-pulse
-  #- pipewire-alsa
+  # --- Networking ---
+  - wireless_tools
+  - wpa_supplicant
   # --- Display & Theming ---
   - libinput
   - waybar
@@ -50,6 +55,7 @@ pacman_installed_packages:
   - htop
   - kitty
   - smartmontools
+  - cliphist
 
 # --- AUR Packages ---
 aur_installed_packages:
