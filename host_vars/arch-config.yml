@@ -139,4 +139,3 @@ dotfiles_files_binaries:
   - "eww/scripts/winlist"
   - "eww/scripts/winnumbers"
   - "eww/scripts/workspaces"
-  - /usr/share/zsh-theme-powerlevel10k
