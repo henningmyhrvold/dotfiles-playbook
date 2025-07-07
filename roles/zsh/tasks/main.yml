@@ -25,7 +25,6 @@
     state: link
   become: true
   become_user: "{{ target_user }}"
-  when: dotfiles_repo_cloned is defined and dotfiles_repo_cloned
   
  - name: Ensure powerlevel10k theme directory has execute permissions
   file:
