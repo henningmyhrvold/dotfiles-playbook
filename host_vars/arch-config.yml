@@ -109,7 +109,7 @@ regular_links:
   - { src: "{{ dotfiles_home }}/src/dotfiles/sddm/sddm.conf", dest: "/etc/sddm.conf" }
 
 copy:
-  - { src: "{{ dotfiles_home }}/src/dotfiles/sddm/catppuccin-mocha/", dest: "/usr/share/sddm/themes/" }
+  - { src: "{{ dotfiles_home }}/src/dotfiles/sddm/catppuccin-mocha/", dest: "/usr/share/sddm/themes/catppuccin-mocha/" }
   
 # --- Git Repositories ---
 git_repositories_external:
