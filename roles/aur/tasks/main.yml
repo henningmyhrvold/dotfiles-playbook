@@ -9,6 +9,7 @@
   args:
     # This task should only run if the paru binary does not already exist
     creates: /usr/bin/paru
+  tags: ['aur']
 
 - name: AUR - Install packages from aur_installed_packages list
   kewlfft.aur.aur:
@@ -19,3 +20,4 @@
   become: true
   become_user: "{{ target_user }}"
   when: aur_installed_packages is defined
+  tags: ['aur']

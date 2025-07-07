@@ -9,8 +9,8 @@
 
   roles:
     - { role: repos, when: configure_repos, tags: ["repos"] }
-    - pacman
-    - aur
+    - { role: pacman, tags: ["pacman"] }
+    - { role: aur, tags: ["aur"] }
     - { role: zsh, tags: ["zsh"] }
     - { role: hyprland, tags: ["hyprland"] }
     - { role: rust, tags: ["rust"] }
@@ -18,5 +18,6 @@
     - { role: tmux, tags: ["tmux"] }
     - { role: fonts, tags: ["fonts"] }
     - { role: links, tags: ["links"] }
+    - { role: copy, tags: ["copy"] }
     - { role: sddm, tags: ["sddm"] }
     - { role: dotfiles, when: configure_dotfiles, tags: ["dotfiles"] }

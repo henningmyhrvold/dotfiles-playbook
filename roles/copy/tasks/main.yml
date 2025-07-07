@@ -1,0 +1,46 @@
+---
+- name: copy - Stat source paths to determine files vs folders
+  ansible.builtin.stat:
+    path: "{{ item.src }}"
+  loop: "{{ copy }}"
+  register: src_stat
+  tags: ["copy"]
+
+- name: copy - Ensure destination directories exist for files
+  ansible.builtin.file:
+    path: "{{ item.0.dest | dirname }}"
+    state: directory
+    owner: "{{ 'root' if item.0.dest.startswith('/usr/') or item.0.dest.startswith('/etc/') else target_user }}"
+    mode: "0755"
+  loop: "{{ copy | zip(src_stat.results) | selectattr('1.stat.isreg', 'equalto', true) }}"
+  become: true
+  tags: ["copy", "files"]
+  
+- name: copy - Copy individual files
+  ansible.builtin.copy:
+    src: "{{ item.0.src }}"
+    dest: "{{ item.0.dest }}"
+    owner: "{{ 'root' if item.0.dest.startswith('/usr/') or item.0.dest.startswith('/etc/') else target_user }}"
+    mode: "0644"
+    remote_src: false
+  loop: "{{ copy | zip(src_stat.results) | selectattr('1.stat.isreg', 'equalto', true) }}"
+  become: true
+  tags: ["copy", "files"]
+
+- name: copy - Copy full folders
+  ansible.posix.synchronize:
+    src: "{{ item.0.src }}"
+    dest: "{{ item.0.dest }}"
+    archive: true
+    recursive: true
+    owner: true
+    group: true
+    perms: true
+    mode: push
+    rsync_opts:
+      - "--no-motd"
+      - "--chown={{ 'root:root' if item.0.dest.startswith('/usr/') or item.0.dest.startswith('/etc/') else target_user + ':' + target_user }}"
+      - "--chmod=D0755,F0644"
+  loop: "{{ copy | zip(src_stat.results) | selectattr('1.stat.isdir', 'equalto', true) }}"
+  become: true
+  tags: ["copy", "folders"]
