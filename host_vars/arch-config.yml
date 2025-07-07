@@ -105,8 +105,8 @@ dotfiles_links:
 
 regular_links:
   - { src: "/usr/share/zsh-theme-powerlevel10k", dest: "/usr/share/oh-my-zsh/custom/themes/powerlevel10k" }
-  - { src: "{{ dotfiles_home }}/sddm/catppuccin-mocha", dest: "/usr/share/sddm/themes/catppuccin-mocha" }
-  - { src: "{{ dotfiles_home }}/sddm/sddm.conf", dest: "/etc/sddm.conf" }
+  - { src: "{{ dotfiles_home }}/src/dotfiles/sddm/catppuccin-mocha/", dest: "/usr/share/sddm/themes/catppuccin-mocha/" }
+  - { src: "{{ dotfiles_home }}/src/dotfiles/sddm/sddm.conf", dest: "/etc/sddm.conf" }
 
 # --- Git Repositories ---
 git_repositories_external:
