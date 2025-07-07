@@ -26,3 +26,12 @@
   become: true
   become_user: "{{ target_user }}"
   when: dotfiles_repo_cloned is defined and dotfiles_repo_cloned
+  
+ - name: Ensure powerlevel10k theme directory has execute permissions
+  file:
+    path: /usr/share/zsh-theme-powerlevel10k
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+  become: yes
