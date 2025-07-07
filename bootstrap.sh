@@ -10,29 +10,6 @@
 # Exit immediately if any command the script executes fails (returns a non-zero status).
 set -e
 
-# Changes
-
-# Privilege escalation check
-if [ "$EUID" -ne 0 ]; then
-  echo "This script requires elevated privileges."
-  sudo -v || { echo "Sudo authentication failed. Please ensure you have sudo privileges."; exit 1; }
-  exec sudo "$0" "$@"
-  exit 1
-fi
-
-# Now running as root
-# Set HOME to original user's home if SUDO_USER is set
-if [ -n "$SUDO_USER" ]; then
-  ORIGINAL_USER="$SUDO_USER"
-  ORIGINAL_HOME=$(getent passwd "$ORIGINAL_USER" | cut -d: -f6)
-  export HOME="$ORIGINAL_HOME"
-else
-  echo "SUDO_USER is not set. Cannot determine original user."
-  exit 1
-fi
-
-# Changes
-
 ##########################################
 ## Variables
 ##########################################
@@ -120,8 +97,7 @@ cd "$DOTFILES"
 echo "Running Ansible playbook..."
 
 # Common arguments for ansible-playbook
-# COMMON_ARGS="--diff -v"
-COMMON_ARGS="--diff -v --extra-vars \"original_user=$ORIGINAL_USER\""
+COMMON_ARGS="--diff -v"
 
 # Arguments for privilege escalation (sudo)
 BECOME_ARGS="--ask-become-pass"
