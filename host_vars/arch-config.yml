@@ -58,6 +58,7 @@ pacman_installed_packages:
   - cliphist
   - unzip
   - rsync
+  - fastfetch
 
 # --- AUR Packages ---
 aur_installed_packages:
