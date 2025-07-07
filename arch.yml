@@ -12,12 +12,12 @@
     - { role: pacman, tags: ["pacman"] }
     - { role: aur, tags: ["aur"] }
     - { role: zsh, tags: ["zsh"] }
-    - { role: hyprland, tags: ["hyprland"] }
     - { role: rust, tags: ["rust"] }
     - { role: nvim, tags: ["nvim"] }
     - { role: tmux, tags: ["tmux"] }
     - { role: fonts, tags: ["fonts"] }
     - { role: links, tags: ["links"] }
     - { role: copy, tags: ["copy"] }
+    - { role: dotfiles, tags: ["dotfiles"] }
     - { role: sddm, tags: ["sddm"] }
-    - { role: dotfiles, when: configure_dotfiles, tags: ["dotfiles"] }
+    - { role: hyprland, tags: ["hyprland"] }
