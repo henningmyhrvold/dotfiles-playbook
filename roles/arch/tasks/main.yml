@@ -1,8 +1,0 @@
----
-- name: Set up pacman packages
-  include_tasks: pacman.yml
-  tags: ["arch", "pacman", "package"]
-
-- name: Set up AUR packages
-  include_tasks: aur.yml
-  tags: ["arch", "aur", "package"]

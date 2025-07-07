@@ -1,0 +1,6 @@
+- name: Enable SDDM service
+  ansible.builtin.service:
+    name: sddm
+    enabled: true
+  become: true
+  tags: ["sddm"]

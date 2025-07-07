@@ -9,12 +9,14 @@
 
   roles:
     - { role: repos, when: configure_repos, tags: ["repos"] }
+    - pacman
+    - aur
     - { role: zsh, tags: ["zsh"] }
-    - arch
     - { role: hyprland, tags: ["hyprland"] }
     - { role: rust, tags: ["rust"] }
     - { role: nvim, tags: ["nvim"] }
     - { role: tmux, tags: ["tmux"] }
     - { role: fonts, tags: ["fonts"] }
     - { role: links, tags: ["links"] }
+    - { role: sddm, tags: ["sddm"] }
     - { role: dotfiles, when: configure_dotfiles, tags: ["dotfiles"] }
