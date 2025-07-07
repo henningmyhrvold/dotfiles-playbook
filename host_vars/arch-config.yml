@@ -57,6 +57,7 @@ pacman_installed_packages:
   - smartmontools
   - cliphist
   - unzip
+  - rsync
 
 # --- AUR Packages ---
 aur_installed_packages:
