@@ -94,10 +94,11 @@ dotfiles_links:
   - { src: "tmux/tmux.conf", dest: ".config/tmux/tmux.conf" }
   - { src: "wezterm/wezterm.lua", dest: ".config/wezterm/wezterm.lua" }
   - { src: "hypr/hyprland.conf", dest: ".config/hypr/hyprland.conf" }
-  - { src: "hypr/hyprpaper.conf", dest: ".config/hypr/hyprpaper.conf" }
+  - { src: "hypr/hyprpaper-laptop.conf", dest: ".config/hypr/hyprpaper-laptop.conf" }
+  - { src: "hypr/hyprpaper-desktop.conf", dest: ".config/hypr/hyprpaper-desktop.conf" }
   - { src: "hypr/desktop-portals.sh", dest: ".config/hypr/desktop-portals.sh" }
   - { src: "hypr/per-monitor-launcher.sh", dest: ".config/hypr/per-monitor-launcher.sh" }
-  - { src: "hypr/get-last-focused-window.sh", dest: ".config/hypr/get-last-focused-window.sh" }
+  - { src: "hypr/scripts/get-last-focused-window.sh", dest: ".config/hypr/get-last-focused-window.sh" }
   - { src: "hypr/mocha.conf", dest: ".config/hypr/mocha.conf" }
   - { src: "waybar/desktop-bar/config", dest: ".config/waybar/config" }
   - { src: "waybar/desktop-bar/style.css", dest: ".config/waybar/style.css" }
