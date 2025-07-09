@@ -22,3 +22,4 @@
     - { role: dotfiles, tags: ["dotfiles"] }
     - { role: sddm, tags: ["sddm"] }
     - { role: hyprland, tags: ["hyprland"] }
+    - { role: permissions, tags: ["permissions"] }
