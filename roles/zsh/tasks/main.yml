@@ -26,6 +26,16 @@
   become: true
   become_user: "{{ target_user }}"
   
+- name: Check current permissions before
+  command: ls -ld /usr/share/zsh-theme-powerlevel10k
+  register: before_permissions
+  become: yes
+  ignore_errors: yes 
+
+- name: Debug before permissions
+  debug:
+    msg: "{{ before_permissions.stdout | default('Directory not found') }}"
+
 - name: Ensure powerlevel10k theme directory has execute permissions
   file:
     path: /usr/share/zsh-theme-powerlevel10k
@@ -34,3 +44,12 @@
     group: root
     mode: "0755"
   become: yes
+
+- name: Check current permissions after
+  command: ls -ld /usr/share/zsh-theme-powerlevel10k
+  register: after_permissions
+  become: yes
+
+- name: Debug after permissions
+  debug:
+    msg: "{{ after_permissions.stdout }}"

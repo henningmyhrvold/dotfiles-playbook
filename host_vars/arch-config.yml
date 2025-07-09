@@ -114,6 +114,11 @@ regular_links:
 copy:
   - { src: "{{ dotfiles_home }}/src/dotfiles/sddm/catppuccin-mocha/", dest: "/usr/share/sddm/themes/catppuccin-mocha/" }
   
+create_folders:
+  - { path: "{{ dotfiles_home }}/Pictures" }
+  - { path: "{{ dotfiles_home }}/Documents" }
+  - { path: "{{ dotfiles_home }}/Downloads" }
+
 # --- Git Repositories ---
 git_repositories_external:
   - https://aur.archlinux.org/paru-git.git
