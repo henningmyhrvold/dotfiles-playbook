@@ -101,8 +101,12 @@ dotfiles_links:
   - { src: "hypr/per-monitor-launcher.sh", dest: ".config/hypr/per-monitor-launcher.sh" }
   - { src: "hypr/scripts/get-last-focused-window.sh", dest: ".config/hypr/get-last-focused-window.sh" }
   - { src: "hypr/mocha.conf", dest: ".config/hypr/mocha.conf" }
-  - { src: "waybar/desktop-bar/config", dest: ".config/waybar/config" }
-  - { src: "waybar/desktop-bar/style.css", dest: ".config/waybar/style.css" }
+  - { src: "waybar/desktop-bar/config", dest: ".config/waybar/desktop-bar/config" }
+  - { src: "waybar/desktop-bar/style.css", dest: ".config/waybar/desktop-bar/style.css" }
+  - { src: "waybar/laptop-bar/config", dest: ".config/waybar/laptop-bar/config" }
+  - { src: "waybar/laptop-bar/style.css", dest: ".config/waybar/laptop-bar/style.css" }
+  - { src: "waybar/colors/mocha.css", dest: ".config/waybar/colors/mocha.css" }
+  - { src: "waybar/scripts", dest: ".config/waybar/scripts" }
   - { src: "wofi/config", dest: ".config/wofi/config" }
   - { src: "wofi/style.css", dest: ".config/wofi/style.css" }
   - { src: "dunst/dunstrc", dest: ".config/dunst/dunstrc" }
