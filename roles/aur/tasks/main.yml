@@ -21,3 +21,10 @@
   become_user: "{{ target_user }}"
   when: aur_installed_packages is defined
   tags: ['aur']
+  
+  - name: AUR - Update all packages
+  ansible.builtin.shell:
+    cmd: "paru -Syu --noconfirm"
+  become: true
+  become_user: "{{ target_user }}"
+  tags: ['aur']

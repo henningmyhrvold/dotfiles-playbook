@@ -24,6 +24,7 @@ pacman_installed_packages:
   # --- Audio ---
   - pipewire
   - wireplumber
+  - pavucontrol
   # --- Networking ---
   - wireless_tools
   - wpa_supplicant
