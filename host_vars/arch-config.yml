@@ -128,6 +128,9 @@ create_folders:
   - { path: "{{ dotfiles_home }}/Pictures/wallpapers" }
   - { path: "{{ dotfiles_home }}/Documents" }
   - { path: "{{ dotfiles_home }}/Downloads" }
+  - { path: "{{ dotfiles_home }}/.config/waybar/desktop-bar" }
+  - { path: "{{ dotfiles_home }}/.config/waybar/laptop-bar" }
+  - { path: "{{ dotfiles_home }}/.config/waybar/colors" }
 
 # --- Git Repositories ---
 git_repositories_external:
