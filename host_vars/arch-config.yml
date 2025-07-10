@@ -105,8 +105,7 @@ dotfiles_links:
   - { src: "waybar/desktop-bar/style.css", dest: ".config/waybar/desktop-bar/style.css" }
   - { src: "waybar/laptop-bar/config", dest: ".config/waybar/laptop-bar/config" }
   - { src: "waybar/laptop-bar/style.css", dest: ".config/waybar/laptop-bar/style.css" }
-  - { src: "waybar/colors/mocha.css", dest: ".config/waybar/colors/mocha.css" }
-  - { src: "waybar/scripts", dest: ".config/waybar/scripts" }
+  - { src: "waybar/colors/mocha.css", dest: ".config/colors/mocha.css" }
   - { src: "wofi/config", dest: ".config/wofi/config" }
   - { src: "wofi/style.css", dest: ".config/wofi/style.css" }
   - { src: "dunst/dunstrc", dest: ".config/dunst/dunstrc" }
