@@ -22,7 +22,7 @@
   when: aur_installed_packages is defined
   tags: ['aur']
   
-  - name: AUR - Update all packages
+- name: AUR - Update all packages
   ansible.builtin.shell:
     cmd: "paru -Syu --noconfirm"
   become: true
