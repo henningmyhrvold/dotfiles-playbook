@@ -127,9 +127,9 @@ create_folders:
   - { path: "{{ dotfiles_home }}/Pictures/wallpapers" }
   - { path: "{{ dotfiles_home }}/Documents" }
   - { path: "{{ dotfiles_home }}/Downloads" }
+  - { path: "{{ dotfiles_home }}/.config/colors" }
   - { path: "{{ dotfiles_home }}/.config/waybar/desktop-bar" }
   - { path: "{{ dotfiles_home }}/.config/waybar/laptop-bar" }
-  - { path: "{{ dotfiles_home }}/.config/waybar/colors" }
   - { path: "{{ dotfiles_home }}/.config/waybar/scripts" }
 
 # --- Git Repositories ---
