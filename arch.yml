@@ -11,7 +11,6 @@
     - { role: repos, when: configure_repos, tags: ["repos"] }
     - { role: pacman, tags: ["pacman"] }
     - { role: aur, tags: ["aur"] }
-    - { role: folders, tags: ["folders"] }
     - { role: zsh, tags: ["zsh"] }
     - { role: rust, tags: ["rust"] }
     - { role: nvim, tags: ["nvim"] }
