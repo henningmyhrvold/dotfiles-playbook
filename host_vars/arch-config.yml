@@ -87,6 +87,11 @@ dotfiles_directories:
   - "{{ dotfiles_home }}/.config/eww"
   - "{{ dotfiles_home }}/.config/cool-retro-term"
   - "{{ dotfiles_home }}/.zsh"
+  - "{{ dotfiles_home }}/Pictures"
+  - "{{ dotfiles_home }}/Pictures/wallpapers"
+  - "{{ dotfiles_home }}/Documents"
+  - "{{ dotfiles_home }}/Downloads"
+  - "{{ dotfiles_home }}/.config/colors"
 
 # Defines symlinks from the dotfiles repo to the home directory.
 dotfiles_links:
@@ -120,17 +125,6 @@ regular_links:
 
 copy:
   - { src: "{{ dotfiles_home }}/src/dotfiles/sddm/catppuccin-mocha/", dest: "/usr/share/sddm/themes/catppuccin-mocha/" }
-  - { src: "{{ dotfiles_home }}/src/dotfiles/hypr/custom-hyprland.desktop", dest: "/usr/share/wayland-sessions/custom-hyprland.desktop" }
-  
-create_folders:
-  - { path: "{{ dotfiles_home }}/Pictures" }
-  - { path: "{{ dotfiles_home }}/Pictures/wallpapers" }
-  - { path: "{{ dotfiles_home }}/Documents" }
-  - { path: "{{ dotfiles_home }}/Downloads" }
-  - { path: "{{ dotfiles_home }}/.config/colors" }
-  - { path: "{{ dotfiles_home }}/.config/waybar/desktop-bar" }
-  - { path: "{{ dotfiles_home }}/.config/waybar/laptop-bar" }
-  - { path: "{{ dotfiles_home }}/.config/waybar/scripts" }
 
 # --- Git Repositories ---
 git_repositories_external:
@@ -138,15 +132,6 @@ git_repositories_external:
 
 # --- Scripts to make executable ---
 dotfiles_files_binaries:
-  - "hypr/scripts/focused-window"
-  - "hypr/scripts/get-last-focused-window.sh"
-  - "hypr/toggle-gaps.sh"
-  - "waybar/scripts/dunst.sh"
-  - "waybar/scripts/mediaplayer.py"
-  - "waybar/scripts/power-menu/powermenu.sh"
-  - "waybar/scripts/rofi-wifi-menu.sh"
-  - "waybar/scripts/spotify.sh"
-  - "waybar/scripts/weather.py"
   - "wofi/powermenu.sh"
   - "wofi/wifimenu.sh"
   - "eww/scripts/activewin"
