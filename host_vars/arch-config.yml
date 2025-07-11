@@ -60,6 +60,7 @@ pacman_installed_packages:
   - unzip
   - rsync
   - fastfetch
+  - luarocks
 
 # --- AUR Packages ---
 aur_installed_packages:
@@ -76,6 +77,8 @@ configure_dotfiles: true
 dotfiles_directories:
   - "{{ dotfiles_home }}/.config/nvim"
   - "{{ dotfiles_home }}/.config/tmux"
+  - "{{ dotfiles_home }}/.config/tmux-sessionizer"
+  - "{{ dotfiles_home }}/.config/ghostty"
   - "{{ dotfiles_home }}/.config/wezterm"
   - "{{ dotfiles_home }}/.config/hypr"
   - "{{ dotfiles_home }}/.config/waybar"
@@ -88,27 +91,24 @@ dotfiles_directories:
 # Defines symlinks from the dotfiles repo to the home directory.
 dotfiles_links:
   - { src: "zsh/.zshrc", dest: ".zshrc" }
+  - { src: "zsh/.zsh_profile", dest: ".zsh_profile" }
   - { src: "zsh/.p10k.zsh", dest: ".p10k.zsh" }
   - { src: "zsh/catppuccin_mocha-zsh-syntax-highlighting.zsh", dest: ".zsh/catppuccin_mocha-zsh-syntax-highlighting.zsh" }
   - { src: "nvim/init.vim", dest: ".config/nvim/init.vim" }
   - { src: "nvim/keymappings.lua", dest: ".config/nvim/keymappings.lua" }
   - { src: "tmux/tmux.conf", dest: ".config/tmux/tmux.conf" }
+  - { src: "tmux-sessionizer/tmux-sessionizer.conf", dest: ".config/tmux-sessionizer/tmux-sessionizer.conf" }
   - { src: "wezterm/wezterm.lua", dest: ".config/wezterm/wezterm.lua" }
+  - { src: "ghostty/config", dest: ".config/ghostty/config" }
   - { src: "hypr/hyprland.conf", dest: ".config/hypr/hyprland.conf" }
-  - { src: "hypr/hyprpaper-laptop.conf", dest: ".config/hypr/hyprpaper-laptop.conf" }
-  - { src: "hypr/hyprpaper-desktop.conf", dest: ".config/hypr/hyprpaper-desktop.conf" }
-  - { src: "hypr/desktop-portals.sh", dest: ".config/hypr/desktop-portals.sh" }
-  - { src: "hypr/per-monitor-launcher.sh", dest: ".config/hypr/per-monitor-launcher.sh" }
-  - { src: "hypr/scripts/get-last-focused-window.sh", dest: ".config/hypr/get-last-focused-window.sh" }
-  - { src: "hypr/mocha.conf", dest: ".config/hypr/mocha.conf" }
-  - { src: "waybar/desktop-bar/config", dest: ".config/waybar/desktop-bar/config" }
-  - { src: "waybar/desktop-bar/style.css", dest: ".config/waybar/desktop-bar/style.css" }
-  - { src: "waybar/laptop-bar/config", dest: ".config/waybar/laptop-bar/config" }
-  - { src: "waybar/laptop-bar/style.css", dest: ".config/waybar/laptop-bar/style.css" }
-  - { src: "waybar/colors/mocha.css", dest: ".config/colors/mocha.css" }
+  - { src: "hypr/hyprlock.conf", dest: ".config/hypr/hyprlock.conf" }
+  - { src: "hypr/hyprpaper.conf", dest: ".config/hypr/hyprpaper.conf" }
+  - { src: "waybar/config.jsonc", dest: ".config/waybar/config.jsonc" }
+  - { src: "waybar/style.css", dest: ".config/waybar/style.css" }
   - { src: "wofi/config", dest: ".config/wofi/config" }
   - { src: "wofi/style.css", dest: ".config/wofi/style.css" }
   - { src: "dunst/dunstrc", dest: ".config/dunst/dunstrc" }
+  - { src: "dunst/mocha.conf", dest: ".config/dunst/mocha.conf" }
   - { src: "eww/eww.yuck", dest: ".config/eww/eww.yuck" }
   - { src: "eww/eww.scss", dest: ".config/eww/eww.scss" }
   - { src: "cool-retro-term/cool-retro-term-my-futuristic.json", dest: ".config/cool-retro-term/cool-retro-term-my-futuristic.json"}
@@ -116,7 +116,7 @@ dotfiles_links:
 regular_links:
   - { src: "/usr/share/zsh-theme-powerlevel10k", dest: "/usr/share/oh-my-zsh/custom/themes/powerlevel10k" }
   - { src: "{{ dotfiles_home }}/src/dotfiles/sddm/sddm.conf", dest: "/etc/sddm.conf" }
-  - { src: "{{ dotfiles_home }}/src/dotfiles/wallpapers/catppuccin-custom-darker-corners.png", dest: "{{ dotfiles_home }}/Pictures/wallpapers/catppuccin-custom-darker-corners.png" }
+  - { src: "{{ dotfiles_home }}/src/dotfiles/wallpapers/neonrain.png", dest: "{{ dotfiles_home }}/Pictures/wallpapers/neonrain.png" }
 
 copy:
   - { src: "{{ dotfiles_home }}/src/dotfiles/sddm/catppuccin-mocha/", dest: "/usr/share/sddm/themes/catppuccin-mocha/" }
