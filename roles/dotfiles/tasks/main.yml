@@ -1,12 +1,13 @@
 ---
 # All dotfile directories that must exist
-- name: dotfiles - Create configuration directories for target user
+- name: Create parent directories for links
   ansible.builtin.file:
-    path: "{{ item }}"
+    path: "{{ item.dest | dirname }}"
     state: directory
     owner: "{{ target_user }}"
-    mode: "0755"
-  with_items: "{{ dotfiles_directories }}"
+    mode: '0755'
+  loop: "{{ dotfiles_links + regular_links }}"
+  recurse: yes
   tags: ["dotfiles", "dotfiles-setup"]
 
 - name: dotfiles - Link dotfiles into home folder
