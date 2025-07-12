@@ -74,20 +74,25 @@ aur_installed_packages:
 configure_dotfiles: true
 
 # These directories will be created if they don't exist.
-dotfiles_directories:
-  - "{{ dotfiles_home }}/.config/nvim"
-  - "{{ dotfiles_home }}/.config/tmux"
-  - "{{ dotfiles_home }}/.config/tmux-sessionizer"
-  - "{{ dotfiles_home }}/.config/ghostty"
-  - "{{ dotfiles_home }}/.config/wezterm"
-  - "{{ dotfiles_home }}/.config/hypr"
-  - "{{ dotfiles_home }}/.config/waybar"
-  - "{{ dotfiles_home }}/.config/wofi"
-  - "{{ dotfiles_home }}/.config/dunst"
-  - "{{ dotfiles_home }}/.config/eww"
-  - "{{ dotfiles_home }}/.config/colors"
-  - "{{ dotfiles_home }}/.config/cool-retro-term"
-  - "{{ dotfiles_home }}/.zsh"
+create_folders:
+  - { path: "{{ dotfiles_home }}/Pictures" }
+  - { path: "{{ dotfiles_home }}/Pictures/wallpapers" }
+  - { path: "{{ dotfiles_home }}/Documents" }
+  - { path: "{{ dotfiles_home }}/Downloads" }
+  - { path: "{{ dotfiles_home }}/.config/colors" }
+  - { path: "{{ dotfiles_home }}/.config/nvim" }
+  - { path: "{{ dotfiles_home }}/.config/tmux" }
+  - { path: "{{ dotfiles_home }}/.config/tmux-sessionizer" }
+  - { path: "{{ dotfiles_home }}/.config/ghostty" }
+  - { path: "{{ dotfiles_home }}/.config/wezterm" }
+  - { path: "{{ dotfiles_home }}/.config/hypr" }
+  - { path: "{{ dotfiles_home }}/.config/waybar" }
+  - { path: "{{ dotfiles_home }}/.config/wofi" }
+  - { path: "{{ dotfiles_home }}/.config/dunst" }
+  - { path: "{{ dotfiles_home }}/.config/eww" }
+  - { path: "{{ dotfiles_home }}/.config/colors" }
+  - { path: "{{ dotfiles_home }}/.config/cool-retro-term" }
+  - { path: "{{ dotfiles_home }}/.zsh" }
 
 # Defines symlinks from the dotfiles repo to the home directory.
 dotfiles_links:
@@ -121,13 +126,6 @@ regular_links:
 
 copy:
   - { src: "{{ dotfiles_home }}/src/dotfiles/sddm/catppuccin-mocha/", dest: "/usr/share/sddm/themes/catppuccin-mocha/" }
-
-create_folders:
-  - { path: "{{ dotfiles_home }}/Pictures" }
-  - { path: "{{ dotfiles_home }}/Pictures/wallpapers" }
-  - { path: "{{ dotfiles_home }}/Documents" }
-  - { path: "{{ dotfiles_home }}/Downloads" }
-  - { path: "{{ dotfiles_home }}/.config/colors" }
 
 # --- Git Repositories ---
 git_repositories_external:

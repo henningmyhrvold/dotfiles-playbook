@@ -1,15 +1,4 @@
 ---
-# All dotfile directories that must exist
-- name: dotfiles - Create parent directories for links
-  ansible.builtin.file:
-    path: "{{ item.dest | dirname }}"
-    state: directory
-    owner: "{{ target_user }}"
-    mode: '0755'
-  loop: "{{ dotfiles_links + regular_links }}"
-  recurse: yes
-  tags: ["dotfiles", "dotfiles-setup"]
-
 - name: dotfiles - Link dotfiles into home folder
   ansible.builtin.file:
     src: "{{ dotfiles_repo_local_destination }}/{{ item.src }}"
