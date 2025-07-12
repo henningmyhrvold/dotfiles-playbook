@@ -15,7 +15,6 @@ pacman_installed_packages:
   - hyprpaper
   - hypridle
   - hyprlock
-  - hyprsunset
   - hyprutils
   # --- Auth ---
   - sddm
@@ -23,6 +22,7 @@ pacman_installed_packages:
   - mesa
   # --- Audio ---
   - pipewire
+  - pipewire-pulse
   - wireplumber
   - pavucontrol
   # --- Networking ---
