@@ -1,6 +1,6 @@
 ---
 # All dotfile directories that must exist
-- name: Create parent directories for links
+- name: dotfiles - Create parent directories for links
   ansible.builtin.file:
     path: "{{ item.dest | dirname }}"
     state: directory
