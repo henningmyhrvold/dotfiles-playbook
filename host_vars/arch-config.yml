@@ -66,6 +66,8 @@ pacman_installed_packages:
 aur_installed_packages:
   - eww-git
   - oh-my-zsh-git
+  - checkupdates-with-aur
+  - zen-browser-bin
   - zsh-theme-powerlevel10k-git
   - ttf-meslo-nerd-font-powerlevel10k
   - cool-retro-term
