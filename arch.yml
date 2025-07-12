@@ -12,6 +12,7 @@
     - { role: pacman, tags: ["pacman"] }
     - { role: aur, tags: ["aur"] }
     - { role: folders, tags: ["folders"] }
+    - { role: audio, tags: ["audio"] }
     - { role: zsh, tags: ["zsh"] }
     - { role: rust, tags: ["rust"] }
     - { role: nvim, tags: ["nvim"] }
