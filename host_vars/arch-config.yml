@@ -28,6 +28,7 @@ pacman_installed_packages:
   # --- Networking ---
   - wireless_tools
   - wpa_supplicant
+  - network-manager-applet
   # --- Display & Theming ---
   - libinput
   - waybar
