@@ -85,13 +85,9 @@ dotfiles_directories:
   - "{{ dotfiles_home }}/.config/wofi"
   - "{{ dotfiles_home }}/.config/dunst"
   - "{{ dotfiles_home }}/.config/eww"
+  - "{{ dotfiles_home }}/.config/colors"
   - "{{ dotfiles_home }}/.config/cool-retro-term"
   - "{{ dotfiles_home }}/.zsh"
-  - "{{ dotfiles_home }}/Pictures"
-  - "{{ dotfiles_home }}/Pictures/wallpapers"
-  - "{{ dotfiles_home }}/Documents"
-  - "{{ dotfiles_home }}/Downloads"
-  - "{{ dotfiles_home }}/.config/colors"
 
 # Defines symlinks from the dotfiles repo to the home directory.
 dotfiles_links:
@@ -125,6 +121,13 @@ regular_links:
 
 copy:
   - { src: "{{ dotfiles_home }}/src/dotfiles/sddm/catppuccin-mocha/", dest: "/usr/share/sddm/themes/catppuccin-mocha/" }
+
+create_folders:
+  - { path: "{{ dotfiles_home }}/Pictures" }
+  - { path: "{{ dotfiles_home }}/Pictures/wallpapers" }
+  - { path: "{{ dotfiles_home }}/Documents" }
+  - { path: "{{ dotfiles_home }}/Downloads" }
+  - { path: "{{ dotfiles_home }}/.config/colors" }
 
 # --- Git Repositories ---
 git_repositories_external:
