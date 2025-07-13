@@ -124,7 +124,6 @@ case "$1" in
         ;;
 esac
 # vim:set ts=4 sw=4 ft=sh et:
-```
     mode: '0755'
     backup: yes
 
