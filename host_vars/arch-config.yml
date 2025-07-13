@@ -109,8 +109,8 @@ dotfiles_links:
   - { src: "zsh/.zsh_profile", dest: ".zsh_profile" }
   - { src: "zsh/.p10k.zsh", dest: ".p10k.zsh" }
   - { src: "zsh/catppuccin_mocha-zsh-syntax-highlighting.zsh", dest: ".zsh/catppuccin_mocha-zsh-syntax-highlighting.zsh" }
-  - { src: "nvim/init.vim", dest: ".config/nvim/init.vim" }
-  - { src: "nvim/keymappings.lua", dest: ".config/nvim/keymappings.lua" }
+  - { src: "nvim/init.lua", dest: ".config/nvim/init.lua" }
+  - { src: "nvim/test.lua", dest: ".config/nvim/test.lua" }
   - { src: "tmux/tmux.conf", dest: ".config/tmux/tmux.conf" }
   - { src: "tmux-sessionizer/tmux-sessionizer.conf", dest: ".config/tmux-sessionizer/tmux-sessionizer.conf" }
   - { src: "wezterm/wezterm.lua", dest: ".config/wezterm/wezterm.lua" }
