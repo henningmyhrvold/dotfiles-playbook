@@ -102,6 +102,7 @@ create_folders:
   - { path: "{{ dotfiles_home }}/.config/colors" }
   - { path: "{{ dotfiles_home }}/.config/cool-retro-term" }
   - { path: "{{ dotfiles_home }}/.zsh" }
+  - { path: "{{ dotfiles_home }}/.vim" }
 
 # Defines symlinks from the dotfiles repo to the home directory.
 dotfiles_links:
