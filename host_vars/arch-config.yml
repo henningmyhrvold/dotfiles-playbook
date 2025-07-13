@@ -25,6 +25,9 @@ pacman_installed_packages:
   - pipewire-pulse
   - wireplumber
   - pavucontrol
+  # Possibly only thinkpad essensial
+  - sof-firmware
+  - alsa-ucm-conf
   # --- Networking ---
   - wireless_tools
   - wpa_supplicant
