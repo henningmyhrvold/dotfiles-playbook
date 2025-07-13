@@ -33,6 +33,8 @@ pacman_installed_packages:
   - libinput
   - waybar
   - wofi
+  - acpid
+  - brightnessctl
   #- swaybg
   #- swaylock
   - dunst
