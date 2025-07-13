@@ -14,8 +14,7 @@
         dest: /etc/acpi/handler.sh
         content: |
           #!/bin/bash
-	  # Default acpi script that takes an entry for all actions
-
+          # Default acpi script that takes an entry for all actions
           case "$1" in
               button/power)
           	case "$2" in
@@ -128,8 +127,7 @@
           	logger "ACPI group/action undefined: $1 / $2"
           	;;
           esac
-
-	# vim:set ts=4 sw=4 ft=sh et:
+          # vim:set ts=4 sw=4 ft=sh et:
         mode: '0755'
         backup: yes
 
