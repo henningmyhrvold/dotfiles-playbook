@@ -9,11 +9,11 @@
 
 - name: Set fact for latest stable signed release tag
   ansible.builtin.set_fact:
-    latest_signed_tag: "{{ (all_releases.json | json_query('[?prerelease==`false` && length(assets[?contains(name, `firefox.signed.xpi`)]) > `0`] | sort_by(@, &published_at) | reverse | [0].tag_name')) }}"
+    latest_signed_tag: "{{ (all_releases.json | json_query('[?prerelease==`false` && length(assets[?contains(name, `firefox.signed.xpi`)]) > `0`] | max_by(@, &published_at).tag_name')) }}"
 
 - name: Download latest signed uBlock Origin .xpi
   ansible.builtin.get_url:
-    url: "https://github.com/gorhill/uBlock/releases/download/{{ latest_signed_tag }}/uBlock0_{{ latest_signed_tag | replace('.', '_') }}.firefox.signed.xpi"
+    url: "https://github.com/gorhill/uBlock/releases/download/{{ latest_signed_tag }}/uBlock0_{{ latest_signed_tag }}.firefox.signed.xpi"
     dest: /tmp/uBlock0.firefox.signed.xpi
     mode: '0644'
 
