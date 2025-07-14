@@ -1,0 +1,39 @@
+---
+- name: Fetch latest uBlock Origin release information from GitHub API
+  ansible.builtin.uri:
+    url: https://api.github.com/repos/gorhill/uBlock/releases/latest
+    method: GET
+    return_content: true
+  register: release_info
+  changed_when: false
+
+- name: Set fact for latest release tag
+  ansible.builtin.set_fact:
+    latest_tag: "{{ release_info.json.tag_name }}"
+
+- name: Download latest uBlock Origin .xpi
+  ansible.builtin.get_url:
+    url: "https://github.com/gorhill/uBlock/releases/download/{{ latest_tag }}/uBlock0_{{ latest_tag }}.firefox.signed.xpi"
+    dest: /tmp/uBlock0.firefox.signed.xpi
+    mode: '0644'
+
+- name: Find default Zen Browser profile directory
+  ansible.builtin.find:
+    paths: ~/.zen
+    patterns: '*.default*'
+    file_type: directory
+  register: profile_dirs
+  changed_when: false
+
+- name: Create extensions directory in profile
+  ansible.builtin.file:
+    path: "{{ profile_dirs.files[0].path }}/extensions"
+    state: directory
+    mode: '0755'
+
+- name: Install uBlock Origin extension
+  ansible.builtin.copy:
+    src: /tmp/uBlock0.firefox.signed.xpi
+    dest: "{{ profile_dirs.files[0].path }}/extensions/uBlock0@raymondhill.net.xpi"
+    mode: '0644'
+    remote_src: true
