@@ -1,19 +1,19 @@
 ---
-- name: Fetch latest uBlock Origin release information from GitHub API
+- name: Fetch all uBlock Origin releases from GitHub API
   ansible.builtin.uri:
-    url: https://api.github.com/repos/gorhill/uBlock/releases/latest
+    url: https://api.github.com/repos/gorhill/uBlock/releases
     method: GET
     return_content: true
-  register: release_info
+  register: all_releases
   changed_when: false
 
-- name: Set fact for latest release tag
+- name: Set fact for latest stable signed release tag
   ansible.builtin.set_fact:
-    latest_tag: "{{ release_info.json.tag_name }}"
+    latest_signed_tag: "{{ (all_releases.json | json_query('[?prerelease==`false` && assets[?contains(name, `firefox.signed.xpi`)]] | sort_by(@, &published_at) | reverse | [0].tag_name')) }}"
 
-- name: Download latest uBlock Origin .xpi
+- name: Download latest signed uBlock Origin .xpi
   ansible.builtin.get_url:
-    url: "https://github.com/gorhill/uBlock/releases/download/{{ latest_tag }}/uBlock0_{{ latest_tag }}.firefox.signed.xpi"
+    url: "https://github.com/gorhill/uBlock/releases/download/{{ latest_signed_tag }}/uBlock0_{{ latest_signed_tag | replace('.', '_') }}.firefox.signed.xpi"
     dest: /tmp/uBlock0.firefox.signed.xpi
     mode: '0644'
 
