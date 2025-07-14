@@ -62,7 +62,7 @@ pacman_installed_packages:
   - bat
   - ripgrep
   - htop
-  - kitty
+  #- kitty
   - smartmontools
   - cliphist
   - unzip
@@ -71,6 +71,7 @@ pacman_installed_packages:
   - fastfetch
   - lua
   - lua51
+  - stylua
   #- luarocks
   - go
 
@@ -82,7 +83,7 @@ aur_installed_packages:
   - zen-browser-bin
   - zsh-theme-powerlevel10k-git
   - ttf-meslo-nerd-font-powerlevel10k
-  - cool-retro-term
+  #- cool-retro-term
   - ghostty
 
 # --- Dotfiles Configuration ---
@@ -99,7 +100,7 @@ create_folders:
   - { path: "{{ dotfiles_home }}/.config/tmux" }
   - { path: "{{ dotfiles_home }}/.config/tmux-sessionizer" }
   - { path: "{{ dotfiles_home }}/.config/ghostty" }
-  - { path: "{{ dotfiles_home }}/.config/wezterm" }
+  #- { path: "{{ dotfiles_home }}/.config/wezterm" }
   - { path: "{{ dotfiles_home }}/.config/hypr" }
   - { path: "{{ dotfiles_home }}/.config/waybar" }
   - { path: "{{ dotfiles_home }}/.config/wofi" }
@@ -120,7 +121,7 @@ dotfiles_links:
   - { src: "nvim/test.lua", dest: ".config/nvim/test.lua" }
   - { src: "tmux/tmux.conf", dest: ".config/tmux/tmux.conf" }
   - { src: "tmux-sessionizer/tmux-sessionizer.conf", dest: ".config/tmux-sessionizer/tmux-sessionizer.conf" }
-  - { src: "wezterm/wezterm.lua", dest: ".config/wezterm/wezterm.lua" }
+  #- { src: "wezterm/wezterm.lua", dest: ".config/wezterm/wezterm.lua" }
   - { src: "ghostty/config", dest: ".config/ghostty/config" }
   - { src: "hypr/hyprland.conf", dest: ".config/hypr/hyprland.conf" }
   - { src: "hypr/hyprlock.conf", dest: ".config/hypr/hyprlock.conf" }
