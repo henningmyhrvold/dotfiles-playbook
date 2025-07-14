@@ -32,6 +32,8 @@ pacman_installed_packages:
   - wireless_tools
   - wpa_supplicant
   - network-manager-applet
+  - openssh
+  - openssl
   # --- Display & Theming ---
   - libinput
   - waybar
@@ -64,9 +66,13 @@ pacman_installed_packages:
   - smartmontools
   - cliphist
   - unzip
+  - curl
   - rsync
   - fastfetch
-  - luarocks
+  - lua
+  - lua51
+  #- luarocks
+  - go
 
 # --- AUR Packages ---
 aur_installed_packages:
