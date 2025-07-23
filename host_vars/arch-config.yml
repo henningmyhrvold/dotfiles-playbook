@@ -52,6 +52,8 @@ pacman_installed_packages:
   - noto-fonts
   - noto-fonts-emoji
   - ttf-cascadia-code-nerd
+  - ttf-dejavu
+  - ttf-liberation
   # --- GUI File manager ---
   - nautilus
   #- dolphin
