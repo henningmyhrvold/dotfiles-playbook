@@ -21,11 +21,3 @@
   become_user: "{{ target_user }}"
   when: aur_installed_packages is defined
   tags: ['aur']
-  
-- name: AUR - Update all packages
-  kewlfft.aur.aur:
-    upgrade: yes
-    use: paru
-  become: true
-  become_user: "{{ target_user }}"
-  tags: ['aur']
