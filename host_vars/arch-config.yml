@@ -43,10 +43,12 @@ pacman_installed_packages:
   #- swaybg
   #- swaylock
   - dunst
+  - libnotify
   - polkit-kde-agent
   - grim
   - slurp
   # --- Fonts ---
+  - fontconfig
   - noto-fonts
   - noto-fonts-emoji
   - ttf-cascadia-code-nerd
@@ -74,6 +76,7 @@ pacman_installed_packages:
   - stylua
   #- luarocks
   - go
+  - libreoffice-fresh
 
 # --- AUR Packages ---
 aur_installed_packages:
@@ -105,9 +108,8 @@ create_folders:
   - { path: "{{ dotfiles_home }}/.config/waybar" }
   - { path: "{{ dotfiles_home }}/.config/wofi" }
   - { path: "{{ dotfiles_home }}/.config/dunst" }
-  - { path: "{{ dotfiles_home }}/.config/eww" }
-  - { path: "{{ dotfiles_home }}/.config/colors" }
-  - { path: "{{ dotfiles_home }}/.config/cool-retro-term" }
+  - { path: "{{ dotfiles_home }}/.config/fontconfig" }
+  #- { path: "{{ dotfiles_home }}/.config/cool-retro-term" }
   - { path: "{{ dotfiles_home }}/.zsh" }
   - { path: "{{ dotfiles_home }}/.vim" }
 
@@ -133,9 +135,8 @@ dotfiles_links:
   - { src: "wofi/style.css", dest: ".config/wofi/style.css" }
   - { src: "dunst/dunstrc", dest: ".config/dunst/dunstrc" }
   - { src: "dunst/mocha.conf", dest: ".config/dunst/mocha.conf" }
-  - { src: "eww/eww.yuck", dest: ".config/eww/eww.yuck" }
-  - { src: "eww/eww.scss", dest: ".config/eww/eww.scss" }
-  - { src: "cool-retro-term/cool-retro-term-my-futuristic.json", dest: ".config/cool-retro-term/cool-retro-term-my-futuristic.json"}
+  - { src: "fonts/fonts.conf", dest: ".config/fontconfig/fonts.conf" }
+  #- { src: "cool-retro-term/cool-retro-term-my-futuristic.json", dest: ".config/cool-retro-term/cool-retro-term-my-futuristic.json"}
 
 regular_links:
   - { src: "/usr/share/zsh-theme-powerlevel10k", dest: "/usr/share/oh-my-zsh/custom/themes/powerlevel10k" }
