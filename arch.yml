@@ -9,11 +9,11 @@
 
   roles:
     - { role: repos, when: configure_repos, tags: ["repos"] }
+    - { role: folders, tags: ["folders"] }
     - { role: pacman, tags: ["pacman"] }
     - { role: zsh, tags: ["zsh"] }
     - { role: rust, tags: ["rust"] }
     - { role: aur, tags: ["aur"] }
-    - { role: folders, tags: ["folders"] }
     - { role: audio, tags: ["audio"] }
     - { role: acpi, tags: ["acpi"] }
     - { role: nvim, tags: ["nvim"] }
