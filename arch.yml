@@ -13,6 +13,7 @@
     - { role: pacman, tags: ["pacman"] }
     - { role: rust, tags: ["rust"] }
     - { role: aur, tags: ["aur"] }
+    - { role: aur-packages, tags: ["aur-packages"] }
     - { role: audio, tags: ["audio"] }
     - { role: acpi, tags: ["acpi"] }
     - { role: zsh, tags: ["zsh"] }

@@ -1,7 +1,5 @@
 ---
-# tasks/arch/aur.yml
-
-- name: Ensure target user is in wheel group
+- name: aur - Ensure target user is in wheel group
   user:
     name: "{{ target_user }}"
     groups: wheel
@@ -9,7 +7,7 @@
   become: true
   tags: ['aur']
 
-- name: Allow wheel group to sudo without password
+- name: aur - Allow wheel group to sudo without password
   lineinfile:
     path: /etc/sudoers
     regexp: '^# %wheel ALL=\(ALL:ALL\) ALL'
@@ -19,14 +17,14 @@
   become: true
   tags: ['aur']
 
-- name: Install paru build dependencies
+- name: aur - Install paru build dependencies
   community.general.pacman:
     name: rust
     state: present
   become: true
   tags: ['aur']
 
-- name: Build paru package (no install or dep sync)
+- name: aur - Build paru package (no install or dep sync)
   ansible.builtin.shell:
     cmd: "makepkg --noconfirm"
     chdir: "/home/{{ target_user }}/src/external/paru-git"
@@ -36,7 +34,7 @@
     creates: "/home/{{ target_user }}/src/external/paru-git/paru-git*.pkg.tar.zst"
   tags: ['aur']
 
-- name: Find built paru package
+- name: aur - Find built paru package
   find:
     paths: "/home/{{ target_user }}/src/external/paru-git"
     patterns: "*.pkg.tar.zst"
@@ -44,27 +42,11 @@
   become: true
   tags: ['aur']
 
-- name: Install paru package as root
+- name: aur - Install paru package as root
   command: "pacman -U --noconfirm {{ paru_package.files[0].path }}"
   args:
     creates: /usr/bin/paru
   become: true
   tags: ['aur']
 
-- name: AUR - Install packages from aur_installed_packages list
-  kewlfft.aur.aur:
-    name: "{{ item }}"
-    use: paru
-    state: present
-  loop: "{{ aur_installed_packages }}"
-  become: false
-  become_user: "{{ target_user }}"
-  when: aur_installed_packages is defined
-  tags: ['aur']
 
-- name: AUR - Update all packages
-  ansible.builtin.shell:
-    cmd: "paru -Syu --noconfirm"
-  become: true
-  become_user: "{{ target_user }}"
-  tags: ['aur']
