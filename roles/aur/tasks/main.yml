@@ -1,5 +1,5 @@
 ---
-- name: aur - Ensure target user is in wheel group
+- name: Ensure target user is in wheel group
   user:
     name: "{{ target_user }}"
     groups: wheel
@@ -7,7 +7,7 @@
   become: true
   tags: ['aur']
 
-- name: aur - Allow wheel group to sudo without password
+- name: Allow wheel group to sudo without password
   lineinfile:
     path: /etc/sudoers
     regexp: '^# %wheel ALL=\(ALL:ALL\) ALL'
@@ -17,14 +17,14 @@
   become: true
   tags: ['aur']
 
-- name: aur - Install paru build dependencies
+- name: Install paru build dependencies
   community.general.pacman:
     name: rust
     state: present
   become: true
   tags: ['aur']
 
-- name: aur - Build paru package (no install or dep sync)
+- name: Build paru package (no install or dep sync)
   ansible.builtin.shell:
     cmd: "makepkg --noconfirm"
     chdir: "/home/{{ target_user }}/src/external/paru-git"
@@ -34,7 +34,7 @@
     creates: "/home/{{ target_user }}/src/external/paru-git/paru-git*.pkg.tar.zst"
   tags: ['aur']
 
-- name: aur - Find built paru package
+- name: Find built paru package
   find:
     paths: "/home/{{ target_user }}/src/external/paru-git"
     patterns: "*.pkg.tar.zst"
@@ -42,14 +42,19 @@
   become: true
   tags: ['aur']
 
-- name: aur - Install paru package as root
-  command: "pacman -U --noconfirm {{ paru_package.files[0].path }}"
+- name: Select main (non-debug) paru package
+  set_fact:
+    main_paru_package: "{{ paru_package.files | rejectattr('path', 'contains', '-debug-') | first }}"
+  tags: ['aur']
+
+- name: Install paru package as root
+  command: "pacman -U --noconfirm {{ main_paru_package.path }}"
   args:
     creates: /usr/bin/paru
   become: true
   tags: ['aur']
 
-- name: aur - Revert wheel group sudo without password
+- name: Revert wheel group sudo without password
   lineinfile:
     path: /etc/sudoers
     regexp: '^%wheel ALL=\(ALL:ALL\) NOPASSWD: ALL'
@@ -59,7 +64,7 @@
   become: true
   tags: ['aur']
 
-- name: aur - Remove target user from wheel group
+- name: Remove target user from wheel group
   command: "gpasswd -d {{ target_user }} wheel"
   become: true
   tags: ['aur']
