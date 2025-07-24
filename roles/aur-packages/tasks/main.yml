@@ -1,4 +1,31 @@
 ---
+- name: Ensure target user is in wheel group
+  user:
+    name: "{{ target_user }}"
+    groups: wheel
+    append: yes
+  become: true
+  tags: ['aur']
+  
+- name: Backup original sudoers file
+  ansible.builtin.copy:
+    src: /etc/sudoers
+    dest: /etc/sudoers.ansible_backup
+    owner: "{{ 'root' }}"
+    mode: "0644"
+    remote_src: yes
+  become: true
+  tags: ['aur']
+
+- name: Allow wheel group to sudo without password
+  lineinfile:
+    path: /etc/sudoers
+    regexp: '^# %wheel ALL=\(ALL:ALL\) ALL'
+    line: '%wheel ALL=(ALL:ALL) NOPASSWD: ALL'
+    validate: /usr/sbin/visudo -cf %s
+  become: true
+  tags: ['aur']
+
 - name: AUR - Install packages from aur_installed_packages list
   kewlfft.aur.aur:
     name: "{{ item }}"
