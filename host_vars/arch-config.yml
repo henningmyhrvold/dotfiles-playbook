@@ -152,7 +152,7 @@ copy:
 git_repositories_external:
   - https://aur.archlinux.org/paru-git.git
   - https://github.com/FrozenVoid/C-techniques.git
-  - https://github.com/andreasferting/programming-with-cpp20.git
+  - https://github.com/andreasfertig/programming-with-cpp20.git
   - https://github.com/paultuckey/example-todo-app-rust-htmx.git
   - https://github.com/pi-hole/pi-hole.git
   - https://github.com/ethereum/go-ethereum.git
