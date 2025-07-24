@@ -7,11 +7,14 @@
   tags: ['aur']
 
 - name: Enable passwordless sudo for wheel group
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: /etc/sudoers
-    regexp: '^# %wheel ALL=\(ALL:ALL\) NOPASSWD: ALL'
+    # This regexp matches the wheel group line, whether it's commented out or not
+    regexp: '^(#\s*)?%wheel ALL=\(ALL:ALL\) ALL'
+    # This replaces it with the active NOPASSWD version
     line: '%wheel ALL=(ALL:ALL) NOPASSWD: ALL'
     validate: '/usr/sbin/visudo -cf %s'
+    backrefs: yes
   tags: ['aur']
 
 - name: AUR - Build and install paru from cloned source
