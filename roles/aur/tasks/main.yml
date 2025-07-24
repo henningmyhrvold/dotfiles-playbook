@@ -5,7 +5,7 @@
     cmd: "makepkg --noconfirm"
     chdir: "/home/{{ target_user }}/src/external/paru-git"
   become: true
-  become_user: "{{ target_user }}"
+  #become_user: "{{ target_user }}"
   environment:
     PATH: "{{ ansible_env.PATH }}:/home/{{ target_user }}/.cargo/bin"
   args:
