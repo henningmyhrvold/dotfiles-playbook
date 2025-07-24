@@ -6,13 +6,15 @@
     append: yes
   become: true
   tags: ['aur']
-
+  
 - name: Backup original sudoers file
-  copy:
+  ansible.builtin.copy:
     src: /etc/sudoers
     dest: /etc/sudoers.ansible_backup
+    owner: "{{ 'root' }}"
+    mode: "0644"
     remote_src: yes
-    become: true
+  become: true
   tags: ['aur']
 
 - name: Allow wheel group to sudo without password
