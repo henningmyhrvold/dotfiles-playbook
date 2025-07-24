@@ -1,19 +1,5 @@
+# tasks/arch/aur.yml
 ---
-- name: Add target user to wheel group
-  user:
-    name: "{{ target_user }}"
-    groups: wheel
-    append: true
-  tags: ['aur']
-
-- name: Enable passwordless sudo for wheel group
-  ansible.builtin.lineinfile:
-    path: /etc/sudoers
-    line: '%wheel ALL=(ALL:ALL) NOPASSWD: ALL'
-    state: present
-    validate: '/usr/sbin/visudo -cf %s'
-  tags: ['aur']
-
 - name: AUR - Build and install paru from cloned source
   ansible.builtin.shell:
     cmd: "makepkg -si --noconfirm"
@@ -21,6 +7,7 @@
   become: true
   become_user: "{{ target_user }}"
   args:
+    # This task should only run if the paru binary does not already exist
     creates: /usr/bin/paru
   tags: ['aur']
 
@@ -34,25 +21,10 @@
   become_user: "{{ target_user }}"
   when: aur_installed_packages is defined
   tags: ['aur']
-
+  
 - name: AUR - Update all packages
   ansible.builtin.shell:
     cmd: "paru -Syu --noconfirm"
   become: true
   become_user: "{{ target_user }}"
-  tags: ['aur']
-
-- name: Revert passwordless sudo to require password for wheel group
-  ansible.builtin.lineinfile:
-    path: /etc/sudoers
-    line: '%wheel ALL=(ALL:ALL) NOPASSWD: ALL'
-    state: absent
-    validate: '/usr/sbin/visudo -cf %s'
-  tags: ['aur']
-
-- name: Remove target user from wheel group
-  user:
-    name: "{{ target_user }}"
-    groups: "{{ target_user }}"
-    append: false
   tags: ['aur']
