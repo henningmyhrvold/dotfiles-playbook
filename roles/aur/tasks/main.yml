@@ -64,7 +64,3 @@
   become: true
   tags: ['aur']
 
-- name: Remove target user from wheel group
-  command: "gpasswd -d {{ target_user }} wheel"
-  become: true
-  tags: ['aur']
