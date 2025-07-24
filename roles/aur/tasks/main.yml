@@ -57,7 +57,7 @@
     use: paru
     state: present
   loop: "{{ aur_installed_packages }}"
-  become: true
+  become: false
   become_user: "{{ target_user }}"
   when: aur_installed_packages is defined
   tags: ['aur']
