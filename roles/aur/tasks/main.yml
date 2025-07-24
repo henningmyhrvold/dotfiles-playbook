@@ -7,13 +7,20 @@
   become: true
   tags: ['aur']
 
+- name: Backup original sudoers file
+  copy:
+    src: /etc/sudoers
+    dest: /etc/sudoers.ansible_backup
+    remote_src: yes
+    become: true
+  tags: ['aur']
+
 - name: Allow wheel group to sudo without password
   lineinfile:
     path: /etc/sudoers
     regexp: '^# %wheel ALL=\(ALL:ALL\) ALL'
     line: '%wheel ALL=(ALL:ALL) NOPASSWD: ALL'
     validate: /usr/sbin/visudo -cf %s
-    backup: yes
   become: true
   tags: ['aur']
 
@@ -54,13 +61,11 @@
   become: true
   tags: ['aur']
 
-- name: Revert wheel group sudo without password
-  lineinfile:
-    path: /etc/sudoers
-    regexp: '^%wheel ALL=\(ALL:ALL\) NOPASSWD: ALL'
-    line: '# %wheel ALL=(ALL:ALL) ALL'
+- name: Revert sudoers to original
+  copy:
+    src: /etc/sudoers.ansible_backup
+    dest: /etc/sudoers
+    remote_src: yes
     validate: /usr/sbin/visudo -cf %s
-    backup: yes
-  become: true
+    become: true
   tags: ['aur']
-
