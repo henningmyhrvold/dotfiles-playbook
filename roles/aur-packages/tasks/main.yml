@@ -1,19 +1,19 @@
 ---
 - name: AUR - Install packages from aur_installed_packages list
-  kewlfft.aur.aur:
-    use: paru
-    name: "{{ aur_installed_packages }}"
-  become: false
-  when: aur_installed_packages is defined and aur_installed_packages | length > 0
-  tags: ['aur-packages']
+  ansible.builtin.shell:
+    cmd: "sudo -S env LC_ALL=C LANGUAGE=C paru -S --noconfirm --needed --cleanafter {{ item }}"
+  with_items: "{{ aur_installed_packages }}"
+  become: true
+  become_user: "{{ target_user }}"
+  when: aur_installed_packages is defined
+  tags: ['aur']
 
 - name: AUR - Update all packages
-  community.general.pacman:
-    aur: true
-    upgrade: yes
-    executable: /usr/bin/paru
-  become: false
-  tags: ['aur-packages']
+  ansible.builtin.shell:
+    cmd: "sudo -S env LC_ALL=C LANGUAGE=C paru -Syu --noconfirm"
+  become: true
+  become_user: "{{ target_user }}"
+  tags: ['aur']
 
 - name: Revert sudoers to original
   ansible.builtin.copy:
