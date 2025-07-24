@@ -64,10 +64,12 @@
   tags: ['aur']
 
 - name: Revert sudoers to original
-  copy:
+  ansible.builtin.copy:
     src: /etc/sudoers.ansible_backup
     dest: /etc/sudoers
+    owner: "{{ 'root' }}"
+    mode: "0644"
     remote_src: yes
     validate: /usr/sbin/visudo -cf %s
-    become: true
+  become: true
   tags: ['aur']
