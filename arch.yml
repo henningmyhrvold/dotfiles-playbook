@@ -11,11 +11,11 @@
     - { role: repos, when: configure_repos, tags: ["repos"] }
     - { role: folders, tags: ["folders"] }
     - { role: pacman, tags: ["pacman"] }
-    - { role: zsh, tags: ["zsh"] }
     - { role: rust, tags: ["rust"] }
     - { role: aur, tags: ["aur"] }
     - { role: audio, tags: ["audio"] }
     - { role: acpi, tags: ["acpi"] }
+    - { role: zsh, tags: ["zsh"] }
     - { role: nvim, tags: ["nvim"] }
     - { role: tmux, tags: ["tmux"] }
     - { role: fonts, tags: ["fonts"] }

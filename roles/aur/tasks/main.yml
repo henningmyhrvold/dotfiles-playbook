@@ -6,8 +6,11 @@
     chdir: "/home/{{ target_user }}/src/external/paru-git"
   become: true
   become_user: "{{ target_user }}"
+  environment:
+    PATH: "{{ ansible_env.PATH }}:/home/{{ target_user }}/.cargo/bin"
   args:
-    creates: "/home/{{ target_user }}/src/external/paru-git/paru-git*.pkg.tar.zst"  # Adjust pattern if needed
+    creates: "/home/{{ target_user }}/src/external/paru-git/paru-git*.pkg.tar.zst"
+  tags: ['aur']
 
 - name: Find built paru package
   find:
