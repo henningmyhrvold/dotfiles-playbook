@@ -1,48 +1,19 @@
 ---
-- name: Ensure target user is in wheel group
-  user:
-    name: "{{ target_user }}"
-    groups: wheel
-    append: yes
-  become: true
-  tags: ['aur']
-  
-- name: Backup original sudoers file
-  ansible.builtin.copy:
-    src: /etc/sudoers
-    dest: /etc/sudoers.ansible_backup
-    owner: "{{ 'root' }}"
-    mode: "0644"
-    remote_src: yes
-  become: true
-  tags: ['aur']
-
-- name: Allow wheel group to sudo without password
-  lineinfile:
-    path: /etc/sudoers
-    regexp: '^# %wheel ALL=\(ALL:ALL\) ALL'
-    line: '%wheel ALL=(ALL:ALL) NOPASSWD: ALL'
-    validate: /usr/sbin/visudo -cf %s
-  become: true
-  tags: ['aur']
-
 - name: AUR - Install packages from aur_installed_packages list
   kewlfft.aur.aur:
-    name: "{{ item }}"
     use: paru
-    state: present
-  with_items: "{{ aur_installed_packages }}"
-  become: true
-  become_user: "{{ target_user }}"
-  when: aur_installed_packages is defined
-  tags: ['aur']
-  
+    name: "{{ aur_installed_packages }}"
+  become: false
+  when: aur_installed_packages is defined and aur_installed_packages | length > 0
+  tags: ['aur-packages']
+
 - name: AUR - Update all packages
-  ansible.builtin.shell:
-    cmd: "paru -Syu --noconfirm"
-  become: true
-  become_user: "{{ target_user }}"
-  tags: ['aur']
+  community.general.pacman:
+    aur: true
+    upgrade: yes
+    executable: /usr/bin/paru
+  become: false
+  tags: ['aur-packages']
 
 - name: Revert sudoers to original
   ansible.builtin.copy:

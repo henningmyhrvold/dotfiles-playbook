@@ -97,7 +97,7 @@ cd "$DOTFILES"
 echo "Running Ansible playbook..."
 
 # Common arguments for ansible-playbook
-COMMON_ARGS="--diff -v -k"
+COMMON_ARGS="--diff -v"
 
 # Arguments for privilege escalation (sudo)
 BECOME_ARGS="--ask-become-pass"
