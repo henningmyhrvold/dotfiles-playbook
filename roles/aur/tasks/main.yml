@@ -49,4 +49,17 @@
   become: true
   tags: ['aur']
 
+- name: aur - Revert wheel group sudo without password
+  lineinfile:
+    path: /etc/sudoers
+    regexp: '^%wheel ALL=\(ALL:ALL\) NOPASSWD: ALL'
+    line: '# %wheel ALL=(ALL:ALL) ALL'
+    validate: /usr/sbin/visudo -cf %s
+    backup: yes
+  become: true
+  tags: ['aur']
 
+- name: aur - Remove target user from wheel group
+  command: "gpasswd -d {{ target_user }} wheel"
+  become: true
+  tags: ['aur']
