@@ -5,7 +5,9 @@
 # 2. Checks if Ansible is installed; exits with an error if not (Ansible is expected to be installed by post_install.sh).
 # 3. Checks if an SSH RSA key exists. If it doesn't, create one.
 # 4. Installs Ansible requirements based on the distribution.
-# 5. Runs the Ansible playbook, prompting for sudo password.
+# 5. Updates the inventory to use SSH for Arch to ensure PTY allocation.
+# 6. Updates ansible.cfg to disable pipelining for PTY support.
+# 7. Runs the Ansible playbook, prompting for sudo password.
 
 # Exit immediately if any command the script executes fails (returns a non-zero status).
 set -e
@@ -22,6 +24,8 @@ isDebian="false"
 isFedora="false"
 isArch="false"
 isMacOS="false"
+
+current_user="$USER"
 
 # Check the OS
 if [ -f /etc/os-release ]; then
@@ -81,6 +85,15 @@ setup_RSA_key() {
   fi
 }
 
+# Updates the Ansible inventory to use SSH connection for Arch
+update_inventory() {
+  if [ "$isArch" = "true" ]; then
+    cd "$DOTFILES"
+    sed -i '/\[workstation_arch\]/,+1 s/ansible_connection=local/ansible_connection=ssh ansible_user='"$current_user"'/' inventory
+  fi
+}
+
+
 #################################
 ## Main Start of Script
 #################################
@@ -91,7 +104,13 @@ install_ansible_requirements
 
 setup_RSA_key
 
+update_inventory
+
 cd "$DOTFILES"
+
+# Cache sudo credentials to minimize prompts during the run
+echo "Please enter your sudo password to cache credentials:"
+sudo -v
 
 # ==== Run Ansible Playbook ====
 echo "Running Ansible playbook..."
