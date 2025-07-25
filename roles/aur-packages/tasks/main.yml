@@ -1,4 +1,22 @@
 ---
+- name: Backup original sudoers file for pacman configuration
+  ansible.builtin.copy:
+    src: /etc/sudoers
+    dest: /etc/sudoers.pacman_backup
+    owner: root
+    mode: "0644"
+    remote_src: yes
+  become: true
+  tags: ['aur']
+
+- name: Allow target user to run pacman without password
+  lineinfile:
+    path: /etc/sudoers
+    line: '{{ target_user }} ALL=(ALL) NOPASSWD: /usr/bin/pacman *'
+    validate: /usr/sbin/visudo -cf %s
+  become: true
+  tags: ['aur']
+
 - name: AUR - Install packages from aur_installed_packages list
   kewlfft.aur.aur:
     name: "{{ item }}"
@@ -8,4 +26,22 @@
   become: true
   become_user: "{{ target_user }}"
   when: aur_installed_packages is defined
+  tags: ['aur']
+    
+- name: AUR - Update all packages
+  ansible.builtin.shell:
+    cmd: "paru -Syu --noconfirm"
+  become: true
+  become_user: "{{ target_user }}"
+  tags: ['aur']
+
+- name: Revert sudoers after pacman configuration
+  ansible.builtin.copy:
+    src: /etc/sudoers.pacman_backup
+    dest: /etc/sudoers
+    owner: root
+    mode: "0644"
+    remote_src: yes
+    validate: /usr/sbin/visudo -cf %s
+  become: true
   tags: ['aur']
