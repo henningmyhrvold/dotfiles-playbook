@@ -40,11 +40,11 @@ pacman_installed_packages:
   - wofi
   - acpid
   - brightnessctl
-  #- swaybg
-  #- swaylock
+  # --- Notification ---
   - dunst
   - libnotify
   - polkit-kde-agent
+  # --- Screenshot ---
   - grim
   - slurp
   # --- Fonts ---
@@ -56,8 +56,8 @@ pacman_installed_packages:
   - ttf-liberation
   # --- GUI File manager ---
   - nautilus
-  #- dolphin
   # --- CLI Tools & Shell ---
+  - ghostty
   - neovim
   - zsh
   - tmux
@@ -66,20 +66,19 @@ pacman_installed_packages:
   - bat
   - ripgrep
   - htop
-  #- kitty
   - smartmontools
   - cliphist
   - unzip
   - curl
   - rsync
   - fastfetch
+  # --- Programming ---
   - lua
   - lua51
   - stylua
-  #- luarocks
   - go
+  # --- Productivity ---
   - libreoffice-fresh
-  - ghostty
 
 # --- AUR Packages ---
 aur_installed_packages:
@@ -88,7 +87,7 @@ aur_installed_packages:
   - zen-browser-bin
   - zsh-theme-powerlevel10k-git
   - ttf-meslo-nerd-font-powerlevel10k
-  - cool-retro-term
+  #- cool-retro-term
 
 # --- Dotfiles Configuration ---
 configure_dotfiles: true
@@ -110,7 +109,7 @@ create_folders:
   - { path: "{{ dotfiles_home }}/.config/wofi" }
   - { path: "{{ dotfiles_home }}/.config/dunst" }
   - { path: "{{ dotfiles_home }}/.config/fontconfig" }
-  - { path: "{{ dotfiles_home }}/.config/cool-retro-term" }
+  #- { path: "{{ dotfiles_home }}/.config/cool-retro-term" }
   - { path: "{{ dotfiles_home }}/.zsh" }
   - { path: "{{ dotfiles_home }}/.vim" }
 
@@ -137,7 +136,7 @@ dotfiles_links:
   - { src: "dunst/dunstrc", dest: ".config/dunst/dunstrc" }
   - { src: "dunst/mocha.conf", dest: ".config/dunst/mocha.conf" }
   - { src: "fonts/fonts.conf", dest: ".config/fontconfig/fonts.conf" }
-  - { src: "cool-retro-term/cool-retro-term-my-futuristic.json", dest: ".config/cool-retro-term/cool-retro-term-my-futuristic.json"}
+  #- { src: "cool-retro-term/cool-retro-term-my-futuristic.json", dest: ".config/cool-retro-term/cool-retro-term-my-futuristic.json"}
 
 regular_links:
   - { src: "/usr/share/zsh-theme-powerlevel10k", dest: "/usr/share/oh-my-zsh/custom/themes/powerlevel10k" }

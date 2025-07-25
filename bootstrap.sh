@@ -3,7 +3,7 @@
 # Script to run on a new system to configure it.
 # 1. First, check if the distribution is Arch, Debian, Fedora, or MacOS. If it is not one of those, the script exits.
 # 2. Checks if Ansible is installed; exits with an error if not (Ansible is expected to be installed by post_install.sh).
-# 3. Checks if an SSH RSA key exists. If it doesn't, create one.
+# 3. Checks if an SSH Ed25519 key exists. If it doesn't, create one.
 # 4. Installs Ansible requirements based on the distribution.
 # 5. Runs the Ansible playbook, prompting for sudo password.
 
@@ -67,15 +67,15 @@ install_ansible_requirements() {
   fi
 }
 
-# Creates an SSH RSA key if one doesn't already exist.
-setup_RSA_key() {
-  # Check if SSH RSA key exists
-  if [ ! -f "$DOTSSH/id_rsa" ]; then
-    echo "SSH RSA key does not exist. Creating a 4096-bit SSH RSA key..."
+# Creates an SSH Ed25519 key if one doesn't already exist.
+setup_ed25519_key() {
+  # Check if SSH Ed25519 key exists
+  if [ ! -f "$DOTSSH/id_ed25519" ]; then
+    echo "SSH Ed25519 key does not exist. Creating an Ed25519 SSH key..."
     mkdir -p "$DOTSSH"
     chmod 700 "$DOTSSH"
-    ssh-keygen -b 4096 -t rsa -f "$DOTSSH/id_rsa" -N "" -C "$USER@$(uname -n)"
-    cat "$DOTSSH/id_rsa.pub" >>"$DOTSSH/authorized_keys"
+    ssh-keygen -t ed25519 -f "$DOTSSH/id_ed25519" -N "" -C "$USER@$(uname -n)"
+    cat "$DOTSSH/id_ed25519.pub" >>"$DOTSSH/authorized_keys"
     chmod 600 "$DOTSSH/authorized_keys"
     echo "SSH key created and added to authorized_keys."
   fi
@@ -89,7 +89,7 @@ check_ansible
 
 install_ansible_requirements
 
-setup_RSA_key
+setup_ed25519_key
 
 cd "$DOTFILES"
 
