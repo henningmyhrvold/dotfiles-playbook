@@ -155,7 +155,7 @@ git_repositories_external:
   - https://github.com/andreasfertig/programming-with-cpp20.git
   - https://github.com/paultuckey/example-todo-app-rust-htmx.git
   - https://github.com/pi-hole/pi-hole.git
-  - https://github.com/ethereum/go-ethereum.git
+  - https://github.com/golang/example.git
   - https://github.com/ProgrammingRust/examples.git
 
 # --- Scripts to make executable ---
