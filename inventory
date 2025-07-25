@@ -5,7 +5,7 @@
 127.0.0.1 ansible_connection=local
 
 [workstation_arch]
-localhost ansible_connection=ssh ansible_host=127.0.0.1 ansible_user=hm ansible_python_interpreter=/usr/bin/python3.13
+127.0.0.1 ansible_connection=local ansible_python_interpreter=/usr/bin/python3.13
 
 [workstation_macos]
 127.0.0.1 ansible_connection=local

@@ -79,6 +79,7 @@ pacman_installed_packages:
   #- luarocks
   - go
   - libreoffice-fresh
+  - ghostty
 
 # --- AUR Packages ---
 aur_installed_packages:
@@ -88,7 +89,6 @@ aur_installed_packages:
   - zsh-theme-powerlevel10k-git
   - ttf-meslo-nerd-font-powerlevel10k
   #- cool-retro-term
-  - ghostty
 
 # --- Dotfiles Configuration ---
 configure_dotfiles: true
