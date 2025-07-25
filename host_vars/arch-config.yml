@@ -88,7 +88,7 @@ aur_installed_packages:
   - zen-browser-bin
   - zsh-theme-powerlevel10k-git
   - ttf-meslo-nerd-font-powerlevel10k
-  - cool-retro-term
+  #- cool-retro-term
 
 # --- Dotfiles Configuration ---
 configure_dotfiles: true
@@ -110,7 +110,7 @@ create_folders:
   - { path: "{{ dotfiles_home }}/.config/wofi" }
   - { path: "{{ dotfiles_home }}/.config/dunst" }
   - { path: "{{ dotfiles_home }}/.config/fontconfig" }
-  - { path: "{{ dotfiles_home }}/.config/cool-retro-term" }
+  #- { path: "{{ dotfiles_home }}/.config/cool-retro-term" }
   - { path: "{{ dotfiles_home }}/.zsh" }
   - { path: "{{ dotfiles_home }}/.vim" }
 
@@ -137,7 +137,7 @@ dotfiles_links:
   - { src: "dunst/dunstrc", dest: ".config/dunst/dunstrc" }
   - { src: "dunst/mocha.conf", dest: ".config/dunst/mocha.conf" }
   - { src: "fonts/fonts.conf", dest: ".config/fontconfig/fonts.conf" }
-  - { src: "cool-retro-term/cool-retro-term-my-futuristic.json", dest: ".config/cool-retro-term/cool-retro-term-my-futuristic.json"}
+  #- { src: "cool-retro-term/cool-retro-term-my-futuristic.json", dest: ".config/cool-retro-term/cool-retro-term-my-futuristic.json"}
 
 regular_links:
   - { src: "/usr/share/zsh-theme-powerlevel10k", dest: "/usr/share/oh-my-zsh/custom/themes/powerlevel10k" }
