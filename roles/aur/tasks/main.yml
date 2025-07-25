@@ -25,14 +25,6 @@
     validate: /usr/sbin/visudo -cf %s
   become: true
   tags: ['aur']
-  
-- name: Set sudo timestamp timeout for target user
-  lineinfile:
-    path: /etc/sudoers
-    line: 'Defaults:{{ target_user }} timestamp_timeout=60'
-    validate: /usr/sbin/visudo -cf %s
-  become: true
-  tags: ['aur']
 
 - name: Install paru build dependencies
   community.general.pacman:
