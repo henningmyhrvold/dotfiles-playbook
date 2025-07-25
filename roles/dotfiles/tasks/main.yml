@@ -1,4 +1,14 @@
 ---
+# All dotfile directories that must exist
+- name: dotfiles - Create configuration directories for target user
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ target_user }}"
+    mode: "0755"
+  with_items: "{{ dotfiles_directories }}"
+  tags: ["dotfiles", "dotfiles-setup"]
+
 - name: dotfiles - Link dotfiles into home folder
   ansible.builtin.file:
     src: "{{ dotfiles_repo_local_destination }}/{{ item.src }}"
