@@ -78,7 +78,7 @@ pacman_installed_packages:
   - stylua
   - go
   # --- Productivity ---
-  - libreoffice-fresh
+  - gedit
 
 # --- AUR Packages ---
 aur_installed_packages:
