@@ -1,12 +1,12 @@
 ---
-- name: copy - Stat source paths to determine files vs folders
+- name: Stat source paths to determine files vs folders
   ansible.builtin.stat:
     path: "{{ item.src }}"
   loop: "{{ copy }}"
   register: src_stat
   tags: ["copy"]
 
-- name: copy - Ensure destination directories exist for files
+- name: Ensure destination directories exist for files
   ansible.builtin.file:
     path: "{{ item.0.dest | dirname }}"
     state: directory
@@ -16,7 +16,7 @@
   become: true
   tags: ["copy", "files"]
   
-- name: copy - Copy individual files
+- name: Copy individual files
   ansible.builtin.copy:
     src: "{{ item.0.src }}"
     dest: "{{ item.0.dest }}"
@@ -27,7 +27,7 @@
   become: true
   tags: ["copy", "files"]
 
-- name: copy - Copy full folders
+- name: Copy full folders
   ansible.posix.synchronize:
     src: "{{ item.0.src }}"
     dest: "{{ item.0.dest }}"

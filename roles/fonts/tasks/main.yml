@@ -1,5 +1,5 @@
 # Create ~/.fonts directory if it does not exist of target user
-- name: fonts - Create ~/.fonts directory if it does not exist of target user
+- name: Create ~/.fonts directory if it does not exist of target user
   ansible.builtin.file:
     path: /home/{{ target_user }}/.fonts
     state: directory
@@ -9,6 +9,6 @@
   tags: ['fonts']
 
 # Update font cache assuming package manager fonts were updated
-- name: fonts - Update font cache
+- name: Update font cache
   ansible.builtin.command: fc-cache -fv
   tags: ['fonts']

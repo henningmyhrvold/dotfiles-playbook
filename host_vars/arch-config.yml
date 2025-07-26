@@ -28,6 +28,7 @@ pacman_installed_packages:
   # Possibly only thinkpad essensial
   - sof-firmware
   - alsa-ucm-conf
+  - vlc
   # --- Networking ---
   - wireless_tools
   - wpa_supplicant

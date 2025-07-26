@@ -1,22 +1,22 @@
-- name: pacman - Install reflector for mirrorlist management
+- name: Install reflector for mirrorlist management
   ansible.builtin.pacman:
     name: reflector
     state: present
   tags: ['pacman', 'workstation-arch', 'package']
 
-- name: pacman - Ensure mirrorlist is not empty
+- name: Ensure mirrorlist is not empty
   ansible.builtin.stat:
     path: /etc/pacman.d/mirrorlist
   register: mirrorlist_stat
   tags: ['pacman', 'workstation-arch', 'package']
 
-- name: pacman - Populate mirrorlist if empty or missing
+- name: Populate mirrorlist if empty or missing
   ansible.builtin.command:
     cmd: reflector --latest 10 --sort rate --save /etc/pacman.d/mirrorlist
   when: ansible_distribution == 'Archlinux' and (not mirrorlist_stat.stat.exists or mirrorlist_stat.stat.size == 0)
   tags: ['pacman', 'workstation-arch', 'package']
 
-- name: pacman - Ensure multilib repository is enabled
+- name: Ensure multilib repository is enabled
   ansible.builtin.blockinfile:
     path: /etc/pacman.conf
     block: |
@@ -26,24 +26,24 @@
     state: present
   tags: ['pacman', 'workstation-arch', 'package']
 
-- name: pacman - Initialize keyring
+- name: Initialize keyring
   ansible.builtin.command:
     cmd: pacman-key --init
     creates: /etc/pacman.d/gnupg/gpg.conf
   tags: ['pacman', 'workstation-arch', 'package']
 
-- name: pacman - Populate Arch Linux keyring
+- name: Populate Arch Linux keyring
   ansible.builtin.command:
     cmd: pacman-key --populate archlinux
     creates: /etc/pacman.d/gnupg/archlinux.gpg
   tags: ['pacman', 'workstation-arch', 'package']
 
-- name: pacman - Update package database
+- name: Update package database
   ansible.builtin.pacman:
     update_cache: true
   tags: ['pacman', 'workstation-arch', 'package']
 
-- name: pacman - Install base-devel and git for AUR support
+- name: Install base-devel and git for AUR support
   ansible.builtin.pacman:
     name:
       - base-devel
@@ -51,21 +51,21 @@
     state: present
   tags: ['pacman', 'workstation-arch', 'package']
 
-- name: pacman - Install specified packages
+- name: Install specified packages
   ansible.builtin.pacman:
     name: "{{ pacman_installed_packages }}"
     state: present
   when: pacman_installed_packages is defined and pacman_installed_packages | length > 0
   tags: ['pacman', 'workstation-arch', 'package']
 
-- name: pacman - Enable color
+- name: Enable color
   ansible.builtin.lineinfile:
     path: /etc/pacman.conf
     regexp: '^#Color$'
     line: 'Color'
   tags: ['pacman', 'workstation-arch', 'package']
 
-- name: pacman - Enable ParallelDownloads
+- name: Enable ParallelDownloads
   ansible.builtin.lineinfile:
     path: /etc/pacman.conf
     regexp: '^#ParallelDownloads'

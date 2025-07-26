@@ -1,5 +1,5 @@
 ---
-- name: dotfiles - Link dotfiles into home folder
+- name: Link dotfiles into home folder
   ansible.builtin.file:
     src: "{{ dotfiles_repo_local_destination }}/{{ item.src }}"
     dest: "{{ dotfiles_home }}/{{ item.dest }}"
@@ -12,7 +12,7 @@
   become_user: "{{ target_user }}"
   tags: ["dotfiles", "dotfiles-symlink"]
 
-- name: dotfiles - Ensure specified scripts are executable
+- name: Ensure specified scripts are executable
   ansible.builtin.file:
     path: "{{ dotfiles_repo_local_destination }}/{{ item }}"
     mode: "0755"

@@ -1,8 +1,8 @@
-- name: permissions - Debug before permissions
+- name: Debug before permissions
   debug:
     msg: "{{ before_permissions.stdout | default('Directory not found') }}"
 
-- name: permissions - Ensure powerlevel10k theme directory has execute permissions
+- name: Ensure powerlevel10k theme directory has execute permissions
   file:
     path: /usr/share/zsh-theme-powerlevel10k
     state: directory
@@ -12,11 +12,11 @@
   become: yes
   tags: ["permissions"]
 
-- name: permissions - Check current permissions after
+- name: Check current permissions after
   command: ls -ld /usr/share/zsh-theme-powerlevel10k
   register: after_permissions
   become: yes
 
-- name: permissions - Debug after permissions
+- name: Debug after permissions
   debug:
     msg: "{{ after_permissions.stdout }}"

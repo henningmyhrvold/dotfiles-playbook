@@ -1,28 +1,28 @@
-- name: dnf - Add RPM Fusion, Microsoft VS Code repositories
+- name: Add RPM Fusion, Microsoft VS Code repositories
   ansible.builtin.rpm_key:
     state: present
     key: "{{ item }}"
   loop: "{{ rpm_repo_keys }}"
   tags: ['dnf', 'workstation-fedora', 'package']
   
-- name: dnf - Check VS Code repository exists
+- name: Check VS Code repository exists
   ansible.builtin.stat:
     path: "/etc/yum.repos.d/vscode.repo"
   register: vscoderepo
   tags: ['dnf', 'workstation-fedora', 'package']  
 
-- name: dnf - Add VS Code Repository to Yum Repos
+- name: Add VS Code Repository to Yum Repos
   ansible.builtin.command: sh -c 'echo -e "[code]\nname=Visual Studio Code\nbaseurl=https://packages.microsoft.com/yumrepos/vscode\nenabled=1\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc" > /etc/yum.repos.d/vscode.repo'
   when: not vscoderepo.stat.exists
   tags: ['dnf', 'workstation-fedora', 'package']  
 
-- name: dnf - Check VS Code repository exists
+- name: Check VS Code repository exists
   ansible.builtin.stat:
     path: "/etc/yum.repos.d/google-kubernetes.repo"
   register: gk8srepo
   tags: ['dnf', 'workstation-fedora', 'package']  
 
-- name: dnf - Update listing and install packages
+- name: Update listing and install packages
   ansible.builtin.dnf:
     name:
       - "{{ item }}"
@@ -30,7 +30,7 @@
   loop: "{{ dnf_installed_packages }}"
   tags: ['dnf', 'workstation-fedora', 'package']  
 
-- name: dnf - Remove unneeded packages
+- name: Remove unneeded packages
   ansible.builtin.dnf:
     name:
     - "{{ item }}"
@@ -38,13 +38,13 @@
   loop: "{{ dnf_removed_packages }}"
   tags: ['dnf', 'workstation-fedora', 'package']  
 
-- name: dnf - Upgrade all packages
+- name: Upgrade all packages
   ansible.builtin.dnf:
     name: "*"
     state: latest
   tags: ['dnf', 'workstation-fedora', 'package']    
 
-- name: dnf - Autoremove unneeded packages installed as dependencies
+- name: Autoremove unneeded packages installed as dependencies
   ansible.builtin.dnf:
     autoremove: yes
   tags: ['dnf', 'workstation-fedora', 'package']    

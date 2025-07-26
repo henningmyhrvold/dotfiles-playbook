@@ -1,4 +1,4 @@
-- name: tmux - Set up tmux package manager
+- name: Set up tmux package manager
   ansible.builtin.git:
     repo: "https://github.com/tmux-plugins/tpm.git"
     dest: "/home/{{ target_user }}/.tmux/plugins/tpm"

@@ -1,12 +1,12 @@
 # Update and upgrade all apt installed packages
-- name: apt - Update and upgrade all installed packages
+- name: Update and upgrade all installed packages
   ansible.builtin.apt:
     upgrade: yes
     update_cache: yes
   tags: ['apt', 'workstation-debian', 'package']
 
 # Remove unneed packages
-- name: apt - Remove packages
+- name: Remove packages
   ansible.builtin.apt:
     name:  "{{ apt_removed_packages | join(', ') }}"
     state: absent
@@ -14,17 +14,17 @@
 
 # Install / Check packages with apt
 # Using list of items variable: apt_installed_packages
-- name: apt - Install packages
+- name: anstall packages
   ansible.builtin.apt:
     pkg: "{{ apt_installed_packages }}"
   tags: ['apt', 'workstation-debian', 'package']
 
-- name: apt - Remove useless packages from the cache
+- name: Remove useless packages from the cache
   ansible.builtin.apt:
     autoclean: yes
   tags: ['apt', 'workstation-debian', 'package']
 
-- name: apt - Auto remove packages no longer required and delete their configuration files
+- name: Auto remove packages no longer required and delete their configuration files
   ansible.builtin.apt:
     autoremove: yes
     purge: true    

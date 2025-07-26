@@ -17,7 +17,7 @@
   become: true
   tags: ['aur']
 
-- name: AUR - Install packages from aur_installed_packages list
+- name: Install packages from aur_installed_packages list
   kewlfft.aur.aur:
     name: "{{ item }}"
     use: paru
@@ -28,7 +28,7 @@
   when: aur_installed_packages is defined
   tags: ['aur']
     
-- name: AUR - Update all packages
+- name: Update all packages
   ansible.builtin.shell:
     cmd: "paru -Syu --noconfirm"
   become: true

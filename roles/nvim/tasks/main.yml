@@ -1,4 +1,4 @@
-- name: "Check if ~/.config/nvim exists"
+- name: Check if ~/.config/nvim exists
   ansible.builtin.stat:
     path: "~/.config/nvim"
   register: nvim_dir
@@ -6,7 +6,7 @@
   become: true
   become_user: "{{ target_user }}"
 
-- name: "Install LazyVim Neovim Setup"
+- name: Install LazyVim Neovim Setup
   ansible.builtin.git:
     repo: https://github.com/LazyVim/starter
     dest: ~/.config/nvim
