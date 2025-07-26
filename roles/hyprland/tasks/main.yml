@@ -1,11 +1,4 @@
-- name: Add Wayland environment variables to .zshrc
-  lineinfile:
-    path: "/home/{{ target_user }}/.zshrc"
-    line: 'export XDG_SESSION_TYPE=wayland'
-    create: yes
-  become: true
-  become_user: "{{ target_user }}"
-  
+---
 - name: Display instructions to start Hyprland
   debug:
     msg: |
