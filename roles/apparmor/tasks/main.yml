@@ -44,17 +44,41 @@
     regexp: '^#write-cache$'
     replace: 'write-cache'
 
-- name: Get current kernel options from systemd-boot entry
-  ansible.builtin.command: grep '^options' {{ entry_file }}
-  register: current_options
-  changed_when: false
+- name: Set entry directory
+  ansible.builtin.set_fact:
+    entry_dir: "{{ esp_mount }}/loader/entries"
 
-- name: Append AppArmor kernel parameters to systemd-boot entry if not present
+- name: Find all boot entry files
+  ansible.builtin.find:
+    paths: "{{ entry_dir }}"
+    patterns: '*.conf'
+    file_type: file
+  register: boot_entries
+
+- name: Fail if no boot entry files found
+  ansible.builtin.fail:
+    msg: "No boot entry files found in {{ entry_dir }}. Verify systemd-boot configuration and esp_mount variable."
+  when: boot_entries.matched == 0
+
+- name: Get current kernel options from each systemd-boot entry
+  ansible.builtin.command: grep '^options' {{ item.path }}
+  loop: "{{ boot_entries.files }}"
+  register: current_options_list
+  changed_when: false
+  ignore_errors: true  # Handle cases where 'options' line is missing
+
+- name: Append AppArmor kernel parameters to each entry if not present
   ansible.builtin.lineinfile:
-    path: "{{ entry_file }}"
+    path: "{{ current_options_list.results[ansible_loop.index0].item.path }}"
     regexp: '^options'
-    line: "{{ current_options.stdout }} lsm=landlock,lockdown,yama,integrity,apparmor,bpf"
-  when: '"lsm=landlock,lockdown,yama,integrity,apparmor,bpf" not in current_options.stdout'
+    line: "options {{ (current_options_list.results[ansible_loop.index0].stdout | regex_replace('^options\\s*', '')) + ' ' if current_options_list.results[ansible_loop.index0].stdout else '' }}lsm=landlock,lockdown,yama,integrity,apparmor,bpf"
+    state: present
+    create: false  # Do not create new files if missing
+  loop: "{{ current_options_list.results }}"
+  loop_control:
+    index_var: ansible_loop.index0
+    label: "{{ item.item.path }}"
+  when: '"lsm=landlock,lockdown,yama,integrity,apparmor,bpf" not in item.stdout'
   notify: Reboot system
 
 - name: Deploy AppArmor notify desktop file for notifications
