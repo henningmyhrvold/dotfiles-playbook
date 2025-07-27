@@ -20,3 +20,15 @@
 - name: Debug after permissions
   debug:
     msg: "{{ after_permissions.stdout }}"
+
+- name: Grant reboot permission without sudo password
+  lineinfile:
+    path: /etc/sudoers.d/reboot-permissions
+    create: yes
+    owner: root
+    group: root
+    mode: "0440"
+    line: '{{ ansible_user_id }} ALL=(ALL) NOPASSWD: /sbin/reboot'
+    validate: 'visudo -cf %s'
+  become: yes
+  tags: ["permissions"]

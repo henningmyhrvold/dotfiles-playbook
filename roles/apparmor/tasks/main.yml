@@ -67,18 +67,50 @@
   changed_when: false
   ignore_errors: true  # Handle cases where 'options' line is missing
 
-- name: Append AppArmor kernel parameters to each entry if not present
+- name: Append LSM kernel parameter to each entry if not present
   ansible.builtin.lineinfile:
     path: "{{ item.item.path }}"
     regexp: '^options'
-    line: "options {{ (item.stdout | regex_replace('^options\\s*', '')) + ' ' if item.stdout else '' }}lsm=landlock,lockdown,yama,integrity,apparmor,bpf apparmor=1 security=apparmor"
+    line: "options {{ (item.stdout | regex_replace('^options\\s*', '')) + ' lsm=landlock,lockdown,yama,integrity,apparmor,bpf' if item.stdout else 'lsm=landlock,lockdown,yama,integrity,apparmor,bpf' }}"
     state: present
-    create: false  # Do not create new files if missing
+    create: false
   loop: "{{ current_options_list.results }}"
   loop_control:
     label: "{{ item.item.path }}"
-  when: '"lsm=landlock,lockdown,yama,integrity,apparmor,bpf apparmor=1 security=apparmor" not in item.stdout'
+  when: '"lsm=landlock,lockdown,yama,integrity,apparmor,bpf" not in item.stdout'
   notify: Reboot system
+  vars:
+    ansible_become: true
+
+- name: Append apparmor=1 kernel parameter to each entry if not present
+  ansible.builtin.lineinfile:
+    path: "{{ item.item.path }}"
+    regexp: '^options'
+    line: "options {{ (item.stdout | regex_replace('^options\\s*', '')) + ' apparmor=1' if item.stdout else 'apparmor=1' }}"
+    state: present
+    create: false
+  loop: "{{ current_options_list.results }}"
+  loop_control:
+    label: "{{ item.item.path }}"
+  when: '"apparmor=1" not in item.stdout'
+  notify: Reboot system
+  vars:
+    ansible_become: true
+
+- name: Append security=apparmor kernel parameter to each entry if not present
+  ansible.builtin.lineinfile:
+    path: "{{ item.item.path }}"
+    regexp: '^options'
+    line: "options {{ (item.stdout | regex_replace('^options\\s*', '')) + ' security=apparmor' if item.stdout else 'security=apparmor' }}"
+    state: present
+    create: false
+  loop: "{{ current_options_list.results }}"
+  loop_control:
+    label: "{{ item.item.path }}"
+  when: '"security=apparmor" not in item.stdout'
+  notify: Reboot system
+  vars:
+    ansible_become: true
 
 - name: Set user home directory
   ansible.builtin.set_fact:
