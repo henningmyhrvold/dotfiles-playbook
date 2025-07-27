@@ -1,3 +1,7 @@
 ---
 apparmor_user: "{{ lookup('env', 'USER') }}"
 esp_mount: /boot
+apparmor_params:
+  - "lsm=landlock,lockdown,yama,integrity,apparmor,bpf"
+  - "apparmor=1"
+  - "security=apparmor"
