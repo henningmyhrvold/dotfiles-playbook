@@ -69,14 +69,13 @@
 
 - name: Append AppArmor kernel parameters to each entry if not present
   ansible.builtin.lineinfile:
-    path: "{{ current_options_list.results[ansible_loop.index0].item.path }}"
+    path: "{{ item.item.path }}"
     regexp: '^options'
-    line: "options {{ (current_options_list.results[ansible_loop.index0].stdout | regex_replace('^options\\s*', '')) + ' ' if current_options_list.results[ansible_loop.index0].stdout else '' }}lsm=landlock,lockdown,yama,integrity,apparmor,bpf"
+    line: "options {{ (item.stdout | regex_replace('^options\\s*', '')) + ' ' if item.stdout else '' }}lsm=landlock,lockdown,yama,integrity,apparmor,bpf"
     state: present
     create: false  # Do not create new files if missing
   loop: "{{ current_options_list.results }}"
   loop_control:
-    index_var: ansible_loop.index0
     label: "{{ item.item.path }}"
   when: '"lsm=landlock,lockdown,yama,integrity,apparmor,bpf" not in item.stdout'
   notify: Reboot system
