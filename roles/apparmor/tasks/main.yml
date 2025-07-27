@@ -71,13 +71,13 @@
   ansible.builtin.lineinfile:
     path: "{{ item.item.path }}"
     regexp: '^options'
-    line: "options {{ (item.stdout | regex_replace('^options\\s*', '')) + ' ' if item.stdout else '' }}lsm=landlock,lockdown,yama,integrity,apparmor,bpf"
+    line: "options {{ (item.stdout | regex_replace('^options\\s*', '')) + ' ' if item.stdout else '' }}lsm=landlock,lockdown,yama,integrity,apparmor,bpf apparmor=1 security=apparmor"
     state: present
     create: false  # Do not create new files if missing
   loop: "{{ current_options_list.results }}"
   loop_control:
     label: "{{ item.item.path }}"
-  when: '"lsm=landlock,lockdown,yama,integrity,apparmor,bpf" not in item.stdout'
+  when: '"lsm=landlock,lockdown,yama,integrity,apparmor,bpf apparmor=1 security=apparmor" not in item.stdout'
   notify: Reboot system
 
 - name: Set user home directory
