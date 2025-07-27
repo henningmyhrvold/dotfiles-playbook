@@ -53,6 +53,11 @@
   ansible.builtin.set_fact:
     is_uki: "{{ 'systemd-stub' in boot_status.stdout }}"
 
+- name: Set dummy current_options_list for traditional skip
+  ansible.builtin.set_fact:
+    current_options_list: {'results': []}
+  when: is_uki
+
 - name: Handle traditional boot entries if not UKI
   block:
     - name: Set entry directory
@@ -78,18 +83,43 @@
       changed_when: false
       ignore_errors: true
 
-    - name: Append each AppArmor kernel parameter to traditional entries if not present
+    - name: Append LSM kernel parameter to each entry if not present
       ansible.builtin.lineinfile:
-        path: "{{ current_options_list.results[loop_index].item.path }}"
+        path: "{{ item.item.path }}"
         regexp: '^options'
-        line: "options {{ (current_options_list.results[loop_index].stdout | regex_replace('^options\\s*', '')) + ' ' + param if current_options_list.results[loop_index].stdout else param }}"
+        line: "options {{ (item.stdout | regex_replace('^options\\s*', '')) + ' lsm=landlock,lockdown,yama,integrity,apparmor,bpf' if item.stdout else 'lsm=landlock,lockdown,yama,integrity,apparmor,bpf' }}"
         state: present
         create: false
-      loop: "{{ apparmor_params }}"
+      loop: "{{ current_options_list.results }}"
       loop_control:
-        index_var: loop_index
-        label: "{{ current_options_list.results[loop_index].item.path }} - {{ param }}"
-      when: param not in current_options_list.results[loop_index].stdout
+        label: "{{ item.item.path }} - LSM"
+      when: '"lsm=landlock,lockdown,yama,integrity,apparmor,bpf" not in item.stdout'
+      notify: Reboot system
+
+    - name: Append apparmor=1 kernel parameter to each entry if not present
+      ansible.builtin.lineinfile:
+        path: "{{ item.item.path }}"
+        regexp: '^options'
+        line: "options {{ (item.stdout | regex_replace('^options\\s*', '')) + ' apparmor=1' if item.stdout else 'apparmor=1' }}"
+        state: present
+        create: false
+      loop: "{{ current_options_list.results }}"
+      loop_control:
+        label: "{{ item.item.path }} - apparmor=1"
+      when: '"apparmor=1" not in item.stdout'
+      notify: Reboot system
+
+    - name: Append security=apparmor kernel parameter to each entry if not present
+      ansible.builtin.lineinfile:
+        path: "{{ item.item.path }}"
+        regexp: '^options'
+        line: "options {{ (item.stdout | regex_replace('^options\\s*', '')) + ' security=apparmor' if item.stdout else 'security=apparmor' }}"
+        state: present
+        create: false
+      loop: "{{ current_options_list.results }}"
+      loop_control:
+        label: "{{ item.item.path }} - security=apparmor"
+      when: '"security=apparmor" not in item.stdout'
       notify: Reboot system
   when: not is_uki
 
@@ -105,7 +135,7 @@
       ansible.builtin.set_fact:
         current_cmdline: "{{ current_cmdline_slurp.content | b64decode | default('') | trim }}"
 
-    - name: Append missing AppArmor parameters to cmdline
+    - name: Set new cmdline with missing AppArmor parameters
       ansible.builtin.set_fact:
         new_cmdline: "{{ current_cmdline + ' ' + ' '.join([param for param in apparmor_params if param not in current_cmdline.split()]) | trim }}"
 
