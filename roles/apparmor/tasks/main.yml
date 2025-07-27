@@ -1,0 +1,66 @@
+---
+- name: Install required packages for AppArmor and related tools
+  community.general.pacman:
+    name:
+      - apparmor
+      - audit
+      - python-notify2
+      - python-psutil
+    state: present
+
+- name: Create audit group if it does not exist
+  ansible.builtin.group:
+    name: audit
+    system: true
+
+- name: Add user to audit group
+  ansible.builtin.user:
+    name: "{{ apparmor_user }}"
+    groups: audit
+    append: true
+
+- name: Configure auditd to use audit group for log access
+  ansible.builtin.lineinfile:
+    path: /etc/audit/auditd.conf
+    regexp: '^log_group\s*='
+    line: 'log_group = audit'
+    state: present
+
+- name: Enable and start auditd service
+  ansible.builtin.systemd:
+    name: auditd.service
+    enabled: true
+    state: started
+
+- name: Enable and start apparmor service
+  ansible.builtin.systemd:
+    name: apparmor.service
+    enabled: true
+    state: started
+
+- name: Enable profile caching in AppArmor parser configuration
+  ansible.builtin.replace:
+    path: /etc/apparmor/parser.conf
+    regexp: '^#write-cache$'
+    replace: 'write-cache'
+
+- name: Get current kernel options from systemd-boot entry
+  ansible.builtin.command: grep '^options' {{ entry_file }}
+  register: current_options
+  changed_when: false
+
+- name: Append AppArmor kernel parameters to systemd-boot entry if not present
+  ansible.builtin.lineinfile:
+    path: {{ entry_file }}
+    regexp: '^options'
+    line: "{{ current_options.stdout }} lsm=landlock,lockdown,yama,integrity,apparmor,bpf"
+  when: '"lsm=landlock,lockdown,yama,integrity,apparmor,bpf" not in current_options.stdout'
+  notify: Reboot system
+
+- name: Deploy AppArmor notify desktop file for notifications
+  ansible.builtin.template:
+    src: apparmor-notify.desktop.j2
+    dest: "/home/{{ apparmor_user }}/.config/autostart/apparmor-notify.desktop"
+    owner: "{{ apparmor_user }}"
+    group: "{{ apparmor_user }}"
+    mode: '0644'

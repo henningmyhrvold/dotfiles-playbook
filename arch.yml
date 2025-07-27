@@ -27,3 +27,4 @@
     - { role: hyprland, tags: ["hyprland"] }
     - { role: permissions, tags: ["permissions"] }
     - { role: luarocks311, tags: ["luarocks311"] }
+    - { role: apparmor, tags: ["apparmor"] }

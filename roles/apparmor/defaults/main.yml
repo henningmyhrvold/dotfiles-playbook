@@ -1,0 +1,3 @@
+---
+apparmor_user: "{{ ansible_user }}"
+entry_file: /boot/loader/entries/arch.conf
