@@ -137,7 +137,7 @@
 
     - name: Set new cmdline with missing AppArmor parameters
       ansible.builtin.set_fact:
-        new_cmdline: "{{ current_cmdline + ' ' + ' '.join([param for param in apparmor_params if param not in current_cmdline.split()]) | trim }}"
+        new_cmdline: "{{ current_cmdline + ' ' + (apparmor_params | reject('in', current_cmdline.split()) | join(' ')) | trim }}"
 
     - name: Write updated kernel cmdline if changed
       ansible.builtin.copy:
