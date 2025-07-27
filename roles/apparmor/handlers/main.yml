@@ -1,4 +1,4 @@
 ---
 - name: Reboot system
-  reboot:
-    msg: "Rebooting to apply kernel parameters for AppArmor"
+  ansible.builtin.debug:
+    msg: "Kernel parameters have been updated. Please reboot the system manually to apply the changes and activate AppArmor fully."
