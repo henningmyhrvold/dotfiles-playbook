@@ -1,3 +1,3 @@
 ---
-apparmor_user: "{{ ansible_user_id }}"
+apparmor_user: "{{ lookup('env', 'USER') }}"
 esp_mount: /boot

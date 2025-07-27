@@ -80,10 +80,22 @@
   when: '"lsm=landlock,lockdown,yama,integrity,apparmor,bpf" not in item.stdout'
   notify: Reboot system
 
+- name: Set user home directory
+  ansible.builtin.set_fact:
+    user_home: "{{ '/root' if apparmor_user == 'root' else '/home/' + apparmor_user }}"
+
+- name: Ensure autostart directory exists
+  ansible.builtin.file:
+    path: "{{ user_home }}/.config/autostart"
+    state: directory
+    owner: "{{ apparmor_user }}"
+    group: "{{ apparmor_user }}"
+    mode: '0755'
+
 - name: Deploy AppArmor notify desktop file for notifications
   ansible.builtin.template:
     src: apparmor-notify.desktop.j2
-    dest: "/home/{{ apparmor_user }}/.config/autostart/apparmor-notify.desktop"
+    dest: "{{ user_home }}/.config/autostart/apparmor-notify.desktop"
     owner: "{{ apparmor_user }}"
     group: "{{ apparmor_user }}"
     mode: '0644'
