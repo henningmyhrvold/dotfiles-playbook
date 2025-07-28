@@ -45,6 +45,8 @@ pacman_installed_packages:
   - dunst
   - libnotify
   - polkit-kde-agent
+  - tk
+  - python-gobject
   # --- Screenshot ---
   - grim
   - slurp
@@ -55,8 +57,11 @@ pacman_installed_packages:
   - ttf-cascadia-code-nerd
   - ttf-dejavu
   - ttf-liberation
-  # --- GUI File manager ---
+  # --- GNOME Apps ---
   - nautilus
+  - loupe
+  - gnome-calendar
+  - showtime
   # --- CLI Tools & Shell ---
   - ghostty
   - neovim

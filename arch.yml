@@ -28,3 +28,4 @@
     - { role: permissions, tags: ["permissions"] }
     - { role: luarocks311, tags: ["luarocks311"] }
     - { role: apparmor, tags: ["apparmor"] }
+    - { role: nftables, tags: ["nftables"] }
