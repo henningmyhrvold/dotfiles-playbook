@@ -61,6 +61,7 @@ pacman_installed_packages:
   - nautilus
   - loupe
   - gnome-calendar
+  - gnome-calculator
   - showtime
   # --- CLI Tools & Shell ---
   - ghostty
@@ -78,6 +79,7 @@ pacman_installed_packages:
   - curl
   - rsync
   - fastfetch
+  - wireguard-tools
   # --- Programming ---
   - lua
   - lua51
