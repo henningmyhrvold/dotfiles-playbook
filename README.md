@@ -4,12 +4,12 @@ Ansible playbooks for Managing my Linux (Debian, Fedora, Arch), and MacOS Machin
 
 ## Usage
 
-**Change myuser name with youruser name**
+**Change the henning username with youruser**
 ```bash
-git grep -l myuser | xargs sed -i 's/myuser/youruser/g'
+git grep -l henning | xargs sed -i 's/henning/youruser/g'
 ```
 
-Run `bootstrap.sh -r`
+Run `./bootstrap.sh`
 
 ### What the Script Does
 

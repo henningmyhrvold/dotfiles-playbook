@@ -17,7 +17,7 @@ dotfiles_repo_local_destination: "{{ dotfiles_home }}/src/dotfiles"
 dotfiles_home: "/home/{{ target_user }}"
 
 # User for which set up is being done for
-target_user: myuser
+target_user: henning
 
 # Personal Repositories to be cloned, synchronized
 git_repositories:

@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-git grep -l myuser | xargs sed -i 's/myuser/hm/g'
+git grep -l henning | xargs sed -i 's/henning/youruser/g'
