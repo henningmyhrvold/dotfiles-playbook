@@ -67,6 +67,7 @@ pacman_installed_packages:
   - ghostty
   - neovim
   - zsh
+  - zsh-autosuggestions
   - tmux
   - wget
   - fzf
