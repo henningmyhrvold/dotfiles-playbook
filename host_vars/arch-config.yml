@@ -89,6 +89,7 @@ pacman_installed_packages:
   - python-uv
   # --- Productivity ---
   - gedit
+  - thunderbird
 
 # --- AUR Packages ---
 aur_installed_packages:
@@ -141,6 +142,7 @@ dotfiles_links:
   - { src: "hypr/hyprpaper.conf", dest: ".config/hypr/hyprpaper.conf" }
   - { src: "waybar/config.jsonc", dest: ".config/waybar/config.jsonc" }
   - { src: "waybar/style.css", dest: ".config/waybar/style.css" }
+  - { src: "waybar/email_unread.sh", dest: ".config/waybar/email_unread.sh" }
   - { src: "wofi/config", dest: ".config/wofi/config" }
   - { src: "wofi/style.css", dest: ".config/wofi/style.css" }
   - { src: "dunst/dunstrc", dest: ".config/dunst/dunstrc" }
