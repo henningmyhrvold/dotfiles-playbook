@@ -175,4 +175,4 @@ dotfiles_files_binaries:
   - "wofi/powermenu.sh"
   - "wofi/wifimenu.sh"
   - "waybar/email_unread.sh"
-  - "waybar/meetings.sh"
+  - "waybar/meetings.py"
