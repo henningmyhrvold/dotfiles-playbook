@@ -87,6 +87,7 @@ pacman_installed_packages:
   - stylua
   - go
   - python-uv
+  - python-dateutil
   # --- Productivity ---
   - gedit
   - thunderbird
