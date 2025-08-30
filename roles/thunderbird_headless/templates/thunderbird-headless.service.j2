@@ -1,0 +1,14 @@
+[Unit]
+Description=Thunderbird (headless) - background mail & calendar sync
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+ExecStart={{ thunderbird_exec }} --headless{% if thunderbird_extra_args|length %} {{ thunderbird_extra_args }}{% endif %}
+Restart=on-failure
+RestartSec=3s
+
+[Install]
+WantedBy=default.target
+

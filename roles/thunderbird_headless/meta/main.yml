@@ -1,0 +1,12 @@
+galaxy_info:
+  author: you
+  description: Run Thunderbird headless as a user systemd service for background mail & calendar sync
+  license: MIT
+  min_ansible_version: "2.10"
+  platforms:
+    - name: ArchLinux
+    - name: Debian
+    - name: Ubuntu
+    - name: Fedora
+dependencies: []
+
