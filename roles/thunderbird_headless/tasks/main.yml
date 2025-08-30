@@ -2,14 +2,12 @@
   ansible.builtin.assert:
     that: ansible_service_mgr == "systemd"
     fail_msg: "This role requires systemd."
-  tags: [thunderbird]
 
 - name: Install Thunderbird (if requested)
   ansible.builtin.package:
     name: "{{ thunderbird_packages }}"
     state: present
   when: thunderbird_manage_packages
-  tags: [thunderbird, packages]
 
 # Enable lingering so the user service can start at boot (no GUI session needed)
 - name: Check lingering status for {{ thunderbird_user }}
@@ -19,7 +17,6 @@
   failed_when: false
   become: true
   when: thunderbird_enable_lingering
-  tags: [thunderbird]
 
 - name: Enable lingering for {{ thunderbird_user }}
   ansible.builtin.command: "loginctl enable-linger {{ thunderbird_user }}"
@@ -27,9 +24,8 @@
   when:
     - thunderbird_enable_lingering
     - _linger_status.stdout is not defined or ('Linger=yes' not in _linger_status.stdout)
-  tags: [thunderbird]
 
-# Create user unit in user's config dir
+# Create user unit
 - name: Ensure user systemd dir exists
   ansible.builtin.file:
     path: "{{ thunderbird_unit_dir }}"
@@ -37,7 +33,6 @@
     mode: "0755"
   become: true
   become_user: "{{ thunderbird_user }}"
-  tags: [thunderbird]
 
 - name: Install Thunderbird headless user unit
   ansible.builtin.template:
@@ -47,31 +42,24 @@
   become: true
   become_user: "{{ thunderbird_user }}"
   notify: restart thunderbird headless (user)
-  tags: [thunderbird]
 
-# Use community.general.systemd to manage the user service cleanly
-- name: Reload user daemon
-  community.general.systemd:
-    daemon_reload: true
-    scope: user
+# Manage with systemctl --user (works without extra collections)
+- name: Reload user systemd daemon
+  ansible.builtin.command: "systemctl --user daemon-reload"
   become: true
   become_user: "{{ thunderbird_user }}"
   changed_when: false
-  tags: [thunderbird]
+  failed_when: false
 
-- name: Enable and start Thunderbird headless (user)
-  community.general.systemd:
-    name: "{{ thunderbird_service_name }}"
-    scope: user
-    enabled: "{{ thunderbird_autostart }}"
-    state: started
+- name: Enable and start the user service (may fail if no user session)
+  ansible.builtin.command: "systemctl --user enable --now {{ thunderbird_service_name }}"
   become: true
   become_user: "{{ thunderbird_user }}"
-  register: _systemd_user
-  failed_when: false         # tolerate missing session bus during provisioning
-  tags: [thunderbird]
+  register: _enable_start
+  failed_when: false
+  changed_when: "'Created symlink' in _enable_start.stdout or 'Started' in _enable_start.stdout"
 
-# Fallback: if enabling under --user failed (no session), create the wants/ symlink
+# Fallback enable if above couldn’t run (e.g., provisioning without user session)
 - name: Ensure default.target wants symlink exists (idempotent enable)
   ansible.builtin.file:
     state: link
@@ -80,5 +68,4 @@
   become: true
   become_user: "{{ thunderbird_user }}"
   when: thunderbird_autostart
-  tags: [thunderbird]
 

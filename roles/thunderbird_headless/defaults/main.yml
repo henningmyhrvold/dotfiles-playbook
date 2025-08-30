@@ -1,17 +1,15 @@
-# Which user runs the user service (defaults to your global target_user)
 thunderbird_user: "{{ target_user | default(ansible_user_id) }}"
 
-# Path to the Thunderbird binary
-thunderbird_exec: "/usr/bin/thunderbird"
+thunderbird_manage_packages: true
+thunderbird_packages:
+  - thunderbird
 
-# Extra CLI args (in addition to --headless)
+thunderbird_exec: "/usr/bin/thunderbird"
 thunderbird_extra_args: ""
 
-# Service name & unit dir
 thunderbird_service_name: "thunderbird-headless.service"
 thunderbird_unit_dir: "~/.config/systemd/user"
 
-# Autostart and lingering
 thunderbird_autostart: true
 thunderbird_enable_lingering: true
 

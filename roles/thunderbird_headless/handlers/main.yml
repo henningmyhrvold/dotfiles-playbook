@@ -1,8 +1,7 @@
 - name: restart thunderbird headless (user)
-  community.general.systemd:
-    name: "{{ thunderbird_service_name }}"
-    scope: user
-    state: restarted
+  ansible.builtin.command: "systemctl --user restart {{ thunderbird_service_name }}"
   become: true
   become_user: "{{ thunderbird_user }}"
+  changed_when: true
+  failed_when: false
 
