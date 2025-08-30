@@ -9,7 +9,12 @@
     state: present
   when: thunderbird_manage_packages
 
-# Enable lingering so the user service can start at boot (no GUI session needed)
+- name: Install Xvfb (if using virtual display)
+  ansible.builtin.package:
+    name: "{{ thunderbird_xvfb_package }}"
+    state: present
+  when: thunderbird_use_xvfb
+
 - name: Check lingering status for {{ thunderbird_user }}
   ansible.builtin.command: "loginctl show-user {{ thunderbird_user }} --property=Linger"
   register: _linger_status
@@ -25,7 +30,6 @@
     - thunderbird_enable_lingering
     - _linger_status.stdout is not defined or ('Linger=yes' not in _linger_status.stdout)
 
-# Create user unit
 - name: Ensure user systemd dir exists
   ansible.builtin.file:
     path: "{{ thunderbird_unit_dir }}"
@@ -43,7 +47,6 @@
   become_user: "{{ thunderbird_user }}"
   notify: restart thunderbird headless (user)
 
-# Manage with systemctl --user (works without extra collections)
 - name: Reload user systemd daemon
   ansible.builtin.command: "systemctl --user daemon-reload"
   become: true
@@ -59,7 +62,6 @@
   failed_when: false
   changed_when: "'Created symlink' in _enable_start.stdout or 'Started' in _enable_start.stdout"
 
-# Fallback enable if above couldn’t run (e.g., provisioning without user session)
 - name: Ensure default.target wants symlink exists (idempotent enable)
   ansible.builtin.file:
     state: link

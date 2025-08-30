@@ -1,13 +1,23 @@
 [Unit]
 Description=Thunderbird (headless) - background mail & calendar sync
-After=network-online.target
+After=network-online.target dbus.service
 Wants=network-online.target
 
 [Service]
 Type=simple
+# Force true headless Gecko
+Environment=MOZ_HEADLESS=1
+Environment=HOME=%h
+Environment=XDG_RUNTIME_DIR=%t
+WorkingDirectory=%h
+{% if thunderbird_use_xvfb %}
+ExecStart={{ thunderbird_xvfb_run }} {{ thunderbird_exec }} --headless{% if thunderbird_extra_args|length %} {{ thunderbird_extra_args }}{% endif %}
+{% else %}
 ExecStart={{ thunderbird_exec }} --headless{% if thunderbird_extra_args|length %} {{ thunderbird_extra_args }}{% endif %}
+{% endif %}
 Restart=on-failure
-RestartSec=3s
+RestartSec=5s
+TimeoutStopSec=10s
 
 [Install]
 WantedBy=default.target
