@@ -27,6 +27,12 @@
     - { role: hyprland, tags: ["hyprland"] }
     - { role: permissions, tags: ["permissions"] }
     - { role: luarocks311, tags: ["luarocks311"] }
-    - { role: thunderbird_headless, tags: ["thunderbird"] }
+    - role: thunderbird_headless
+      tags: ["thunderbird"]
+      vars:
+        thunderbird_enable_lingering: true
+        thunderbird_refresh_method: "timer"      # "timer" | "runtime_max" | "none"
+        thunderbird_refresh_interval: "1min"     # restart cadence
+        # thunderbird_use_xvfb: true             # uncomment only if MOZ_HEADLESS still fails
     - { role: apparmor, tags: ["apparmor"] }
     - { role: nftables, tags: ["nftables"] }

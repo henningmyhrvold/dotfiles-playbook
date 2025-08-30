@@ -15,6 +15,7 @@
     state: present
   when: thunderbird_use_xvfb
 
+# Enable lingering so user services can run from boot
 - name: Check lingering status for {{ thunderbird_user }}
   ansible.builtin.command: "loginctl show-user {{ thunderbird_user }} --property=Linger"
   register: _linger_status
@@ -30,6 +31,7 @@
     - thunderbird_enable_lingering
     - _linger_status.stdout is not defined or ('Linger=yes' not in _linger_status.stdout)
 
+# Create user unit
 - name: Ensure user systemd dir exists
   ansible.builtin.file:
     path: "{{ thunderbird_unit_dir }}"
@@ -47,6 +49,25 @@
   become_user: "{{ thunderbird_user }}"
   notify: restart thunderbird headless (user)
 
+# --- Timer-based refresh (optional) ---
+- name: Install refresh service unit (timer method)
+  ansible.builtin.template:
+    src: thunderbird-headless-refresh.service.j2
+    dest: "{{ thunderbird_unit_dir }}/thunderbird-headless-refresh.service"
+    mode: "0644"
+  become: true
+  become_user: "{{ thunderbird_user }}"
+  when: thunderbird_refresh_method == "timer"
+
+- name: Install refresh timer unit (timer method)
+  ansible.builtin.template:
+    src: thunderbird-headless-refresh.timer.j2
+    dest: "{{ thunderbird_unit_dir }}/thunderbird-headless-refresh.timer"
+    mode: "0644"
+  become: true
+  become_user: "{{ thunderbird_user }}"
+  when: thunderbird_refresh_method == "timer"
+
 - name: Reload user systemd daemon
   ansible.builtin.command: "systemctl --user daemon-reload"
   become: true
@@ -54,7 +75,7 @@
   changed_when: false
   failed_when: false
 
-- name: Enable and start the user service (may fail if no user session)
+- name: Enable and start the headless service
   ansible.builtin.command: "systemctl --user enable --now {{ thunderbird_service_name }}"
   become: true
   become_user: "{{ thunderbird_user }}"
@@ -62,6 +83,16 @@
   failed_when: false
   changed_when: "'Created symlink' in _enable_start.stdout or 'Started' in _enable_start.stdout"
 
+- name: Enable and start the refresh timer (timer method)
+  ansible.builtin.command: "systemctl --user enable --now thunderbird-headless-refresh.timer"
+  become: true
+  become_user: "{{ thunderbird_user }}"
+  when: thunderbird_refresh_method == "timer"
+  register: _enable_timer
+  failed_when: false
+  changed_when: "'Created symlink' in _enable_timer.stdout or 'Started' in _enable_timer.stdout"
+
+# Fallback enable if enable --user fails without a session
 - name: Ensure default.target wants symlink exists (idempotent enable)
   ansible.builtin.file:
     state: link

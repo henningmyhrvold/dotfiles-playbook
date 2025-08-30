@@ -4,17 +4,23 @@ thunderbird_manage_packages: true
 thunderbird_packages:
   - thunderbird
 
-# Optional: use Xvfb if MOZ_HEADLESS still fails in your environment
+# Headless handling
 thunderbird_use_xvfb: false
 thunderbird_xvfb_package: "xorg-server-xvfb"
 thunderbird_xvfb_run: "/usr/bin/xvfb-run -a -n 99 -s '-screen 0 1280x1024x24'"
 
 thunderbird_exec: "/usr/bin/thunderbird"
-thunderbird_extra_args: ""      # additional CLI args
+thunderbird_extra_args: ""
 
 thunderbird_service_name: "thunderbird-headless.service"
 thunderbird_unit_dir: "~/.config/systemd/user"
 
 thunderbird_autostart: true
 thunderbird_enable_lingering: true
+
+# --- NEW: auto-refresh strategy ---
+# choices: "timer", "runtime_max", "none"
+thunderbird_refresh_method: "timer"
+# systemd time span (supports "1min", "5min", "30s", etc.)
+thunderbird_refresh_interval: "5min"
 

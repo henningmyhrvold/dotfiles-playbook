@@ -1,0 +1,7 @@
+[Unit]
+Description=Restart Thunderbird headless to force sync
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/systemctl --user restart {{ thunderbird_service_name }}
+
