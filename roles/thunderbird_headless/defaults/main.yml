@@ -18,6 +18,8 @@ thunderbird_unit_dir: "~/.config/systemd/user"
 thunderbird_autostart: true
 thunderbird_enable_lingering: true
 
+thunderbird_desktop_id: "org.mozilla.Thunderbird.desktop"
+
 # choices: "timer", "runtime_max", "none"
 thunderbird_refresh_method: "timer"
 # systemd time span (supports "1min", "5min", "30s", etc.)

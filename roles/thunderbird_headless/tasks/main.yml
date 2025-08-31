@@ -130,13 +130,28 @@
   become_user: "{{ thunderbird_user }}"
   when: thunderbird_install_desktop_override
 
-# Install a desktop override pointing to the wrapper
-- name: Install Thunderbird desktop override (uses wrapper)
+# Install a desktop override *with the same ID* as the system file
+- name: Install Thunderbird desktop override (uses wrapper, shadows system entry)
   ansible.builtin.template:
     src: thunderbird.desktop.j2
-    dest: "{{ lookup('env','HOME') ~ '/.local/share/applications/thunderbird.desktop' }}"
+    dest: "{{ lookup('env','HOME') ~ '/.local/share/applications/' ~ thunderbird_desktop_id }}"
     mode: "0644"
   become: true
   become_user: "{{ thunderbird_user }}"
   when: thunderbird_install_desktop_override
+
+# Remove the old local desktop to avoid duplicates
+- name: Remove previous local thunderbird.desktop (cleanup)
+  ansible.builtin.file:
+    path: "{{ lookup('env','HOME') ~ '/.local/share/applications/thunderbird.desktop' }}"
+    state: absent
+  become: true
+  become_user: "{{ thunderbird_user }}"
+
+- name: Update desktop database (optional)
+  ansible.builtin.command: "update-desktop-database {{ lookup('env','HOME') ~ '/.local/share/applications' }}"
+  changed_when: false
+  failed_when: false
+  become: true
+  become_user: "{{ thunderbird_user }}"
 
