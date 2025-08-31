@@ -18,9 +18,16 @@ thunderbird_unit_dir: "~/.config/systemd/user"
 thunderbird_autostart: true
 thunderbird_enable_lingering: true
 
-# --- NEW: auto-refresh strategy ---
 # choices: "timer", "runtime_max", "none"
 thunderbird_refresh_method: "timer"
 # systemd time span (supports "1min", "5min", "30s", etc.)
 thunderbird_refresh_interval: "5min"
+
+# Where to put the GUI wrapper
+thunderbird_gui_wrapper_path: "{{ lookup('env','HOME') ~ '/.local/bin/thunderbird-gui' }}"
+# Command used in the desktop file
+thunderbird_gui_exec: "{{ thunderbird_gui_wrapper_path }}"
+# Install the desktop override?
+thunderbird_install_desktop_override: true
+
 

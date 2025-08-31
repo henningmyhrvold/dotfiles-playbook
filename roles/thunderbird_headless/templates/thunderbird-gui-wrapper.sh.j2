@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Stop headless instance if it is active (frees the profile lock)
+if systemctl --user is-active --quiet {{ thunderbird_service_name }}; then
+  systemctl --user stop {{ thunderbird_service_name }}
+fi
+
+# Ensure GUI mode
+unset MOZ_HEADLESS
+
+LOCK="$HOME/.local/state/thunderbird_gui.lock"
+mkdir -p "$(dirname "$LOCK")"; trap 'rm -f "$LOCK"' EXIT; touch "$LOCK"
+
+# Run Thunderbird GUI in the foreground, passing through args
+exec /usr/bin/thunderbird "$@"
+ret=$?
+systemctl --user start {{ thunderbird_service_name }} || true
+exit $ret
+
+

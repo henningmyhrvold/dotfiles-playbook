@@ -1,7 +1,7 @@
 [Unit]
-Description=Restart Thunderbird headless to force sync
+Description=Restart Thunderbird headless to force sync (only if active)
 
 [Service]
 Type=oneshot
-ExecStart=/usr/bin/systemctl --user restart {{ thunderbird_service_name }}
+ExecStart=/usr/bin/bash -lc '[ -f "$HOME/.local/state/thunderbird_gui.lock" ] && exit 0; /usr/bin/systemctl --user is-active --quiet {{ thunderbird_service_name }} && /usr/bin/systemctl --user restart {{ thunderbird_service_name }} || /usr/bin/true'
 

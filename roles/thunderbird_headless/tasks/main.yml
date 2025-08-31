@@ -102,3 +102,41 @@
   become_user: "{{ thunderbird_user }}"
   when: thunderbird_autostart
 
+# Ensure ~/.local/bin exists
+- name: Ensure per-user bin dir exists
+  ansible.builtin.file:
+    path: "{{ thunderbird_gui_wrapper_path | dirname }}"
+    state: directory
+    mode: "0755"
+  become: true
+  become_user: "{{ thunderbird_user }}"
+
+# Install the GUI wrapper
+- name: Install Thunderbird GUI wrapper
+  ansible.builtin.template:
+    src: thunderbird-gui-wrapper.sh.j2
+    dest: "{{ thunderbird_gui_wrapper_path }}"
+    mode: "0755"
+  become: true
+  become_user: "{{ thunderbird_user }}"
+
+# Ensure desktop overrides dir exists
+- name: Ensure ~/.local/share/applications exists
+  ansible.builtin.file:
+    path: "{{ lookup('env','HOME') ~ '/.local/share/applications' }}"
+    state: directory
+    mode: "0755"
+  become: true
+  become_user: "{{ thunderbird_user }}"
+  when: thunderbird_install_desktop_override
+
+# Install a desktop override pointing to the wrapper
+- name: Install Thunderbird desktop override (uses wrapper)
+  ansible.builtin.template:
+    src: thunderbird.desktop.j2
+    dest: "{{ lookup('env','HOME') ~ '/.local/share/applications/thunderbird.desktop' }}"
+    mode: "0644"
+  become: true
+  become_user: "{{ thunderbird_user }}"
+  when: thunderbird_install_desktop_override
+
