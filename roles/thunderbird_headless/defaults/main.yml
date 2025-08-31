@@ -23,7 +23,7 @@ thunderbird_desktop_id: "org.mozilla.Thunderbird.desktop"
 # choices: "timer", "runtime_max", "none"
 thunderbird_refresh_method: "timer"
 # systemd time span (supports "1min", "5min", "30s", etc.)
-thunderbird_refresh_interval: "5min"
+thunderbird_refresh_interval: "2min"
 
 # Where to put the GUI wrapper
 thunderbird_gui_wrapper_path: "{{ lookup('env','HOME') ~ '/.local/bin/thunderbird-gui' }}"
