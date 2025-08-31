@@ -49,7 +49,6 @@
   become_user: "{{ thunderbird_user }}"
   notify: restart thunderbird headless (user)
 
-# --- Timer-based refresh (optional) ---
 - name: Install refresh service unit (timer method)
   ansible.builtin.template:
     src: thunderbird-headless-refresh.service.j2
@@ -58,6 +57,8 @@
   become: true
   become_user: "{{ thunderbird_user }}"
   when: thunderbird_refresh_method == "timer"
+  notify:
+    - restart thunderbird headless refresh timer (user)
 
 - name: Install refresh timer unit (timer method)
   ansible.builtin.template:
@@ -67,6 +68,8 @@
   become: true
   become_user: "{{ thunderbird_user }}"
   when: thunderbird_refresh_method == "timer"
+  notify:
+    - restart thunderbird headless refresh timer (user)
 
 - name: Reload user systemd daemon
   ansible.builtin.command: "systemctl --user daemon-reload"

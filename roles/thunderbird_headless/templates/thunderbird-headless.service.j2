@@ -14,18 +14,20 @@ ExecStart={{ thunderbird_xvfb_run }} {{ thunderbird_exec }} --headless{% if thun
 {% else -%}
 ExecStart={{ thunderbird_exec }} --headless{% if thunderbird_extra_args|length %} {{ thunderbird_extra_args }}{% endif %}
 {% endif -%}
-# Restart policy:
 {% if thunderbird_refresh_method == 'runtime_max' -%}
 Restart=always
 {% else -%}
 Restart=on-failure
 {% endif -%}
 RestartSec=5s
-TimeoutStopSec=10s
+# Give Thunderbird longer to exit cleanly; then SIGKILL remaining children.
+TimeoutStopSec=30s
+KillMode=mixed
+SendSIGKILL=yes
 {% if thunderbird_refresh_method == 'runtime_max' -%}
-# Auto-restart the service after this runtime (forces periodic refresh)
 RuntimeMaxSec={{ thunderbird_refresh_interval }}
 {% endif -%}
+
 
 [Install]
 WantedBy=default.target

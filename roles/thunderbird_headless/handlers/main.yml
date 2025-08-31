@@ -5,3 +5,10 @@
   changed_when: true
   failed_when: false
 
+- name: restart thunderbird headless refresh timer (user)
+  ansible.builtin.command: "systemctl --user restart thunderbird-headless-refresh.timer"
+  become: true
+  become_user: "{{ thunderbird_user }}"
+  changed_when: true
+  failed_when: false
+

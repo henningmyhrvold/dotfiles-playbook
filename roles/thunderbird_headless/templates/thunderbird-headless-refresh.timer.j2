@@ -2,9 +2,10 @@
 Description=Periodic restart of Thunderbird headless
 
 [Timer]
-# Wait a little after boot, then repeat every interval
 OnBootSec=2min
 OnUnitActiveSec={{ thunderbird_refresh_interval }}
+AccuracySec=1s
+Persistent=true
 Unit=thunderbird-headless-refresh.service
 
 [Install]

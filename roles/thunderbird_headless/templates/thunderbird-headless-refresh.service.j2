@@ -3,5 +3,18 @@ Description=Restart Thunderbird headless to force sync (only if active)
 
 [Service]
 Type=oneshot
-ExecStart=/usr/bin/bash -lc '[ -f "$HOME/.local/state/thunderbird_gui.lock" ] && exit 0; /usr/bin/systemctl --user is-active --quiet {{ thunderbird_service_name }} && /usr/bin/systemctl --user restart {{ thunderbird_service_name }} || /usr/bin/true'
+Environment=HOME=%h
+Environment=XDG_RUNTIME_DIR=%t
+StandardOutput=journal
+StandardError=journal
+# Skip if GUI is open; else stop → reset-failed → start
+ExecStart=/usr/bin/bash -lc '\
+  [ -f "$HOME/.local/state/thunderbird_gui.lock" ] && exit 0; \
+  if systemctl --user is-active --quiet {{ thunderbird_service_name }}; then \
+    systemctl --user stop {{ thunderbird_service_name }}; \
+    # wait up to ~15s for it to fully stop
+    for i in {1..15}; do systemctl --user is-active --quiet {{ thunderbird_service_name }} || break; sleep 1; done; \
+  fi; \
+  systemctl --user reset-failed {{ thunderbird_service_name }} || true; \
+  systemctl --user start {{ thunderbird_service_name }} || true'
 

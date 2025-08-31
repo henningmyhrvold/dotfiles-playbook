@@ -13,9 +13,10 @@ LOCK="$HOME/.local/state/thunderbird_gui.lock"
 mkdir -p "$(dirname "$LOCK")"; trap 'rm -f "$LOCK"' EXIT; touch "$LOCK"
 
 # Run Thunderbird GUI in the foreground, passing through args
-exec /usr/bin/thunderbird "$@"
+/usr/bin/thunderbird "$@"
 ret=$?
 systemctl --user start {{ thunderbird_service_name }} || true
-exit $ret
+exit "$ret"
+
 
 
