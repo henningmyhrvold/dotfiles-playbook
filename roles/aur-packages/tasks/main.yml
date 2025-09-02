@@ -27,13 +27,30 @@
   become_user: "{{ target_user }}"
   when: aur_installed_packages is defined
   tags: ['aur']
-    
-- name: Update all packages
-  ansible.builtin.shell:
-    cmd: "paru -Syu --noconfirm"
+
+- name: Update repo packages first (faster and reduces AUR work)
+  community.general.pacman:
+    update_cache: true
+    upgrade: true
+  become: true
+
+- name: Update AUR packages (retry on transient AUR RPC errors)
+  ansible.builtin.command:
+    cmd: "paru -Sua --noconfirm --skipreview"
   become: true
   become_user: "{{ target_user }}"
-  tags: ['aur']
+  register: paru_upgrade
+  retries: 5
+  delay: 10
+  until: paru_upgrade.rc == 0 or
+         ('there is nothing to do' in (paru_upgrade.stdout | default('')))
+  failed_when: >
+    (paru_upgrade.rc != 0)
+    and ('there is nothing to do' not in (paru_upgrade.stdout | default('')))
+    and ('Connection reset by peer' not in (paru_upgrade.stderr | default('')))
+    and ('timed out' not in (paru_upgrade.stderr | default('')))
+    and ('Temporary failure' not in (paru_upgrade.stderr | default('')))
+  changed_when: "'there is nothing to do' not in (paru_upgrade.stdout | default(''))"
 
 - name: Revert sudoers after pacman configuration
   ansible.builtin.copy:
