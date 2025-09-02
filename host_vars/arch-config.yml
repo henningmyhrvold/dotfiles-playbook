@@ -99,6 +99,7 @@ aur_installed_packages:
   - zen-browser-bin
   - zsh-theme-powerlevel10k-git
   - ttf-meslo-nerd-font-powerlevel10k
+  - omnissa-horizon-client
   #- cool-retro-term
 
 # --- Dotfiles Configuration ---
