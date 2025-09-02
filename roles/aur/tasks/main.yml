@@ -33,26 +33,6 @@
   become: true
   tags: ['aur']
 
-- name: Ensure external src dir exists
-  ansible.builtin.file:
-    path: "/home/{{ target_user }}/src/external"
-    state: directory
-    owner: "{{ target_user }}"
-    group: "{{ target_user }}"
-    mode: "0755"
-  become: true
-
-- name: Clone paru-git (AUR)
-  ansible.builtin.git:
-    repo: "https://aur.archlinux.org/paru-git.git"
-    dest: "/home/{{ target_user }}/src/external/paru-git"
-    version: master
-    update: yes
-    accept_hostkey: yes
-  become: true
-  become_user: "{{ target_user }}"
-  tags: ['aur']
-
 - name: Build paru package (no install or dep sync)
   ansible.builtin.shell:
     cmd: "makepkg --noconfirm"
