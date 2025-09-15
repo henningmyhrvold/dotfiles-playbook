@@ -81,6 +81,7 @@ pacman_installed_packages:
   - rsync
   - fastfetch
   - wireguard-tools
+  - fwupd
   # --- Programming ---
   - lua
   - lua51
