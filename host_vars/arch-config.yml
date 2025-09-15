@@ -146,6 +146,7 @@ dotfiles_links:
   - { src: "waybar/config.jsonc", dest: ".config/waybar/config.jsonc" }
   - { src: "waybar/style.css", dest: ".config/waybar/style.css" }
   - { src: "waybar/email_unread.sh", dest: ".config/waybar/email_unread.sh" }
+  - { src: "waybar/meetings.py", dest: ".config/waybar/meetings.py" }
   - { src: "wofi/config", dest: ".config/wofi/config" }
   - { src: "wofi/style.css", dest: ".config/wofi/style.css" }
   - { src: "dunst/dunstrc", dest: ".config/dunst/dunstrc" }
