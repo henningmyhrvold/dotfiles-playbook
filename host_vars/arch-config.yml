@@ -71,6 +71,7 @@ pacman_installed_packages:
   - tmux
   - wget
   - fzf
+  - fd
   - bat
   - ripgrep
   - htop
@@ -89,6 +90,10 @@ pacman_installed_packages:
   - go
   - python-uv
   - python-dateutil
+  - python-pip
+  - python-pynvim
+  - nodejs
+  - npm
   # --- Productivity ---
   - gedit
   - thunderbird

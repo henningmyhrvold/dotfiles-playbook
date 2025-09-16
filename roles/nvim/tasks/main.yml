@@ -16,3 +16,44 @@
   become: true
   become_user: "{{ target_user }}"
   when: nvim_dir.stat.exists == False
+  
+# --- Python provider venv for Neovim -----------------------------------------
+
+- name: Ensure ~/.venvs exists
+  ansible.builtin.file:
+    path: "/home/{{ target_user }}/.venvs"
+    state: directory
+    owner: "{{ target_user }}"
+    group: "{{ target_user }}"
+    mode: "0755"
+  tags: ['dotfiles', 'nvim']
+
+- name: Create Neovim Python venv if missing
+  ansible.builtin.command: "python -m venv /home/{{ target_user }}/.venvs/nvim"
+  args:
+    creates: "/home/{{ target_user }}/.venvs/nvim/bin/python"
+  become: true
+  become_user: "{{ target_user }}"
+  tags: ['dotfiles', 'nvim']
+
+- name: Ensure pip is present in the venv (bootstrap with ensurepip)
+  ansible.builtin.command: "/home/{{ target_user }}/.venvs/nvim/bin/python -m ensurepip --upgrade"
+  args:
+    creates: "/home/{{ target_user }}/.venvs/nvim/bin/pip"
+  become: true
+  become_user: "{{ target_user }}"
+  tags: ['dotfiles', 'nvim']
+
+- name: Upgrade pip and install pynvim + debugpy in the venv
+  ansible.builtin.pip:
+    name:
+      - pip
+      - pynvim
+      - debugpy
+    state: latest
+    virtualenv: "/home/{{ target_user }}/.venvs/nvim"
+    virtualenv_command: "python -m venv"
+  become: true
+  become_user: "{{ target_user }}"
+  tags: ['dotfiles', 'nvim']
+
