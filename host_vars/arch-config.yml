@@ -187,3 +187,5 @@ dotfiles_files_binaries:
   - "wofi/wifimenu.sh"
   - "waybar/meetings.py"
   - "waybar/email_unread.sh"
+  - "tmux-sessionizer/tmux-sessionizer.sh"
+  - "tmux-sessionizer/tmux-status-color.sh"
