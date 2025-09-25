@@ -8,7 +8,7 @@ pacman_installed_packages:
   - xorg-xwayland
   - xdg-desktop-portal-hyprland
   - xdg-utils
-  - qt5-wayland 
+  - qt5-wayland
   - qt6-wayland
   # --- Hyprland ---
   - hyprland
@@ -142,6 +142,7 @@ dotfiles_links:
   - { src: "nvim/test.lua", dest: ".config/nvim/test.lua" }
   - { src: "tmux/tmux.conf", dest: ".config/tmux/tmux.conf" }
   - { src: "tmux-sessionizer/tmux-sessionizer.conf", dest: ".config/tmux-sessionizer/tmux-sessionizer.conf" }
+  - { src: "tmux-sessionizer/.tmux-sessionizer", dest: ".local/bin/.tmux-sessionizer" }
   #- { src: "wezterm/wezterm.lua", dest: ".config/wezterm/wezterm.lua" }
   - { src: "ghostty/config", dest: ".config/ghostty/config" }
   - { src: "hypr/hyprland.conf", dest: ".config/hypr/hyprland.conf" }
