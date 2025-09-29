@@ -94,6 +94,7 @@ pacman_installed_packages:
   - python-pynvim
   - nodejs
   - npm
+  - terraform
   # --- Productivity ---
   - gedit
   - thunderbird
