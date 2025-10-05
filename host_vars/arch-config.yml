@@ -96,6 +96,7 @@ pacman_installed_packages:
   - npm
   - direnv
   - terraform
+  - direnv
   # --- Productivity ---
   - gedit
   - thunderbird
