@@ -108,7 +108,7 @@ aur_installed_packages:
   - zsh-theme-powerlevel10k-git
   - ttf-meslo-nerd-font-powerlevel10k
   - omnissa-horizon-client
-  #- cool-retro-term
+  - cool-retro-term
 
 # --- Dotfiles Configuration ---
 configure_dotfiles: true
@@ -124,13 +124,13 @@ create_folders:
   - { path: "{{ dotfiles_home }}/.config/tmux" }
   - { path: "{{ dotfiles_home }}/.config/tmux-sessionizer" }
   - { path: "{{ dotfiles_home }}/.config/ghostty" }
-  #- { path: "{{ dotfiles_home }}/.config/wezterm" }
   - { path: "{{ dotfiles_home }}/.config/hypr" }
   - { path: "{{ dotfiles_home }}/.config/waybar" }
   - { path: "{{ dotfiles_home }}/.config/wofi" }
   - { path: "{{ dotfiles_home }}/.config/dunst" }
   - { path: "{{ dotfiles_home }}/.config/fontconfig" }
-  #- { path: "{{ dotfiles_home }}/.config/cool-retro-term" }
+  - { path: "{{ dotfiles_home }}/.config/cool-retro-term" }
+  - { path: "{{ dotfiles_home }}/.local/bin/" }
   - { path: "{{ dotfiles_home }}/.zsh" }
   - { path: "{{ dotfiles_home }}/.vim" }
 
