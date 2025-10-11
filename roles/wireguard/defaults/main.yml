@@ -27,3 +27,10 @@ wg_install_helpers: true
 # set a CIDR (like "192.168.0.0/16" or "10.0.0.0/8"). Leave empty to block LAN egress too.
 wg_killswitch_allow_lan_cidr: ""
 
+# DNS handling for wg-quick when your wg.conf includes DNS=
+#   - "auto"   : detect DNS= in the config; if present, install openresolv
+#   - "openresolv" : force-install openresolv
+#   - "systemd-resolved" : install systemd-resolvconf (you should also enable systemd-resolved)
+#   - "none"   : do nothing (only safe if your config has no DNS= lines)
+wg_dns_provider: "auto"
+
