@@ -22,7 +22,12 @@
 
 - name: Detect DNS= lines in WireGuard config
   ansible.builtin.set_fact:
-    _wg_has_dns: "{{ (_wgconf_content.content | default('') | b64decode).splitlines() | select('match', '^[[:space:]]*DNS[[:space:]]*=') | list | length > 0 }}"
+    _wg_has_dns: >-
+      {{
+        (_wgconf_content.content | default('') | b64decode).splitlines()
+        | select('search', '^\\s*DNS\\s*=')
+        | list | length > 0
+      }}
   when: _wgconf.stat.exists
 
 - name: Fail fast if DNS= is present but no known provider chosen
@@ -36,14 +41,25 @@
     - _wg_has_dns | default(false)
     - dns_provider not in ['systemd-resolved', 'openresolv']
 
-# Ensure NetworkManager exists if we plan to configure it (common on laptops)
-- name: Ensure NetworkManager is present (optional but recommended)
-  become: true
-  ansible.builtin.pacman:
-    name: NetworkManager
-    state: present
-    update_cache: true
-  when: dns_configure_networkmanager | bool
+# ------------------------------
+# Detect whether NetworkManager is installed
+# ------------------------------
+- name: Detect if NetworkManager is installed (Arch package 'networkmanager')
+  ansible.builtin.command: pacman -Q networkmanager
+  register: _nm_q
+  changed_when: false
+  failed_when: false
+
+- name: Set fact nm_installed
+  ansible.builtin.set_fact:
+    nm_installed: "{{ _nm_q.rc == 0 }}"
+
+- name: Debug NM state
+  ansible.builtin.debug:
+    msg: >-
+      NetworkManager detected: {{ nm_installed }}.
+      DNS provider: {{ dns_provider }}.
+  verbosity: 1
 
 # ------------------------------
 # Provider: systemd-resolved
@@ -53,6 +69,7 @@
   ansible.builtin.pacman:
     name: systemd-resolvconf
     state: present
+    update_cache: true
   when: dns_provider == "systemd-resolved"
 
 - name: Enable and start systemd-resolved
@@ -73,7 +90,7 @@
   notify: reload systemd-resolved
   when: dns_provider == "systemd-resolved"
 
-- name: Configure NetworkManager for systemd-resolved
+- name: Configure NetworkManager for systemd-resolved (only if installed)
   become: true
   ansible.builtin.copy:
     dest: /etc/NetworkManager/conf.d/99-dns.conf
@@ -84,7 +101,10 @@
       [main]
       dns=systemd-resolved
   notify: restart NetworkManager
-  when: dns_provider == "systemd-resolved" and dns_configure_networkmanager | bool
+  when:
+    - dns_provider == "systemd-resolved"
+    - dns_configure_networkmanager | bool
+    - nm_installed | bool
 
 - name: Remove openresolv if present (avoid conflicts)
   become: true
@@ -101,6 +121,7 @@
   ansible.builtin.pacman:
     name: openresolv
     state: present
+    update_cache: true
   when: dns_provider == "openresolv"
 
 - name: Ensure /etc/resolv.conf is a regular file (not a symlink)
@@ -127,11 +148,11 @@
   become: true
   ansible.builtin.command: resolvconf -u
   register: _resolvconf_u
-  changed_when: "'not found' not in _resolvconf_u.stderr | default('')"
+  changed_when: "'not found' not in (_resolvconf_u.stderr | default(''))"
   failed_when: false
   when: dns_provider == "openresolv"
 
-- name: Configure NetworkManager for openresolv/default handling
+- name: Configure NetworkManager for openresolv/default handling (only if installed)
   become: true
   ansible.builtin.copy:
     dest: /etc/NetworkManager/conf.d/99-dns.conf
@@ -142,7 +163,10 @@
       [main]
       dns=default
   notify: restart NetworkManager
-  when: dns_provider == "openresolv" and dns_configure_networkmanager | bool
+  when:
+    - dns_provider == "openresolv"
+    - dns_configure_networkmanager | bool
+    - nm_installed | bool
 
 - name: Remove systemd-resolvconf if present (avoid conflicts)
   become: true

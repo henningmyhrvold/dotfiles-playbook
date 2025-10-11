@@ -7,7 +7,7 @@ dns_provider: "systemd-resolved"
 # If true, uninstall the non-selected provider to avoid conflicts/signature mismatches
 dns_remove_conflicts: true
 
-# Configure NetworkManager to cooperate with the chosen provider
+# Configure NetworkManager to cooperate with the chosen provider (only if NM is installed)
 #   - for systemd-resolved: sets [main] dns=systemd-resolved
 #   - for openresolv:       sets [main] dns=default
 dns_configure_networkmanager: true
