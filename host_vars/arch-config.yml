@@ -35,6 +35,7 @@ pacman_installed_packages:
   - network-manager-applet
   - openssh
   - openssl
+  - openresolv
   # --- Display & Theming ---
   - libinput
   - waybar
