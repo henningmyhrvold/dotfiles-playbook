@@ -25,7 +25,7 @@ pacman_installed_packages:
   - pipewire-pulse
   - wireplumber
   - pavucontrol
-  # Possibly only thinkpad essensial
+  # --- Possibly only thinkpad essensial ---
   - sof-firmware
   - alsa-ucm-conf
   - vlc
@@ -83,6 +83,7 @@ pacman_installed_packages:
   - fastfetch
   - wireguard-tools
   - fwupd
+  - pacman-contrib
   # --- Programming ---
   - lua
   - lua51
