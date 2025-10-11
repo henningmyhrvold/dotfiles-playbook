@@ -59,7 +59,7 @@
     msg: >-
       NetworkManager detected: {{ nm_installed }}.
       DNS provider: {{ dns_provider }}.
-  verbosity: 1
+  when: (ansible_verbosity | default(0) | int) > 0
 
 # ------------------------------
 # Provider: systemd-resolved
