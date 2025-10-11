@@ -36,4 +36,5 @@
         # thunderbird_use_xvfb: true             # uncomment only if MOZ_HEADLESS still fails
     - { role: apparmor, tags: ["apparmor"] }
     - { role: nftables, tags: ["nftables"] }
+    - { role: dns, tags: ["dns"] }
     - { role: wireguard, tags: ["wireguard"] }

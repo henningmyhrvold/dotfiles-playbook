@@ -1,0 +1,29 @@
+---
+# Choose ONE provider:
+#   - systemd-resolved   (recommended)
+#   - openresolv
+dns_provider: "systemd-resolved"
+
+# If true, uninstall the non-selected provider to avoid conflicts/signature mismatches
+dns_remove_conflicts: true
+
+# Configure NetworkManager to cooperate with the chosen provider
+#   - for systemd-resolved: sets [main] dns=systemd-resolved
+#   - for openresolv:       sets [main] dns=default
+dns_configure_networkmanager: true
+
+# Path to the systemd-resolved stub resolv.conf
+dns_resolved_stub: "/run/systemd/resolve/stub-resolv.conf"
+
+# Temporary resolvers to seed /etc/resolv.conf if needed (openresolv path)
+dns_fallback_nameservers:
+  - "1.1.1.1"
+  - "9.9.9.9"
+
+# Optional sanity check with your WireGuard role:
+# If you keep DNS= lines in /etc/wireguard/wg0.conf, you MUST have a resolvconf provider.
+# Set this to the same location/name as in your WireGuard role to enable the check.
+wg_conf_dir: "/etc/wireguard"
+wg_interface: "wg0"
+dns_fail_if_wg_dns_without_provider: true
+

@@ -115,6 +115,11 @@ aur_installed_packages:
 # --- Dotfiles Configuration ---
 configure_dotfiles: true
 
+# --- DNS ---
+dns_provider: "systemd-resolved"
+dns_remove_conflicts: true
+dns_configure_networkmanager: true
+
 # These directories will be created if they don't exist.
 create_folders:
   - { path: "{{ dotfiles_home }}/Pictures" }
