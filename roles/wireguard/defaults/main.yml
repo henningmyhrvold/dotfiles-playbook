@@ -1,0 +1,29 @@
+---
+# Directory where WireGuard configs live
+wg_conf_dir: /etc/wireguard
+
+# Name of the interface (your config should be /etc/wireguard/{{ wg_interface }}.conf)
+wg_interface: wg0
+
+# Whether to try to enable/start the systemd unit (only if the config file exists)
+wg_enable_service: false
+
+# Create a placeholder config file (false by default so we don't commit secrets or mislead)
+wg_create_placeholder: false
+
+# File mode for actual config files you place later
+wg_config_mode: "0600"
+
+# Try to load the kernel module (safe on Arch; module is often built-in)
+wg_load_module: true
+
+# Install and use a dynamic nftables-based killswitch
+wg_killswitch_enable: true
+
+# Install convenience commands wg-on / wg-off
+wg_install_helpers: true
+
+# Optional: if you want to allow LAN egress even when the killswitch is active,
+# set a CIDR (like "192.168.0.0/16" or "10.0.0.0/8"). Leave empty to block LAN egress too.
+wg_killswitch_allow_lan_cidr: ""
+
