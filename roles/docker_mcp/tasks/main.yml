@@ -35,7 +35,7 @@
     update: yes
 
 # Build the image once; Compose will use this local image tag
-- name: Build local image: mcp-server-docker:latest
+- name: "Build local image: mcp-server-docker:latest"
   community.docker.docker_image:
     name: mcp-server-docker
     tag: latest
@@ -132,3 +132,4 @@
         },
         "default": ["docker"]
       }
+
