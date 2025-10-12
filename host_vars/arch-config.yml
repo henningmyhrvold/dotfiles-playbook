@@ -137,6 +137,7 @@ create_folders:
   - { path: "{{ dotfiles_home }}/.config/dunst" }
   - { path: "{{ dotfiles_home }}/.config/fontconfig" }
   - { path: "{{ dotfiles_home }}/.config/cool-retro-term" }
+  - { path: "{{ dotfiles_home }}/.config/mcp" }
   - { path: "{{ dotfiles_home }}/.local/bin/" }
   - { path: "{{ dotfiles_home }}/.zsh" }
   - { path: "{{ dotfiles_home }}/.vim" }
@@ -167,6 +168,8 @@ dotfiles_links:
   - { src: "dunst/dunstrc", dest: ".config/dunst/dunstrc" }
   - { src: "dunst/mocha.conf", dest: ".config/dunst/mocha.conf" }
   - { src: "fonts/fonts.conf", dest: ".config/fontconfig/fonts.conf" }
+  - { src: "mcp/docker-compose.mcp.yml", dest: ".config/mcp/docker-compose.mcp.yml" }
+  - { src: "mcp/mcphub.json", dest: ".config/mcp/mcphub.json" }
   - { src: "cool-retro-term/cool-retro-term-my-futuristic.json", dest: ".config/cool-retro-term/cool-retro-term-my-futuristic.json"}
 
 regular_links:

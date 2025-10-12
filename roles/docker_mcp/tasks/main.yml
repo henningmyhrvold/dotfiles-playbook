@@ -1,0 +1,134 @@
+---
+- name: Ensure base packages on Arch
+  become: yes
+  pacman:
+    name:
+      - git
+      - docker
+      - docker-compose
+      - nodejs
+      - npm
+    state: present
+
+- name: Enable & start Docker
+  become: yes
+  service:
+    name: docker
+    enabled: true
+    state: started
+
+- name: Create dirs
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: "0755"
+  loop:
+    - "{{ ansible_user_dir }}/.local/src"
+    - "{{ ansible_user_dir }}/.config/mcp"
+    - "{{ ansible_user_dir }}/.config/nvim/lua/plugins"
+
+- name: Clone mcp-server-docker (upstream)
+  git:
+    repo: "https://github.com/ckreiling/mcp-server-docker.git"
+    dest: "{{ ansible_user_dir }}/.local/src/mcp-server-docker"
+    version: "main"
+    update: yes
+
+# Build the image once; Compose will use this local image tag
+- name: Build local image: mcp-server-docker:latest
+  community.docker.docker_image:
+    name: mcp-server-docker
+    tag: latest
+    build:
+      path: "{{ ansible_user_dir }}/.local/src/mcp-server-docker"
+  become: yes
+
+# NEW: Drop the Compose file that runs a persistent base container
+- name: Drop Compose file for MCP Docker service
+  copy:
+    dest: "{{ ansible_user_dir }}/.config/mcp/docker-compose.mcp.yml"
+    mode: "0644"
+    content: |
+      version: "3.9"
+      services:
+        mcp-docker:
+          image: mcp-server-docker:latest
+          restart: unless-stopped
+          stdin_open: true
+          tty: true
+          # If you later need cached tooling or config, add named volumes here.
+          volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
+          # Optional resource limits (enable if desired):
+          # deploy:
+          #   resources:
+          #     limits:
+          #       cpus: "2.0"
+          #       memory: "2g"
+
+# Bring up (or update) the service
+- name: Ensure MCP Docker service is up via Compose
+  community.docker.docker_compose_v2:
+    project_src: "{{ ansible_user_dir }}/.config/mcp"
+    files:
+      - docker-compose.mcp.yml
+    state: present
+    pull: false
+
+# CLEANUP: remove the one-shot stdio launcher from Step 1 if it exists
+- name: Remove old one-shot launcher (Step 1) if present
+  file:
+    path: "{{ ansible_user_dir }}/.config/mcp/run-mcp-docker.sh"
+    state: absent
+
+# Neovim: mcphub.nvim plugin (unchanged)
+- name: Drop mcphub.nvim plugin spec
+  copy:
+    dest: "{{ ansible_user_dir }}/.config/nvim/lua/plugins/mcphub.lua"
+    mode: "0644"
+    content: |
+      return {
+        {
+          "ravitemer/mcphub.nvim",
+          lazy = false,
+          config = function()
+            require("mcphub").setup({
+              config_path = vim.fn.expand("~/.config/mcp/mcphub.json"),
+              keymaps = {
+                open = "<leader>mo",
+                run_tool = "<leader>mt",
+                insert_resource = "<leader>mr",
+              },
+            })
+          end,
+        },
+      }
+
+# NEW: mcphub client config that attaches via `docker compose exec -T`
+- name: Drop mcphub client config (exec into the service)
+  copy:
+    dest: "{{ ansible_user_dir }}/.config/mcp/mcphub.json"
+    mode: "0644"
+    content: |
+      {
+        "transports": {
+          "stdio": [
+            {
+              "id": "docker",
+              "cmd": "docker",
+              "args": [
+                "compose",
+                "-f",
+                "{{ ansible_user_dir }}/.config/mcp/docker-compose.mcp.yml",
+                "exec",
+                "-T",
+                "mcp-docker",
+                "/bin/sh",
+                "-lc",
+                "mcp-server-docker"
+              ]
+            }
+          ]
+        },
+        "default": ["docker"]
+      }

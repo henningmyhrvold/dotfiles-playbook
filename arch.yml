@@ -38,3 +38,4 @@
     - { role: nftables, tags: ["nftables"] }
     - { role: dns, tags: ["dns"] }
     - { role: wireguard, tags: ["wireguard"] }
+    - { role: docker_mcp, tags: ["docker_mcp"] }
