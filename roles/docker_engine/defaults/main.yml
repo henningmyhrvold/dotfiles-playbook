@@ -1,0 +1,20 @@
+---
+# Users to add to the docker group (append, non-destructive)
+docker_users:
+  - "{{ ansible_user_id }}"
+
+# Manage /etc/docker/daemon.json (merge-safe)
+docker_manage_daemon_json: true
+
+# Enable BuildKit (required by Dockerfiles using RUN --mount)
+docker_enable_buildkit: true
+
+# Extra daemon.json content you want to merge in (optional)
+# Example:
+# docker_daemon_json_extra:
+#   log-driver: "json-file"
+#   log-opts:
+#     max-size: "10m"
+#     max-file: "3"
+docker_daemon_json_extra: {}
+

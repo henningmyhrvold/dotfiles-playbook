@@ -38,4 +38,15 @@
     - { role: nftables, tags: ["nftables"] }
     - { role: dns, tags: ["dns"] }
     - { role: wireguard, tags: ["wireguard"] }
-    - { role: docker_mcp, tags: ["docker_mcp"] }
+    - role: docker_engine
+      vars:
+        docker_users:
+          - henning        # adjust to your user
+        docker_enable_buildkit: true
+        docker_daemon_json_extra:
+          # Example extras (optional):
+          # "log-driver": "json-file"
+          # "log-opts":
+          #   "max-size": "10m"
+          #   "max-file": "3"
+   # - { role: docker_mcp, tags: ["docker_mcp"] }

@@ -94,11 +94,16 @@ pacman_installed_packages:
   - python-dateutil
   - python-pip
   - python-pynvim
+  - python-requests
+  - python-docker
   - nodejs
   - npm
   - direnv
   - terraform
   - direnv
+  - docker
+  - docker-compose
+
   # --- Productivity ---
   - gedit
   - thunderbird

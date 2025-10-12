@@ -1,0 +1,90 @@
+---
+# 1) Packages for Docker + the Ansible docker modules on Arch
+- name: Install Docker and dependencies (Arch)
+  become: yes
+  pacman:
+    name:
+      - docker
+      - docker-compose        # compose v2; fine on Arch
+      - python
+      - python-pip
+      - python-requests       # required by community.docker
+      - python-docker         # Docker SDK for Python
+    state: present
+    update_cache: yes
+
+# 2) Ensure docker service enabled/started
+- name: Enable & start docker
+  become: yes
+  service:
+    name: docker
+    enabled: true
+    state: started
+
+# 3) Ensure /etc/docker exists
+- name: Ensure /etc/docker exists
+  become: yes
+  file:
+    path: /etc/docker
+    state: directory
+    mode: "0755"
+
+# 4) Optionally manage daemon.json (merge-safe)
+- name: Stat existing /etc/docker/daemon.json
+  become: yes
+  stat:
+    path: /etc/docker/daemon.json
+  register: docker_daemon_json_stat
+  when: docker_manage_daemon_json
+
+- name: Read existing /etc/docker/daemon.json (if present)
+  become: yes
+  slurp:
+    path: /etc/docker/daemon.json
+  register: docker_daemon_json_slurp
+  when:
+    - docker_manage_daemon_json
+    - docker_daemon_json_stat.stat.exists
+
+- name: Build target daemon.json dict
+  become: yes
+  set_fact:
+    docker_daemon_json_target: >-
+      {{
+        (
+          (docker_daemon_json_slurp.content | b64decode | from_json)
+          if docker_daemon_json_stat.stat.exists
+          else {}
+        )
+        | combine(
+            {"features": {"buildkit": docker_enable_buildkit|bool}},
+            recursive=True
+          )
+        | combine(docker_daemon_json_extra, recursive=True)
+      }}
+  when: docker_manage_daemon_json
+
+- name: Write /etc/docker/daemon.json (merge-safe)
+  become: yes
+  copy:
+    dest: /etc/docker/daemon.json
+    mode: "0644"
+    content: "{{ docker_daemon_json_target | to_nice_json }}"
+  notify: restart docker
+  when: docker_manage_daemon_json
+
+# 5) Ensure users are in the docker group (append, idempotent)
+- name: Ensure docker group exists
+  become: yes
+  group:
+    name: docker
+    state: present
+
+- name: Add users to docker group
+  become: yes
+  user:
+    name: "{{ item }}"
+    groups: docker
+    append: true
+  loop: "{{ docker_users | default([]) }}"
+
