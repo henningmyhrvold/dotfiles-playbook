@@ -103,10 +103,18 @@ pacman_installed_packages:
   - direnv
   - docker
   - docker-compose
-
   # --- Productivity ---
   - gedit
   - thunderbird
+  # --- HW Development ---
+  - subversion
+  - bc
+  - ccache
+  - time
+  - usbutils
+  - picocom
+  - minicom
+  - tftp-hpa
 
 # --- AUR Packages ---
 aur_installed_packages:
