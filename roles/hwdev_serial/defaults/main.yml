@@ -18,9 +18,10 @@ hwdev_core_packages:
   - bc
   - ccache
   - tftp-hpa
+  - swig
 
 # Enable this to install a lean OpenWrt/RUT field & build toolkit
-hwdev_openwrt_tooling: false
+hwdev_openwrt_tooling: true
 
 # OpenWrt build deps & useful field tools (Arch package names)
 # Note: 'base-devel' is a group; skip if you already have it.
