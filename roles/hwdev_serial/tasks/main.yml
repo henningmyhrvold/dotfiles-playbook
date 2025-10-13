@@ -1,0 +1,66 @@
+---
+- name: Ensure serial dev groups exist (Arch default, but keep idempotent)
+  become: true
+  ansible.builtin.group:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - uucp
+    - lock
+
+- name: Add {{ target_user }} to serial groups (uucp, lock)
+  become: true
+  ansible.builtin.user:
+    name: "{{ target_user }}"
+    groups: [uucp, lock]
+    append: true
+
+- name: Install core HW dev/serial packages
+  become: true
+  ansible.builtin.pacman:
+    name: "{{ hwdev_core_packages }}"
+    state: present
+    update_cache: true
+
+- name: Install optional HW dev packages (if any)
+  become: true
+  when: hwdev_optional_packages | length > 0
+  ansible.builtin.pacman:
+    name: "{{ hwdev_optional_packages }}"
+    state: present
+
+- name: Install OpenWrt build + field tools (if enabled)
+  become: true
+  when: hwdev_openwrt_tooling | bool
+  ansible.builtin.pacman:
+    name: "{{ hwdev_openwrt_packages }}"
+    state: present
+
+- name: Deploy udev rules for common dev boards and serial adapters
+  become: true
+  when: hwdev_install_udev_rules | bool
+  ansible.builtin.copy:
+    src: 99-serial-dev.rules
+    dest: /etc/udev/rules.d/99-serial-dev.rules
+    owner: root
+    group: root
+    mode: "0644"
+  notify:
+    - reload udev
+    - retrigger tty uevents
+
+# Optional: restart services that may have grabbed ttys before rules applied
+- name: Maybe restart NetworkManager
+  when: hwdev_restart_networkmanager | bool
+  ansible.builtin.meta: flush_handlers
+
+- name: Maybe restart ModemManager
+  when: hwdev_restart_modemmanager | bool
+  ansible.builtin.meta: flush_handlers
+
+- name: Post-run note about login session
+  ansible.builtin.debug:
+    msg: >
+      '{{ target_user }}' was added to groups [uucp, lock]. Log out and back in
+      (or reboot) for group membership to take effect.
+

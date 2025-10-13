@@ -1,0 +1,25 @@
+# Common serial adapters / dev boards
+# - group=uucp, mode=0660 so users in 'uucp' can access without sudo
+# - ID_MM_DEVICE_IGNORE=1 prevents ModemManager from grabbing and blocking ports
+
+# Generic ACM devices (Arduino, STM32 CDC ACM, RP Pico, etc.)
+SUBSYSTEM=="tty", KERNEL=="ttyACM[0-9]*", GROUP="uucp", MODE="0660", ENV{ID_MM_DEVICE_IGNORE}="1"
+
+# FTDI (0403:*), covers many dev boards & USB-UARTs
+SUBSYSTEM=="tty", ATTRS{idVendor}=="0403", GROUP="uucp", MODE="0660", ENV{ID_MM_DEVICE_IGNORE}="1"
+
+# Silicon Labs CP210x (10c4:ea60 and variants)
+SUBSYSTEM=="tty", ATTRS{idVendor}=="10c4", GROUP="uucp", MODE="0660", ENV{ID_MM_DEVICE_IGNORE}="1"
+
+# WCH CH340/CH341 (1a86:7523 etc.)
+SUBSYSTEM=="tty", ATTRS{idVendor}=="1a86", GROUP="uucp", MODE="0660", ENV{ID_MM_DEVICE_IGNORE}="1"
+
+# Prolific PL2303 (067b:*) widely used in USB-UART dongles
+SUBSYSTEM=="tty", ATTRS{idVendor}=="067b", GROUP="uucp", MODE="0660", ENV{ID_MM_DEVICE_IGNORE}="1"
+
+# Arduino SA (2341:*) incl. genuine boards
+SUBSYSTEM=="tty", ATTRS{idVendor}=="2341", GROUP="uucp", MODE="0660", ENV{ID_MM_DEVICE_IGNORE}="1"
+
+# Raspberry Pi Pico (2e8a:*) in CDC mode
+SUBSYSTEM=="tty", ATTRS{idVendor}=="2e8a", GROUP="uucp", MODE="0660", ENV{ID_MM_DEVICE_IGNORE}="1"
+

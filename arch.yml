@@ -50,3 +50,4 @@
           #   "max-size": "10m"
           #   "max-file": "3"
    # - { role: docker_mcp, tags: ["docker_mcp"] }
+    - { role: hwdev_serial, tags: ["hwdev_serial"] }

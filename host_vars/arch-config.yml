@@ -36,6 +36,9 @@ pacman_installed_packages:
   - openssh
   - openssl
   - systemd-resolvconf
+  - nmap
+  - tcpdump
+  - wireshark-cli
   # --- Display & Theming ---
   - libinput
   - waybar
@@ -132,6 +135,11 @@ configure_dotfiles: true
 dns_provider: "systemd-resolved"
 dns_remove_conflicts: true
 dns_configure_networkmanager: true
+
+# Serial role settings
+hwdev_openwrt_tooling: true
+hwdev_optional_packages:
+  - kermit
 
 # These directories will be created if they don't exist.
 create_folders:

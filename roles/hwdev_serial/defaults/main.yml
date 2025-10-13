@@ -1,0 +1,50 @@
+---
+# Target user to grant serial access (your repo already defines target_user for dotfiles)
+target_user: "{{ target_user | default('henning') }}"
+
+# Core serial/UI tools to install from pacman (minimal)
+hwdev_core_packages:
+  - tio             # modern serial console
+  - minicom         # classic serial terminal
+  - picocom         # tiny serial terminal
+  - screen          # fallback terminal multiplexer/serial
+  - python-pyserial # pyserial for quick scripts
+  - usbutils        # lsusb
+  - avrdude         # AVR flashing
+  - dfu-util        # DFU bootloaders (STM32, etc.)
+  - openocd         # JTAG/SWD debug
+  - stlink          # ST-Link utility
+  - esptool         # ESP8266/ESP32 flashing
+  - subversion
+  - bc
+  - ccache
+  - tftp-hpa
+
+# Optional extras (you can extend this per project)
+hwdev_optional_packages: []
+
+# Enable this to install a lean OpenWrt/RUT field & build toolkit
+hwdev_openwrt_tooling: false
+
+# OpenWrt build deps & useful field tools (Arch package names)
+# Note: 'base-devel' is a group; skip if you already have it.
+hwdev_openwrt_packages:
+  - base-devel      # make, gcc, etc. (group)
+  - gawk
+  - gettext
+  - ncurses
+  - zlib
+  - rsync
+  - file
+  - time            # measure build steps
+  - inetutils       # provides 'telnet' client
+  # - sshpass       # optionally, for scripted auth (prefer keys)
+
+# Whether to deploy udev rules that (a) give group=uucp, mode=0660, and
+# (b) set ID_MM_DEVICE_IGNORE=1 so ModemManager doesn't grab dev boards.
+hwdev_install_udev_rules: true
+
+# Whether to try to restart services that tend to hold ttys (safer to leave false)
+hwdev_restart_networkmanager: false
+hwdev_restart_modemmanager: false
+
