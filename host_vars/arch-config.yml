@@ -127,6 +127,8 @@ aur_installed_packages:
   - ttf-meslo-nerd-font-powerlevel10k
   - omnissa-horizon-client
   - cool-retro-term
+  - tio             # HW dev: Modern serial console
+  - kermit          # HW dev: A VTE-based, simple and froggy terminal emulator
 
 # --- Dotfiles Configuration ---
 configure_dotfiles: true
@@ -138,8 +140,6 @@ dns_configure_networkmanager: true
 
 # Serial role settings
 hwdev_openwrt_tooling: true
-hwdev_optional_packages:
-  - kermit
 
 # These directories will be created if they don't exist.
 create_folders:

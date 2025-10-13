@@ -4,7 +4,6 @@ target_user: "{{ target_user | default('henning') }}"
 
 # Core serial/UI tools to install from pacman (minimal)
 hwdev_core_packages:
-  - tio             # modern serial console
   - minicom         # classic serial terminal
   - picocom         # tiny serial terminal
   - screen          # fallback terminal multiplexer/serial
@@ -19,9 +18,6 @@ hwdev_core_packages:
   - bc
   - ccache
   - tftp-hpa
-
-# Optional extras (you can extend this per project)
-hwdev_optional_packages: []
 
 # Enable this to install a lean OpenWrt/RUT field & build toolkit
 hwdev_openwrt_tooling: false

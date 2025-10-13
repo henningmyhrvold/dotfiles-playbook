@@ -22,13 +22,6 @@
     state: present
     update_cache: true
 
-- name: Install optional HW dev packages (if any)
-  become: true
-  when: hwdev_optional_packages | length > 0
-  ansible.builtin.pacman:
-    name: "{{ hwdev_optional_packages }}"
-    state: present
-
 - name: Install OpenWrt build + field tools (if enabled)
   become: true
   when: hwdev_openwrt_tooling | bool

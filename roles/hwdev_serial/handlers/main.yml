@@ -1,0 +1,26 @@
+---
+# These names MUST match the 'notify' entries in tasks/main.yml
+
+- name: reload udev
+  become: true
+  ansible.builtin.command: udevadm control --reload
+  changed_when: false
+
+- name: retrigger tty uevents
+  become: true
+  ansible.builtin.command: udevadm trigger --subsystem-match=tty
+  changed_when: false
+
+- name: restart NetworkManager
+  become: true
+  ansible.builtin.systemd:
+    name: NetworkManager
+    state: restarted
+
+- name: restart ModemManager
+  become: true
+  ansible.builtin.systemd:
+    name: ModemManager
+    state: restarted
+  failed_when: false
+
