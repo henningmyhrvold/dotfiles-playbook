@@ -1,0 +1,25 @@
+---
+# Who should own and run the compose stack (must have access to Docker)
+mcp_owner: "{{ target_user | default(ansible_user_id) }}"
+
+# Where to put things
+mcp_project_dir: "/home/{{ mcp_owner }}/.config/mcp"
+mcp_compose_file: "docker-compose.mcp.yml"
+mcp_repo_url: "https://github.com/ckreiling/mcp-server-docker.git"
+mcp_repo_dir: "/home/{{ mcp_owner }}/.local/src/mcp-server-docker"
+
+# Build/run behavior
+# Use host networking to avoid veth/bridge issues on your kernel
+mcp_network_mode: "host"          # "host" or "bridge"
+
+# Compose bring-up behavior
+mcp_compose_pull_policy: "never"  # "never" | "missing" | "always" | "policy"
+
+# Optional Neovim glue for the owner
+mcp_install_nvim_glue: true
+
+# Optional user systemd service (auto-start after login)
+mcp_install_user_service: true
+mcp_user_service_name: "mcp-docker.service"
+mcp_enable_lingering: true    # keep user services running after logout
+

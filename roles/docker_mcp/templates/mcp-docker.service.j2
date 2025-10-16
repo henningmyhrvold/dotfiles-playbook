@@ -1,0 +1,15 @@
+[Unit]
+Description=MCP server via Docker Compose (user)
+After=default.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=%h/.config/mcp
+RemainAfterExit=yes
+ExecStart=/usr/bin/docker compose up -d --no-color --pull {{ mcp_compose_pull_policy }}
+ExecStop=/usr/bin/docker compose down
+TimeoutStartSec=0
+
+[Install]
+WantedBy=default.target
+

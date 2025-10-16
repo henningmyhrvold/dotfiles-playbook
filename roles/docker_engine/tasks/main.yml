@@ -6,6 +6,7 @@
     name:
       - docker
       - docker-compose        # compose v2; fine on Arch
+      - docker-buildx         # <-- Buildx plugin (required for BuildKit builds)
       - python
       - python-pip
       - python-requests       # required by community.docker
@@ -72,6 +73,10 @@
     content: "{{ docker_daemon_json_target | to_nice_json }}"
   notify: restart docker
   when: docker_manage_daemon_json
+
+# Ensure handlers run right now so other roles see the new daemon settings
+- name: Restart docker immediately if daemon.json changed
+  meta: flush_handlers
 
 # 5) Ensure users are in the docker group (append, idempotent)
 - name: Ensure docker group exists
