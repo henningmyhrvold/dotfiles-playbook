@@ -97,7 +97,7 @@
   ansible.builtin.command: docker buildx create --driver docker-container --use
   when: _bx_inspect.rc != 0
 
-- name: Build local image: mcp-server-docker:latest (via buildx + BuildKit)
+- name: "Build local image: mcp-server-docker:latest (via buildx + BuildKit)"
   become: true
   become_user: "{{ mcp_owner }}"
   ansible.builtin.shell: >
