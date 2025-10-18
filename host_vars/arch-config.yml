@@ -196,6 +196,7 @@ dotfiles_links:
   - { src: "fonts/fonts.conf", dest: ".config/fontconfig/fonts.conf" }
   - { src: "mcp/docker-compose.mcp.yml", dest: ".config/mcp/docker-compose.mcp.yml" }
   - { src: "mcp/mcphub.json", dest: ".config/mcp/mcphub.json" }
+  - { src: "mcp/hub.json", dest: ".config/mcp/hub.json" }
   - { src: "cool-retro-term/cool-retro-term-my-futuristic.json", dest: ".config/cool-retro-term/cool-retro-term-my-futuristic.json"}
 
 regular_links:
