@@ -38,6 +38,8 @@
     - { role: nftables, tags: ["nftables"] }
     - { role: dns, tags: ["dns"] }
     - { role: wireguard, tags: ["wireguard"] }
+    - { role: npm_global, tags: ["npm"] }
+    - { role: hwdev_serial, tags: ["hwdev_serial"] }
     - role: docker_engine
       vars:
         docker_users:
@@ -49,5 +51,5 @@
           # "log-opts":
           #   "max-size": "10m"
           #   "max-file": "3"
-    - { role: hwdev_serial, tags: ["hwdev_serial"] }
     - { role: docker_mcp, tags: ["docker_mcp"] }
+    - { role: mcp_hub_ui, tags: ["mcp_hub_ui"] }

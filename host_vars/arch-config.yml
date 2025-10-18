@@ -131,6 +131,10 @@ aur_installed_packages:
   - tio             # HW dev: Modern serial console
   - kermit          # HW dev: A VTE-based, simple and froggy terminal emulator
 
+# --- NPM Packages ---
+npm_global_packages:
+  - mcp-hub@latest
+
 # --- Dotfiles Configuration ---
 configure_dotfiles: true
 

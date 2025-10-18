@@ -1,0 +1,29 @@
+# roles/mcp_hub_ui/defaults/main.yml
+mcp_hub_ui_enabled: true
+
+# Port where the web UI will listen
+mcp_hub_ui_port: 7801
+
+# Path to the mcp-hub binary (global npm on Arch installs to /usr/bin)
+mcp_hub_ui_bin: /usr/bin/mcp-hub
+
+# User that will own & run the user service (defaults to your mcp_owner if set)
+mcp_hub_ui_user: "{{ mcp_owner | default(ansible_user_id) }}"
+
+# Enable lingering so user services can run without an active login session
+mcp_hub_ui_enable_lingering: true
+
+# Extra env for the service (safe default PATH)
+mcp_hub_ui_environment:
+  PATH: "%h/.local/bin:/usr/local/bin:/usr/bin"
+
+# Optional extra CLI args for the UI process
+# (Example: ["--verbose"] or ["--host","127.0.0.1"])
+mcp_hub_ui_extra_args:
+  - --host
+  - 127.0.0.1
+  - --no-open
+
+# How long to wait for the port to come up after (re)starting (seconds)
+mcp_hub_ui_wait_timeout: 90
+
