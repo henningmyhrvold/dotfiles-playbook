@@ -132,7 +132,7 @@ aur_installed_packages:
   - zsh-theme-powerlevel10k-git
   - ttf-meslo-nerd-font-powerlevel10k
   - omnissa-horizon-client
-  - claude‑desktop‑native
+  - claude-desktop-native
   - cool-retro-term
   - tio             # HW dev: Modern serial console
   - kermit          # HW dev: A VTE-based, simple and froggy terminal emulator
