@@ -6,7 +6,10 @@ pacman_installed_packages:
   - wayland
   - wlr-randr
   - xorg-xwayland
+  - xdg-desktop-portal
   - xdg-desktop-portal-hyprland
+  - xdg-desktop-portal-gtk
+  - gtk3
   - xdg-utils
   - qt5-wayland
   - qt6-wayland
@@ -76,6 +79,8 @@ pacman_installed_packages:
   - wget
   - fzf
   - fd
+  - jq
+  - lsof
   - bat
   - ripgrep
   - htop
@@ -127,6 +132,7 @@ aur_installed_packages:
   - zsh-theme-powerlevel10k-git
   - ttf-meslo-nerd-font-powerlevel10k
   - omnissa-horizon-client
+  - claude‑desktop‑native
   - cool-retro-term
   - tio             # HW dev: Modern serial console
   - kermit          # HW dev: A VTE-based, simple and froggy terminal emulator

@@ -1,0 +1,4029 @@
+## GPT‑Ready Project Dump
+## Generated on 2025-10-19T01:32:11.850396
+## Scanned directory: /home/henning/src/dotfiles-playbook/roles
+## Output file: /home/henning/src/dotfiles-playbook/roles/project_code.txt
+
+## Architecture Overview
+
+- No Python packages detected; repository consists of top‑level scripts/files.
+## File tree (excluding ignored / binary files)
+
+roles/
+├── acpi/
+│   └── tasks/
+│       └── main.yml
+├── apparmor/
+│   ├── defaults/
+│   │   └── main.yml
+│   ├── handlers/
+│   │   └── main.yml
+│   ├── tasks/
+│   │   └── main.yml
+│   └── templates/
+│       └── apparmor-notify.desktop.j2
+├── apt/
+│   └── tasks/
+│       └── main.yml
+├── audio/
+│   └── tasks/
+│       └── main.yml
+├── aur/
+│   └── tasks/
+│       └── main.yml
+├── aur-packages/
+│   └── tasks/
+│       └── main.yml
+├── copy/
+│   └── tasks/
+│       └── main.yml
+├── dnf/
+│   └── tasks/
+│       └── main.yml
+├── dns/
+│   ├── defaults/
+│   │   └── main.yml
+│   ├── handlers/
+│   │   └── main.yml
+│   └── tasks/
+│       └── main.yml
+├── docker_engine/
+│   ├── defaults/
+│   │   └── main.yml
+│   ├── handlers/
+│   │   └── main.yml
+│   └── tasks/
+│       └── main.yml
+├── docker_mcp/
+│   ├── defaults/
+│   │   └── main.yml
+│   ├── tasks/
+│   │   └── main.yml
+│   └── templates/
+│       ├── docker-compose.mcp.yml.j2
+│       └── mcp-docker.service.j2
+├── dotfiles/
+│   └── tasks/
+│       └── main.yml
+├── folders/
+│   └── tasks/
+│       └── main.yml
+├── fonts/
+│   └── tasks/
+│       └── main.yml
+├── homebrew/
+│   └── tasks/
+│       └── main.yml
+├── hwdev_serial/
+│   ├── defaults/
+│   │   └── main.yml
+│   ├── files/
+│   │   └── 99-serial-dev.rules
+│   ├── handlers/
+│   │   └── main.yml
+│   └── tasks/
+│       └── main.yml
+├── hyprland/
+│   └── tasks/
+│       └── main.yml
+├── links/
+│   └── tasks/
+│       └── main.yml
+├── luarocks311/
+│   └── tasks/
+│       └── main.yml
+├── mcp_hub_ui/
+│   ├── defaults/
+│   │   └── main.yml
+│   ├── tasks/
+│   │   └── main.yml
+│   └── templates/
+│       └── mcp-hub-ui.service.j2
+├── nftables/
+│   ├── defaults/
+│   │   └── main.yml
+│   ├── handlers/
+│   │   └── main.yml
+│   ├── tasks/
+│   │   └── main.yml
+│   └── templates/
+│       └── nftables.conf.j2
+├── npm_global/
+│   ├── defaults/
+│   │   └── main.yml
+│   └── tasks/
+│       └── main.yml
+├── nvim/
+│   └── tasks/
+│       └── main.yml
+├── pacman/
+│   └── tasks/
+│       └── main.yml
+├── permissions/
+│   └── tasks/
+│       └── main.yml
+├── repos/
+│   └── tasks/
+│       └── main.yml
+├── rust/
+│   └── tasks/
+│       └── main.yml
+├── sddm/
+│   └── tasks/
+│       └── main.yml
+├── thunderbird_headless/
+│   ├── defaults/
+│   │   └── main.yml
+│   ├── handlers/
+│   │   └── main.yml
+│   ├── meta/
+│   │   └── main.yml
+│   ├── tasks/
+│   │   └── main.yml
+│   └── templates/
+│       ├── thunderbird-gui-wrapper.sh.j2
+│       ├── thunderbird-headless-refresh.service.j2
+│       ├── thunderbird-headless-refresh.timer.j2
+│       ├── thunderbird-headless.service.j2
+│       └── thunderbird.desktop.j2
+├── tmux/
+│   └── tasks/
+│       └── main.yml
+├── wireguard/
+│   ├── defaults/
+│   │   └── main.yml
+│   └── tasks/
+│       └── main.yml
+└── zsh/
+    └── tasks/
+        └── main.yml
+├── concat_gipity.py
+
+87 directories, 61 files
+
+## Concatenated source files
+
+### FILE: concat_gipity.py ===
+```python
+#!/usr/bin/env python3
+"""
+LLM‑Ready Project Dump
+----------------------
+Creates a single text file (project_code.txt by default) that contains:
+
+* a nicely formatted file‑tree (ignoring .gptignore, binary files, etc.)
+* the concatenated source of every non‑ignored, non‑binary file
+* a **dynamic architecture overview** that is generated from the actual
+  package layout of the project being scanned.
+
+The script fully respects .gptignore (git‑ignore syntax) and automatically
+skips common binary formats.
+"""
+import argparse
+import datetime
+import hashlib
+import json
+import os
+import re
+from pathlib import Path
+from typing import Any, Callable, Dict, List, Tuple
+
+
+# ----------------------------------------------------------------------
+# Binary detection
+# ----------------------------------------------------------------------
+def is_binary(file_path: Path) -> bool:
+    """Return True if the file looks like binary data."""
+    try:
+        with open(file_path, "rb") as f:
+            chunk = f.read(8192)
+            if b"\x00" in chunk:  # null byte → binary
+                return True
+            if not chunk:  # empty file → text
+                return False
+            # Characters that are considered “text”
+            text_chars = bytearray(
+                {7, 8, 9, 10, 12, 13, 27} | set(range(0x20, 0x100)) - {0x7F}
+            )
+            nontext = chunk.translate(None, text_chars)
+            return float(len(nontext)) / len(chunk) > 0.30
+    except (IOError, OSError):
+        # If we cannot read the file we treat it as binary
+        return True
+
+
+# ----------------------------------------------------------------------
+# .gptignore parsing
+# ----------------------------------------------------------------------
+def parse_ignore_patterns(directory: Path) -> List[str]:
+    """Read .gptignore (if any) and return a list of raw patterns."""
+    # Built‑in defaults – the user can override them in .gptignore.
+    patterns = [
+        ".git",
+        ".svn",
+        ".hg",
+        "node_modules",
+        "vendor",
+        "bin",
+        "dist",
+        "build",
+        "__pycache__",
+        ".cache",
+        ".DS_Store",
+        "*.zip",
+        "*.tar",
+        "*.gz",
+        "*.tgz",
+        "*.egg",
+        "*.egg-info",
+        "*.jpg",
+        "*.jpeg",
+        "*.png",
+        "*.gif",
+        "*.exe",
+        "*.dll",
+        "*.so",
+        "*.dylib",
+        "*.class",
+        "*.jar",
+        "*.war",
+        "*.pdf",
+        "*.woff",
+        "*.woff2",
+        "*.ttf",
+        "*.otf",
+        "*.ico",
+        ".gptignore",
+    ]
+    ignore_file = directory / ".gptignore"
+    if ignore_file.exists():
+        print(
+            f"[{datetime.datetime.now().strftime('%T')}] Using .gptignore from {ignore_file}"
+        )
+        with open(ignore_file, "r", encoding="utf-8") as f:
+            for line in f:
+                line = line.strip()
+                if not line or line.startswith("#"):
+                    continue
+                patterns.append(line)
+    else:
+        print(
+            f"[{datetime.datetime.now().strftime('%T')}] Warning: No .gptignore found in {directory}"
+        )
+    return patterns
+
+
+def create_ignore_matcher(
+    patterns: List[str], base_dir: Path
+) -> Callable[[Path], bool]:
+    """
+    Return a callable ``should_ignore(path)`` that is True when the *relative*
+    path matches any of the git‑ignore style patterns.
+    Negated patterns (``!foo``) are also honoured.
+    """
+    regexes: List[str] = []
+    for pat in patterns:
+        if not pat or pat.startswith("#"):
+            continue
+        pat = pat.replace("\\", "/").strip()
+
+        # Negation handling
+        negated = pat.startswith("!")
+        if negated:
+            pat = pat[1:]
+
+        # Directory‑only patterns end with a slash
+        if pat.endswith("/"):
+            pat = pat.rstrip("/")
+            regex = r"(?:^|/)" + re.escape(pat) + r"(?:/|$)"
+        else:
+            if pat.startswith("/"):  # anchored to repo root
+                pat = pat[1:]
+                regex = "^" + re.escape(pat)
+            else:  # un‑anchored
+                regex = r"(?:^|/)" + re.escape(pat)
+
+        # Wildcards
+        regex = regex.replace(r"\*\*", ".*")  # ** → any number of directories
+        regex = regex.replace(r"\*", "[^/]*")  # *  → any chars except '/'
+
+        # End‑of‑string handling for file patterns
+        if not pat.endswith("/"):
+            regex += r"($|/.*$)"
+
+        regexes.append(("NEG:" if negated else "") + regex)
+
+    def should_ignore(path: Path) -> bool:
+        """True if *path* matches any ignore pattern."""
+        rel = str(path.relative_to(base_dir)).replace("\\", "/")
+        if path.is_dir() and not rel.endswith("/"):
+            rel += "/"
+        ignore = False
+        for r in regexes:
+            if r.startswith("NEG:"):
+                if re.search(r[4:], rel):
+                    ignore = False
+            else:
+                if re.search(r, rel):
+                    ignore = True
+        return ignore
+
+    return should_ignore
+
+
+# ----------------------------------------------------------------------
+# Build & render the file‑tree
+# ----------------------------------------------------------------------
+def generate_file_tree(start_dir: Path, should_ignore: Callable[[Path], bool]) -> str:
+    """
+    Build a visual representation of the directory tree, **excluding**
+    ignored and binary files.
+    Returns the tree as a single string (including a final line with the
+    directory/file count).
+    """
+    structure: Dict[str, Any] = {"_files": [], "_dirs": {}}
+    for root, dirs, filenames in os.walk(start_dir):
+        root_path = Path(root)
+
+        # Prune ignored directories so that their contents are never visited.
+        if should_ignore(root_path):
+            dirs.clear()
+            continue
+        dirs[:] = [d for d in dirs if not should_ignore(root_path / d)]
+
+        rel_root = str(root_path.relative_to(start_dir))
+        parts = [] if rel_root == "." else rel_root.split("/")
+
+        # Walk/create the dict nodes that represent the current directory.
+        node = structure
+        for part in parts:
+            if part not in node["_dirs"]:
+                node["_dirs"][part] = {"_files": [], "_dirs": {}}
+            node = node["_dirs"][part]
+
+        # Add files that are not ignored/binary.
+        for filename in filenames:
+            file_path = root_path / filename
+            if should_ignore(file_path) or is_binary(file_path):
+                continue
+            node["_files"].append(filename)
+
+    # ── Render the tree ──
+    tree_lines: List[str] = [f"{start_dir.name}/"]
+
+    def _render(node: Dict[str, Any], prefix: str = "", is_last: bool = False) -> None:
+        files = sorted(node.get("_files", []))
+        dirs = sorted(node.get("_dirs", {}).keys())
+
+        for i, dname in enumerate(dirs):
+            last_dir = i == len(dirs) - 1
+            tree_lines.append(f"{prefix}{'└── ' if last_dir else '├── '}{dname}/")
+            _render(
+                node["_dirs"][dname],
+                prefix + ("    " if last_dir else "│   "),
+                last_dir,
+            )
+        for i, fname in enumerate(files):
+            last_file = i == len(files) - 1
+            connector = "└── " if last_file and not dirs else "├── "
+            tree_lines.append(f"{prefix}{connector}{fname}")
+
+    _render(structure)
+
+    # ── Summary line ──
+    def _count(node: Dict[str, Any]) -> Tuple[int, int]:
+        d_cnt = len(node.get("_dirs", {}))
+        f_cnt = len(node.get("_files", []))
+        for sub in node.get("_dirs", {}).values():
+            sub_d, sub_f = _count(sub)
+            d_cnt += sub_d
+            f_cnt += sub_f
+        return d_cnt, f_cnt
+
+    dirs_total, files_total = _count(structure)
+    tree_lines.append(f"\n{dirs_total} directories, {files_total} files")
+    return "\n".join(tree_lines)
+
+
+# ----------------------------------------------------------------------
+# Collect the actual source files
+# ----------------------------------------------------------------------
+def collect_source_files(
+    start_dir: Path, should_ignore: Callable[[Path], bool]
+) -> List[Tuple[Path, str, str]]:
+    """Return a list of (absolute_path, relative_path, file_content)."""
+    source_files = []
+    for root, dirs, filenames in os.walk(start_dir):
+        root_path = Path(root)
+
+        # Prune ignored directories (same logic as above)
+        if should_ignore(root_path):
+            dirs.clear()
+            continue
+        dirs[:] = [d for d in dirs if not should_ignore(root_path / d)]
+
+        for filename in filenames:
+            file_path = root_path / filename
+            if should_ignore(file_path) or is_binary(file_path):
+                continue
+            rel_path = str(file_path.relative_to(start_dir))
+            try:
+                content = file_path.read_text(encoding="utf-8", errors="replace")
+                source_files.append((file_path, rel_path, content))
+            except (IOError, OSError):
+                continue
+    return source_files
+
+
+# ----------------------------------------------------------------------
+# Dynamic architecture overview
+# ----------------------------------------------------------------------
+def generate_architecture_overview(
+    start_dir: Path, should_ignore: Callable[[Path], bool]
+) -> str:
+    """
+    Produce a short markdown overview of the package layout.
+    Packages are directories that contain an ``__init__.py`` file.
+    The overview lists packages, sub‑packages and the python modules they contain.
+    """
+    # Build the same hierarchical dict used for the tree, but keep all files.
+    structure: Dict[str, Any] = {"_files": [], "_dirs": {}}
+    for root, dirs, filenames in os.walk(start_dir):
+        root_path = Path(root)
+
+        if should_ignore(root_path):
+            dirs.clear()
+            continue
+        dirs[:] = [d for d in dirs if not should_ignore(root_path / d)]
+
+        rel_root = str(root_path.relative_to(start_dir))
+        parts = [] if rel_root == "." else rel_root.split("/")
+        node = structure
+        for part in parts:
+            if part not in node["_dirs"]:
+                node["_dirs"][part] = {"_files": [], "_dirs": {}}
+            node = node["_dirs"][part]
+
+        for filename in filenames:
+            if should_ignore(root_path / filename):
+                continue
+            node["_files"].append(filename)
+
+    # Helper to decide whether a directory is a Python package.
+    def _is_package(node: Dict[str, Any]) -> bool:
+        return "__init__.py" in node.get("_files", [])
+
+    # Recursive rendering of the overview.
+    def _render(node: Dict[str, Any], name: str, depth: int = 0) -> List[str]:
+        lines: List[str] = []
+        indent = "  " * depth
+        if depth == 0:
+            header = f"- **{name}** – package"
+        else:
+            header = f"{indent}- **{name}** – sub‑package"
+        lines.append(header)
+
+        py_modules = sorted(
+            f
+            for f in node.get("_files", [])
+            if f.endswith(".py") and f != "__init__.py"
+        )
+        if py_modules:
+            lines.append(f"{indent}  - Python modules: " + ", ".join(py_modules))
+
+        other_files = sorted(f for f in node.get("_files", []) if not f.endswith(".py"))
+        if other_files:
+            lines.append(f"{indent}  - Other files: " + ", ".join(other_files))
+
+        for sub_name in sorted(node["_dirs"]):
+            sub_node = node["_dirs"][sub_name]
+            if _is_package(sub_node):
+                lines.extend(_render(sub_node, sub_name, depth + 1))
+
+        return lines
+
+    overview_lines: List[str] = ["## Architecture Overview", ""]
+    for top_name in sorted(structure["_dirs"]):
+        top_node = structure["_dirs"][top_name]
+        if _is_package(top_node):
+            overview_lines.extend(_render(top_node, top_name))
+
+    if len(overview_lines) == 2:  # only header & blank line
+        overview_lines.append(
+            "- No Python packages detected; repository consists of top‑level scripts/files."
+        )
+    overview_lines.append("")
+    return "\n".join(overview_lines)
+
+
+# ----------------------------------------------------------------------
+# Main driver
+# ----------------------------------------------------------------------
+def main() -> None:
+    parser = argparse.ArgumentParser(description="Generate GPT‑ready project dump")
+    parser.add_argument(
+        "-o",
+        "--output",
+        default="project_code.txt",
+        help="Output file name (default: project_code.txt)",
+    )
+    parser.add_argument(
+        "directory",
+        nargs="?",
+        default=".",
+        help="Directory to scan (default: current directory)",
+    )
+    args = parser.parse_args()
+
+    start_dir = Path(args.directory).resolve()
+    output_file = Path(args.output).resolve()
+
+    print(f"[{datetime.datetime.now().strftime('%T')}] Using directory: {start_dir}")
+
+    # ------------------------------------------------------------------
+    # Load ignore patterns
+    # ------------------------------------------------------------------
+    patterns = parse_ignore_patterns(start_dir)
+    print(
+        f"[{datetime.datetime.now().strftime('%T')}] Loaded {len(patterns)} ignore patterns"
+    )
+    should_ignore = create_ignore_matcher(patterns, start_dir)
+
+    # ------------------------------------------------------------------
+    # Generate file tree
+    # ------------------------------------------------------------------
+    print(f"[{datetime.datetime.now().strftime('%T')}] Generating file tree...")
+    tree_output = generate_file_tree(start_dir, should_ignore)
+
+    # ------------------------------------------------------------------
+    # Dynamic architecture overview
+    # ------------------------------------------------------------------
+    print(
+        f"[{datetime.datetime.now().strftime('%T')}] Building architecture overview..."
+    )
+    architecture_md = generate_architecture_overview(start_dir, should_ignore)
+
+    # ------------------------------------------------------------------
+    # Collect source files
+    # ------------------------------------------------------------------
+    print(f"[{datetime.datetime.now().strftime('%T')}] Collecting source files...")
+    source_files = collect_source_files(start_dir, should_ignore)
+    print(
+        f"[{datetime.datetime.now().strftime('%T')}] Found {len(source_files)} source files to include"
+    )
+
+    # ------------------------------------------------------------------
+    # Write output – LLM‑friendly format
+    # ------------------------------------------------------------------
+    print(f"[{datetime.datetime.now().strftime('%T')}] Writing to {output_file}...")
+    manifest: List[Dict[str, Any]] = []
+
+    with open(output_file, "w", encoding="utf-8", newline="\n") as out:
+        # Header
+        out.write("## GPT‑Ready Project Dump\n")
+        out.write(f"## Generated on {datetime.datetime.now().isoformat()}\n")
+        out.write(f"## Scanned directory: {start_dir}\n")
+        out.write(f"## Output file: {output_file}\n\n")
+
+        # Architecture overview
+        out.write(architecture_md)
+
+        # File tree
+        out.write("## File tree (excluding ignored / binary files)\n\n")
+        out.write(tree_output + "\n\n")
+
+        # Concatenated source files
+        out.write("## Concatenated source files\n\n")
+        total_bytes = 0
+        for _, rel_path, content in source_files:
+            # Choose fence language based on extension
+            suffix = Path(rel_path).suffix.lower()
+            language = {
+                ".py": "python",
+                ".ipynb": "json",
+                ".toml": "toml",
+                ".md": "markdown",
+                ".rst": "rst",
+                ".json": "json",
+                ".yml": "yaml",
+                ".yaml": "yaml",
+                ".ini": "ini",
+                ".cfg": "ini",
+                ".txt": "text",
+                ".env": "ini",
+
+                ".js": "javascript",
+                ".cjs": "javascript",
+                ".mjs": "javascript",
+                ".ts": "typescript",
+                ".tsx": "tsx",
+                ".jsx": "jsx",
+                ".css": "css",
+                ".scss": "scss",
+                ".sass": "sass",
+                ".less": "less",
+                ".html": "html",
+                ".xml": "xml",
+                ".csv": "csv",
+                ".tsv": "tsv",
+
+                ".c": "c",
+                ".h": "c",
+                ".cpp": "cpp",
+                ".cc": "cpp",
+                ".hpp": "cpp",
+                ".hh": "cpp",
+                ".java": "java",
+                ".kt": "kotlin",
+                ".kts": "kotlin",
+                ".go": "go",
+                ".rs": "rust",
+                ".swift": "swift",
+                ".php": "php",
+                ".rb": "ruby",
+                ".pl": "perl",
+                ".r": "r",
+                ".lua": "lua",
+                ".sh": "bash",
+                ".bash": "bash",
+                ".zsh": "zsh",
+                ".ps1": "powershell",
+                ".sql": "sql",
+                ".proto": "proto",
+                ".gradle": "groovy",
+                ".cmake": "cmake",
+                ".vue": "vue",
+            }.get(suffix, "text")
+
+            out.write(f"### FILE: {rel_path} ===\n")
+            out.write(f"```{language}\n")
+            out.write(content.rstrip("\n"))
+            out.write("\n```\n\n")
+
+            # Manifest entry
+            sha256 = hashlib.sha256(content.encode("utf-8")).hexdigest()
+            line_count = content.count("\n") + (0 if content.endswith("\n") else 1)
+            manifest.append(
+                {
+                    "path": rel_path,
+                    "lines": line_count,
+                    "sha256": sha256,
+                }
+            )
+            total_bytes += len(content.encode("utf-8"))
+
+        # Footer
+        out.write("--- END OF DUMP ---\n")
+        out.write(
+            f"{len(source_files)} files processed, {total_bytes} bytes total source‑code size.\n"
+        )
+        out.write("\n")
+
+        # JSON manifest
+        out.write("## JSON manifest (for downstream indexing)\n")
+        out.write("```json\n")
+        out.write(json.dumps(manifest, indent=2, ensure_ascii=False))
+        out.write("\n```\n")
+
+    print(
+        f"[{datetime.datetime.now().strftime('%T')}] Done! {len(source_files)} files written to {output_file}"
+    )
+
+
+# ----------------------------------------------------------------------
+# Entry‑point
+# ----------------------------------------------------------------------
+if __name__ == "__main__":
+    main()
+```
+
+### FILE: thunderbird_headless/defaults/main.yml ===
+```yaml
+thunderbird_user: "{{ target_user | default(ansible_user_id) }}"
+
+thunderbird_manage_packages: true
+thunderbird_packages:
+  - thunderbird
+
+# Headless handling
+thunderbird_use_xvfb: false
+thunderbird_xvfb_package: "xorg-server-xvfb"
+thunderbird_xvfb_run: "/usr/bin/xvfb-run -a -n 99 -s '-screen 0 1280x1024x24'"
+
+thunderbird_exec: "/usr/bin/thunderbird"
+thunderbird_extra_args: ""
+
+thunderbird_service_name: "thunderbird-headless.service"
+thunderbird_unit_dir: "~/.config/systemd/user"
+
+thunderbird_autostart: true
+thunderbird_enable_lingering: true
+
+thunderbird_desktop_id: "org.mozilla.Thunderbird.desktop"
+
+# choices: "timer", "runtime_max", "none"
+thunderbird_refresh_method: "timer"
+# systemd time span (supports "1min", "5min", "30s", etc.)
+thunderbird_refresh_interval: "2min"
+
+# Where to put the GUI wrapper
+thunderbird_gui_wrapper_path: "{{ lookup('env','HOME') ~ '/.local/bin/thunderbird-gui' }}"
+# Command used in the desktop file
+thunderbird_gui_exec: "{{ thunderbird_gui_wrapper_path }}"
+# Install the desktop override?
+thunderbird_install_desktop_override: true
+```
+
+### FILE: thunderbird_headless/meta/main.yml ===
+```yaml
+galaxy_info:
+  author: you
+  description: Run Thunderbird headless as a user systemd service for background mail & calendar sync
+  license: MIT
+  min_ansible_version: "2.10"
+  platforms:
+    - name: ArchLinux
+    - name: Debian
+    - name: Ubuntu
+    - name: Fedora
+dependencies: []
+```
+
+### FILE: thunderbird_headless/templates/thunderbird-gui-wrapper.sh.j2 ===
+```text
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Stop headless instance if it is active (frees the profile lock)
+if systemctl --user is-active --quiet {{ thunderbird_service_name }}; then
+  systemctl --user stop {{ thunderbird_service_name }}
+fi
+
+# Ensure GUI mode
+unset MOZ_HEADLESS
+
+LOCK="$HOME/.local/state/thunderbird_gui.lock"
+mkdir -p "$(dirname "$LOCK")"; trap 'rm -f "$LOCK"' EXIT; touch "$LOCK"
+
+# Run Thunderbird GUI in the foreground, passing through args
+/usr/bin/thunderbird "$@"
+ret=$?
+systemctl --user start {{ thunderbird_service_name }} || true
+exit "$ret"
+```
+
+### FILE: thunderbird_headless/templates/thunderbird-headless.service.j2 ===
+```text
+[Unit]
+Description=Thunderbird (headless) - background mail & calendar sync
+After=network-online.target dbus.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+Environment=MOZ_HEADLESS=1
+Environment=HOME=%h
+Environment=XDG_RUNTIME_DIR=%t
+WorkingDirectory=%h
+{% if thunderbird_use_xvfb -%}
+ExecStart={{ thunderbird_xvfb_run }} {{ thunderbird_exec }} --headless{% if thunderbird_extra_args|length %} {{ thunderbird_extra_args }}{% endif %}
+{% else -%}
+ExecStart={{ thunderbird_exec }} --headless{% if thunderbird_extra_args|length %} {{ thunderbird_extra_args }}{% endif %}
+{% endif -%}
+{% if thunderbird_refresh_method == 'runtime_max' -%}
+Restart=always
+{% else -%}
+Restart=on-failure
+{% endif -%}
+RestartSec=5s
+# Give Thunderbird longer to exit cleanly; then SIGKILL remaining children.
+TimeoutStopSec=30s
+KillMode=mixed
+SendSIGKILL=yes
+{% if thunderbird_refresh_method == 'runtime_max' -%}
+RuntimeMaxSec={{ thunderbird_refresh_interval }}
+{% endif -%}
+
+
+[Install]
+WantedBy=default.target
+```
+
+### FILE: thunderbird_headless/templates/thunderbird.desktop.j2 ===
+```text
+[Desktop Entry]
+Name=Thunderbird
+Comment=Send and receive mail with Thunderbird
+Comment[ast]=Lleer y escribir corréu electrónicu
+Comment[ca]=Llegiu i escriviu correu
+Comment[cs]=Čtení a psaní pošty
+Comment[da]=Skriv/læs e-post/nyhedsgruppe med Mozilla Thunderbird
+Comment[de]=E-Mails und Nachrichten mit Thunderbird lesen und schreiben
+Comment[el]=Διαβάστε και γράψτε γράμματα με το Mozilla Thunderbird
+Comment[es]=Lea y escriba correos y noticias con Thunderbird
+Comment[fi]=Lue ja kirjoita sähköposteja
+Comment[fr]=Lire et écrire des courriels
+Comment[gl]=Lea e escriba correo electrónico
+Comment[he]=קריאה/כתיבה של דוא״ל/חדשות באמצעות Mozilla Thunderbird
+Comment[hr]=Čitajte/šaljite e-poštu s Thunderbird
+Comment[hu]=Levelek írása és olvasása a Thunderbirddel
+Comment[it]=Per leggere e scrivere email
+Comment[ja]=メールの読み書き
+Comment[ko]=Mozilla Thunderbird 메일/뉴스 읽기 및 쓰기 클라이언트
+Comment[nl]=E-mail/nieuws lezen en schrijven met Mozilla Thunderbird
+Comment[pl]=Czytanie i wysyłanie e-maili
+Comment[pt_BR]=Leia e escreva suas mensagens
+Comment[ru]=Читайте и пишите письма
+Comment[sk]=Čítajte a píšte poštu pomocou programu Thunderbird
+Comment[sv]=Läs och skriv e-post
+Comment[uk]=Читання та написання листів
+Comment[vi]=Đọc và soạn thư điện tử
+Comment[zh_CN]=阅读邮件或新闻
+Comment[zh_TW]=以 Mozilla Thunderbird 讀寫郵件或新聞
+GenericName=Mail Client
+GenericName[ast]=Client de correu
+GenericName[ca]=Client de correu
+GenericName[cs]=Poštovní klient
+GenericName[da]=E-postklient
+GenericName[de]=E-Mail-Anwendung
+GenericName[el]=Λογισμικό αλληλογραφίας
+GenericName[es]=Cliente de correo
+GenericName[fi]=Sähköpostiohjelma
+GenericName[fr]=Client de messagerie
+GenericName[gl]=Cliente de correo electrónico
+GenericName[he]=לקוח דוא״ל
+GenericName[hr]=Klijent e-pošte
+GenericName[hu]=Levelezőkliens
+GenericName[it]=Client email
+GenericName[ja]=電子メールクライアント
+GenericName[ko]=메일 클라이언트
+GenericName[nl]=E-mailprogramma
+GenericName[pl]=Klient poczty
+GenericName[pt_BR]=Cliente de E-mail
+GenericName[ru]=Почтовый клиент
+GenericName[sk]=Poštový klient
+GenericName[uk]=Поштова програма
+GenericName[vi]=Phần mềm khách quản lý thư điện tử
+GenericName[zh_CN]=邮件新闻客户端
+GenericName[zh_TW]=郵件用戶端
+Exec={{ thunderbird_gui_exec }} %u
+Terminal=false
+Type=Application
+Icon=org.mozilla.Thunderbird
+Categories=Network;Email;
+MimeType=message/rfc822;x-scheme-handler/mailto;text/calendar;text/vcard;text/x-vcard;x-scheme-handler/webcal;x-scheme-handler/webcals;x-scheme-handler/mid;
+StartupNotify=true
+StartupWMClass=thunderbird
+Actions=ComposeMessage;OpenAddressBook;
+
+[Desktop Action ComposeMessage]
+Name=Write new message
+Name[ar]=اكتب رسالة جديدة
+Name[ast]=Redactar mensaxe nuevu
+Name[be]=Напісаць новы ліст
+Name[bg]=Съставяне на ново съобщение
+Name[br]=Skrivañ ur gemennadenn nevez
+Name[ca]=Escriu un missatge nou
+Name[cs]=Napsat novou zprávu
+Name[da]=Skriv en ny meddelelse
+Name[de]=Neue Nachricht verfassen
+Name[el]=Σύνταξη νέου μηνύματος
+Name[es_AR]=Escribir un nuevo mensaje
+Name[es_ES]=Redactar nuevo mensaje
+Name[et]=Kirjuta uus kiri
+Name[eu]=Idatzi mezu berria
+Name[fi]=Kirjoita uusi viesti
+Name[fr]=Rédiger un nouveau message
+Name[fy_NL]=Skriuw in nij berjocht
+Name[ga_IE]=Scríobh teachtaireacht nua
+Name[gd]=Sgrìobh teachdaireachd ùr
+Name[gl]=Escribir unha nova mensaxe
+Name[he]=כתיבת הודעה חדשה
+Name[hr]=Piši novu poruku
+Name[hu]=Új üzenet írása
+Name[hy_AM]=Գրել նոր նամակ
+Name[is]=SKrifa nýjan póst
+Name[it]=Scrivi nuovo messaggio
+Name[ja]=新しいメッセージを作成する
+Name[ko]=새 메시지 작성
+Name[lt]=Rašyti naują laišką
+Name[nb_NO]=Skriv ny melding
+Name[nl]=Nieuw bericht aanmaken
+Name[nn_NO]=Skriv ny melding
+Name[pl]=Nowa wiadomość
+Name[pt_BR]=Nova mensagem
+Name[pt_PT]=Escrever nova mensagem
+Name[rm]=Scriver in nov messadi
+Name[ro]=Scrie un mesaj nou
+Name[ru]=Создать новое сообщение
+Name[sk]=Nová e-mailová správa
+Name[sl]=Sestavi novo sporočilo
+Name[sq]=Shkruani mesazh të ri
+Name[sr]=Писање нове поруке
+Name[sv_SE]=Skriv ett nytt meddelande
+Name[tr]=Yeni ileti yaz
+Name[uk]=Написати нового листа
+Name[vi]=Viết thư mới
+Name[zh_CN]=编写新消息
+Name[zh_TW]=寫一封新訊息
+Exec=thunderbird -compose
+
+[Desktop Action OpenAddressBook]
+Name=Open address book
+Name[ar]=افتح دفتر العناوين
+Name[ast]=Abrir llibreta de direiciones
+Name[be]=Адкрыць адрасную кнігу
+Name[bg]=Отваряне на адресник
+Name[br]=Digeriñ ur c'harned chomlec'hioù
+Name[ca]=Obre la llibreta d'adreces
+Name[cs]=Otevřít Adresář
+Name[da]=Åbn adressebog
+Name[de]=Adressbuch öffnen
+Name[el]=Άνοιγμα ευρετηρίου διευθύνσεων
+Name[es_AR]=Abrir libreta de direcciones
+Name[es_ES]=Abrir libreta de direcciones
+Name[et]=Ava aadressiraamat
+Name[eu]=Ireki helbide-liburua
+Name[fi]=Avaa osoitekirja
+Name[fr]=Ouvrir un carnet d'adresses
+Name[fy_NL]=Iepenje adresboek
+Name[ga_IE]=Oscail leabhar seoltaí
+Name[gd]=Fosgail leabhar-sheòlaidhean
+Name[gl]=Abrir a axenda de enderezos
+Name[he]=פתיחת ספר כתובות
+Name[hr]=Otvori adresar
+Name[hu]=Címjegyzék megnyitása
+Name[hy_AM]=Բացել Հասցեագիրքը
+Name[is]=Opna nafnaskrá
+Name[it]=Apri rubrica
+Name[ja]=アドレス帳を開く
+Name[ko]=주소록 열기
+Name[lt]=Atverti adresų knygą
+Name[nb_NO]=Åpne adressebok
+Name[nl]=Adresboek openen
+Name[nn_NO]=Opne adressebok
+Name[pl]=Książka adresowa
+Name[pt_BR]=Catálogo de endereços
+Name[pt_PT]=Abrir livro de endereços
+Name[rm]=Avrir il cudeschet d'adressas
+Name[ro]=Deschide agenda de contacte
+Name[ru]=Открыть адресную книгу
+Name[sk]=Otvoriť adresár
+Name[sl]=Odpri adressar
+Name[sq]=Hapni libër adresash
+Name[sr]=Отвори адресар
+Name[sv_SE]=Öppna adressboken
+Name[tr]=Adres defterini aç
+Name[uk]=Відкрити адресну книгу
+Name[vi]=Mở sổ địa chỉ
+Name[zh_CN]=打开通讯录
+Name[zh_TW]=開啟通訊錄
+Exec=thunderbird -addressbook
+```
+
+### FILE: thunderbird_headless/templates/thunderbird-headless-refresh.service.j2 ===
+```text
+[Unit]
+Description=Restart Thunderbird headless to force sync (only if active)
+
+[Service]
+Type=oneshot
+Environment=HOME=%h
+Environment=XDG_RUNTIME_DIR=%t
+StandardOutput=journal
+StandardError=journal
+# Skip if GUI is open; else stop → reset-failed → start
+ExecStart=/usr/bin/bash -lc '\
+  [ -f "$HOME/.local/state/thunderbird_gui.lock" ] && exit 0; \
+  if systemctl --user is-active --quiet {{ thunderbird_service_name }}; then \
+    systemctl --user stop {{ thunderbird_service_name }}; \
+    # wait up to ~15s for it to fully stop
+    for i in {1..15}; do systemctl --user is-active --quiet {{ thunderbird_service_name }} || break; sleep 1; done; \
+  fi; \
+  systemctl --user reset-failed {{ thunderbird_service_name }} || true; \
+  systemctl --user start {{ thunderbird_service_name }} || true'
+```
+
+### FILE: thunderbird_headless/templates/thunderbird-headless-refresh.timer.j2 ===
+```text
+[Unit]
+Description=Periodic restart of Thunderbird headless
+
+[Timer]
+OnBootSec=2min
+OnUnitActiveSec={{ thunderbird_refresh_interval }}
+AccuracySec=1s
+Persistent=true
+Unit=thunderbird-headless-refresh.service
+
+[Install]
+WantedBy=timers.target
+```
+
+### FILE: thunderbird_headless/tasks/main.yml ===
+```yaml
+- name: Ensure systemd is the service manager
+  ansible.builtin.assert:
+    that: ansible_service_mgr == "systemd"
+    fail_msg: "This role requires systemd."
+
+- name: Install Thunderbird (if requested)
+  ansible.builtin.package:
+    name: "{{ thunderbird_packages }}"
+    state: present
+  when: thunderbird_manage_packages
+
+- name: Install Xvfb (if using virtual display)
+  ansible.builtin.package:
+    name: "{{ thunderbird_xvfb_package }}"
+    state: present
+  when: thunderbird_use_xvfb
+
+# Enable lingering so user services can run from boot
+- name: Check lingering status for {{ thunderbird_user }}
+  ansible.builtin.command: "loginctl show-user {{ thunderbird_user }} --property=Linger"
+  register: _linger_status
+  changed_when: false
+  failed_when: false
+  become: true
+  when: thunderbird_enable_lingering
+
+- name: Enable lingering for {{ thunderbird_user }}
+  ansible.builtin.command: "loginctl enable-linger {{ thunderbird_user }}"
+  become: true
+  when:
+    - thunderbird_enable_lingering
+    - _linger_status.stdout is not defined or ('Linger=yes' not in _linger_status.stdout)
+
+# Create user unit
+- name: Ensure user systemd dir exists
+  ansible.builtin.file:
+    path: "{{ thunderbird_unit_dir }}"
+    state: directory
+    mode: "0755"
+  become: true
+  become_user: "{{ thunderbird_user }}"
+
+- name: Install Thunderbird headless user unit
+  ansible.builtin.template:
+    src: thunderbird-headless.service.j2
+    dest: "{{ thunderbird_unit_dir }}/{{ thunderbird_service_name }}"
+    mode: "0644"
+  become: true
+  become_user: "{{ thunderbird_user }}"
+  notify: restart thunderbird headless (user)
+
+- name: Install refresh service unit (timer method)
+  ansible.builtin.template:
+    src: thunderbird-headless-refresh.service.j2
+    dest: "{{ thunderbird_unit_dir }}/thunderbird-headless-refresh.service"
+    mode: "0644"
+  become: true
+  become_user: "{{ thunderbird_user }}"
+  when: thunderbird_refresh_method == "timer"
+  notify:
+    - restart thunderbird headless refresh timer (user)
+
+- name: Install refresh timer unit (timer method)
+  ansible.builtin.template:
+    src: thunderbird-headless-refresh.timer.j2
+    dest: "{{ thunderbird_unit_dir }}/thunderbird-headless-refresh.timer"
+    mode: "0644"
+  become: true
+  become_user: "{{ thunderbird_user }}"
+  when: thunderbird_refresh_method == "timer"
+  notify:
+    - restart thunderbird headless refresh timer (user)
+
+- name: Reload user systemd daemon
+  ansible.builtin.command: "systemctl --user daemon-reload"
+  become: true
+  become_user: "{{ thunderbird_user }}"
+  changed_when: false
+  failed_when: false
+
+- name: Enable and start the headless service
+  ansible.builtin.command: "systemctl --user enable --now {{ thunderbird_service_name }}"
+  become: true
+  become_user: "{{ thunderbird_user }}"
+  register: _enable_start
+  failed_when: false
+  changed_when: "'Created symlink' in _enable_start.stdout or 'Started' in _enable_start.stdout"
+
+- name: Enable and start the refresh timer (timer method)
+  ansible.builtin.command: "systemctl --user enable --now thunderbird-headless-refresh.timer"
+  become: true
+  become_user: "{{ thunderbird_user }}"
+  when: thunderbird_refresh_method == "timer"
+  register: _enable_timer
+  failed_when: false
+  changed_when: "'Created symlink' in _enable_timer.stdout or 'Started' in _enable_timer.stdout"
+
+# Fallback enable if enable --user fails without a session
+- name: Ensure default.target wants symlink exists (idempotent enable)
+  ansible.builtin.file:
+    state: link
+    src: "{{ thunderbird_unit_dir }}/{{ thunderbird_service_name }}"
+    dest: "{{ thunderbird_unit_dir }}/default.target.wants/{{ thunderbird_service_name }}"
+  become: true
+  become_user: "{{ thunderbird_user }}"
+  when: thunderbird_autostart
+
+# Ensure ~/.local/bin exists
+- name: Ensure per-user bin dir exists
+  ansible.builtin.file:
+    path: "{{ thunderbird_gui_wrapper_path | dirname }}"
+    state: directory
+    mode: "0755"
+  become: true
+  become_user: "{{ thunderbird_user }}"
+
+# Install the GUI wrapper
+- name: Install Thunderbird GUI wrapper
+  ansible.builtin.template:
+    src: thunderbird-gui-wrapper.sh.j2
+    dest: "{{ thunderbird_gui_wrapper_path }}"
+    mode: "0755"
+  become: true
+  become_user: "{{ thunderbird_user }}"
+
+# Ensure desktop overrides dir exists
+- name: Ensure ~/.local/share/applications exists
+  ansible.builtin.file:
+    path: "{{ lookup('env','HOME') ~ '/.local/share/applications' }}"
+    state: directory
+    mode: "0755"
+  become: true
+  become_user: "{{ thunderbird_user }}"
+  when: thunderbird_install_desktop_override
+
+# Install a desktop override *with the same ID* as the system file
+- name: Install Thunderbird desktop override (uses wrapper, shadows system entry)
+  ansible.builtin.template:
+    src: thunderbird.desktop.j2
+    dest: "{{ lookup('env','HOME') ~ '/.local/share/applications/' ~ thunderbird_desktop_id }}"
+    mode: "0644"
+  become: true
+  become_user: "{{ thunderbird_user }}"
+  when: thunderbird_install_desktop_override
+
+# Remove the old local desktop to avoid duplicates
+- name: Remove previous local thunderbird.desktop (cleanup)
+  ansible.builtin.file:
+    path: "{{ lookup('env','HOME') ~ '/.local/share/applications/thunderbird.desktop' }}"
+    state: absent
+  become: true
+  become_user: "{{ thunderbird_user }}"
+
+- name: Update desktop database (optional)
+  ansible.builtin.command: "update-desktop-database {{ lookup('env','HOME') ~ '/.local/share/applications' }}"
+  changed_when: false
+  failed_when: false
+  become: true
+  become_user: "{{ thunderbird_user }}"
+```
+
+### FILE: thunderbird_headless/handlers/main.yml ===
+```yaml
+- name: restart thunderbird headless (user)
+  ansible.builtin.command: "systemctl --user restart {{ thunderbird_service_name }}"
+  become: true
+  become_user: "{{ thunderbird_user }}"
+  changed_when: true
+  failed_when: false
+
+- name: restart thunderbird headless refresh timer (user)
+  ansible.builtin.command: "systemctl --user restart thunderbird-headless-refresh.timer"
+  become: true
+  become_user: "{{ thunderbird_user }}"
+  changed_when: true
+  failed_when: false
+```
+
+### FILE: mcp_hub_ui/defaults/main.yml ===
+```yaml
+# roles/mcp_hub_ui/defaults/main.yml
+mcp_hub_ui_enabled: true
+
+# Port where the web UI will listen
+mcp_hub_ui_port: 7801
+
+# Path to the mcp-hub binary (global npm on Arch installs to /usr/bin)
+mcp_hub_ui_bin: /usr/bin/mcp-hub
+
+# User that will own & run the user service (defaults to your mcp_owner if set)
+mcp_hub_ui_user: "{{ mcp_owner | default(ansible_user_id) }}"
+
+# Enable lingering so user services can run without an active login session
+mcp_hub_ui_enable_lingering: true
+
+# Extra env for the service (safe default PATH)
+mcp_hub_ui_environment:
+  PATH: "%h/.local/bin:/usr/local/bin:/usr/bin"
+
+# Optional extra CLI args for the UI process
+# (Example: ["--verbose"] or ["--host","127.0.0.1"])
+mcp_hub_ui_extra_args:
+  - --host
+  - 127.0.0.1
+  - --no-open
+
+# How long to wait for the port to come up after (re)starting (seconds)
+mcp_hub_ui_wait_timeout: 90
+```
+
+### FILE: mcp_hub_ui/templates/mcp-hub-ui.service.j2 ===
+```text
+# roles/mcp_hub_ui/templates/mcp-hub-ui.service.j2
+[Unit]
+Description=MCP Hub UI
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+ExecStart={{ mcp_hub_ui_bin }} ui --port {{ mcp_hub_ui_port }}{% for a in mcp_hub_ui_extra_args %} {{ a }}{% endfor %}
+Restart=on-failure
+RestartSec=2
+{% for k, v in mcp_hub_ui_environment.items() %}
+Environment={{ k }}={{ v }}
+{% endfor %}
+WorkingDirectory=%h
+
+[Install]
+WantedBy=default.target
+```
+
+### FILE: mcp_hub_ui/tasks/main.yml ===
+```yaml
+# roles/mcp_hub_ui/tasks/main.yml
+- name: "Skip mcp_hub_ui role (disabled)"
+  when: not mcp_hub_ui_enabled | bool
+  ansible.builtin.debug:
+    msg: "mcp_hub_ui_enabled=false, skipping."
+  tags: [mcp_hub_ui]
+  changed_when: false
+
+- name: "Assert mcp-hub is installed and executable"
+  when: mcp_hub_ui_enabled | bool
+  become: true
+  become_user: "{{ mcp_hub_ui_user }}"
+  ansible.builtin.command:
+    cmd: "{{ mcp_hub_ui_bin }} --version"
+  register: _hub_ver
+  changed_when: false
+  tags: [mcp_hub_ui]
+
+- name: "Show mcp-hub version"
+  when: mcp_hub_ui_enabled | bool
+  ansible.builtin.debug:
+    msg: "mcp-hub version: {{ _hub_ver.stdout | default('unknown') }}"
+  tags: [mcp_hub_ui]
+
+- name: "Enable lingering for {{ mcp_hub_ui_user }} (so user services run in background)"
+  when: mcp_hub_ui_enabled | bool and mcp_hub_ui_enable_lingering | bool
+  become: true
+  ansible.builtin.command: "loginctl enable-linger {{ mcp_hub_ui_user }}"
+  changed_when: false
+  failed_when: false
+  tags: [mcp_hub_ui]
+
+- name: "Ensure user systemd dir exists"
+  when: mcp_hub_ui_enabled | bool
+  become: true
+  become_user: "{{ mcp_hub_ui_user }}"
+  ansible.builtin.file:
+    path: "~/.config/systemd/user"
+    state: directory
+    mode: "0755"
+  tags: [mcp_hub_ui]
+
+- name: "Install user unit: mcp-hub-ui.service"
+  when: mcp_hub_ui_enabled | bool
+  become: true
+  become_user: "{{ mcp_hub_ui_user }}"
+  ansible.builtin.template:
+    src: "mcp-hub-ui.service.j2"
+    dest: "~/.config/systemd/user/mcp-hub-ui.service"
+    mode: "0644"
+  tags: [mcp_hub_ui]
+
+- name: "User systemd daemon-reload"
+  when: mcp_hub_ui_enabled | bool
+  become: true
+  become_user: "{{ mcp_hub_ui_user }}"
+  ansible.builtin.command: "systemctl --user daemon-reload"
+  changed_when: false
+  failed_when: false
+  tags: [mcp_hub_ui]
+
+- name: "Enable/Start mcp-hub-ui.service"
+  when: mcp_hub_ui_enabled | bool
+  become: true
+  become_user: "{{ mcp_hub_ui_user }}"
+  ansible.builtin.systemd:
+    name: mcp-hub-ui.service
+    scope: user
+    enabled: true
+    state: started
+    daemon_reload: false
+  tags: [mcp_hub_ui]
+
+# Try, then diagnose on failure
+- block:
+    - name: "Wait for MCP Hub UI to listen on {{ mcp_hub_ui_port }}"
+      when: mcp_hub_ui_enabled | bool
+      ansible.builtin.wait_for:
+        host: "127.0.0.1"
+        port: "{{ mcp_hub_ui_port }}"
+        timeout: "{{ mcp_hub_ui_wait_timeout }}"
+      register: _ui_wait
+      tags: [mcp_hub_ui]
+
+  rescue:
+    - name: "DIAG: systemctl --user status mcp-hub-ui.service"
+      become: true
+      become_user: "{{ mcp_hub_ui_user }}"
+      ansible.builtin.command:
+        cmd: "systemctl --user status mcp-hub-ui.service --no-pager"
+      register: _ui_status
+      changed_when: false
+      failed_when: false
+      tags: [mcp_hub_ui]
+
+    - name: "DIAG: journalctl (last 200 lines)"
+      become: true
+      become_user: "{{ mcp_hub_ui_user }}"
+      ansible.builtin.command:
+        cmd: "journalctl --user -u mcp-hub-ui.service -n 200 --no-pager"
+      register: _ui_journal
+      changed_when: false
+      failed_when: false
+      tags: [mcp_hub_ui]
+
+    - name: "DIAG: show status/journal"
+      ansible.builtin.debug:
+        msg:
+          - "Wait for port {{ mcp_hub_ui_port }} failed; here are diagnostics:"
+          - "{{ _ui_status.stdout | default('') }}"
+          - "{{ _ui_journal.stdout | default('') }}"
+      tags: [mcp_hub_ui]
+
+    - name: "Fail: MCP Hub UI did not bind to port {{ mcp_hub_ui_port }}"
+      ansible.builtin.fail:
+        msg: "MCP Hub UI did not listen on 127.0.0.1:{{ mcp_hub_ui_port }} within {{ mcp_hub_ui_wait_timeout }}s. See diagnostics above."
+      tags: [mcp_hub_ui]
+
+- name: "Debug: UI URL"
+  when: mcp_hub_ui_enabled | bool
+  ansible.builtin.debug:
+    msg: "MCP Hub UI is up: http://localhost:{{ mcp_hub_ui_port }}"
+  tags: [mcp_hub_ui]
+```
+
+### FILE: repos/tasks/main.yml ===
+```yaml
+- name: Git - Sychronize target user's personal repositories
+  ansible.builtin.git:
+    repo: "{{ item }}"
+    dest: "/home/{{ target_user }}/src/{{ item.split('/')[-1].split('.')[0] }}"
+    force: yes
+  with_items: "{{ git_repositories }}"
+  become: true
+  become_user: "{{ target_user }}"
+  tags: ["workstation-debian", "repos", "repos-personal", "workstation-arch"]
+  ignore_errors: true
+
+- name: Git - Create directory ~/src/external
+  file:
+    path: "/home/{{ target_user }}/src/external"
+    state: directory
+    owner: "{{ target_user }}"
+    group: "{{ target_user }}"
+    mode: 0755
+  become: true
+  become_user: "{{ target_user }}"
+  tags: ["workstation-debian", "repos", "repos-external", "workstation-arch"]
+
+- name: Git - Create additional user directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    # User can rwx
+    owner: "{{ target_user }}"
+    # group: "{{ target_user }}"
+    mode: "744"
+  with_items:
+    - "/home/{{ target_user }}/usr/bin"
+  tags: ["workstation-debian", "repos", "repos-external", "workstation-arch"]
+
+- name: Git - Sychronize other external repositories
+  ansible.builtin.git:
+    repo: "{{ item }}"
+    dest: "/home/{{ target_user }}/src/external/{{ item.split('/')[-1].split('.git')[0] }}"
+    force: no
+  with_items: "{{ git_repositories_external }}"
+  become: true
+  become_user: "{{ target_user }}"
+  tags: ["workstation-debian", "repos", "repos-external", "workstation-arch"]
+  ignore_errors: true
+```
+
+### FILE: links/tasks/main.yml ===
+```yaml
+# Task for user-owned paths
+- name: Link files with full paths in user directories
+  ansible.builtin.file:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    state: link
+    force: true
+    owner: "{{ target_user }}"
+    mode: "0644"
+  loop: "{{ regular_links | selectattr('dest', 'match', '^/home/') | list }}"
+  become: true
+  become_user: "{{ target_user }}"
+  tags: ["links", "symlink"]
+
+# Task for system paths
+- name: Link files with full paths in system directories
+  ansible.builtin.file:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    state: link
+    force: true
+    owner: root
+    mode: "0644"
+  loop: "{{ regular_links | selectattr('dest', 'match', '^/usr/|^/etc/') | list }}"
+  become: true
+  tags: ["links", "symlink"]
+```
+
+### FILE: dotfiles/tasks/main.yml ===
+```yaml
+---
+- name: Link dotfiles into home folder
+  ansible.builtin.file:
+    src: "{{ dotfiles_repo_local_destination }}/{{ item.src }}"
+    dest: "{{ dotfiles_home }}/{{ item.dest }}"
+    state: link
+    force: true 
+    owner: "{{ target_user }}"
+    mode: "0644"
+  loop: "{{ dotfiles_links }}"
+  become: true
+  become_user: "{{ target_user }}"
+  tags: ["dotfiles", "dotfiles-symlink"]
+
+- name: Ensure specified scripts are executable
+  ansible.builtin.file:
+    path: "{{ dotfiles_repo_local_destination }}/{{ item }}"
+    mode: "0755"
+  with_items: "{{ dotfiles_files_binaries }}"
+  when: dotfiles_files_binaries is defined
+  become: true
+  become_user: "{{ target_user }}"
+  tags: ["dotfiles", "dotfiles-symlink-binaries"]
+```
+
+### FILE: npm_global/defaults/main.yml ===
+```yaml
+---
+# List can be strings ("pkg@version" or "pkg") or dicts:
+#   - mcp-hub@latest
+#   - { name: mcp-hub, version: latest, state: present }
+#   - { name: typescript, state: latest }
+npm_global_packages: []
+
+# Default state for items that omit it (present|absent|latest)
+npm_global_default_state: present
+
+# Path to npm executable (override if you use corepack/pnpm/yarn)
+npm_global_executable: npm
+
+# For rootful installs, lifecycle scripts sometimes need this
+npm_global_unsafe_perm: true
+
+# If you ever want to install per-user instead of global system:
+# Set to a username like "henning" to install under that user’s $HOME.
+npm_global_as_user: ""
+```
+
+### FILE: npm_global/tasks/main.yml ===
+```yaml
+---
+# Keep this role dependency-free and robust against odd inputs.
+
+- name: Check npm executable
+  ansible.builtin.command: "{{ npm_global_executable }} --version"
+  changed_when: false
+
+# Guard in case the list is undefined somewhere upstream
+- name: Ensure npm_global_packages is a list
+  ansible.builtin.assert:
+    that: npm_global_packages is iterable
+    fail_msg: "npm_global_packages must be a list (strings or dict items)."
+
+# Install / remove packages directly from the list, computing spec per item.
+# Supports:
+#   - "mcp-hub@latest"
+#   - "typescript # with comment"
+#   - { name: mcp-hub, version: latest, state: present }
+#   - { name: yarn, state: latest }
+- name: Ensure global npm packages are in desired state
+  vars:
+    _is_mapping: "{{ item is mapping }}"
+    # If item is a string, strip any inline shell-style comment ` # ...`
+    _name_raw: "{{ (item.name if _is_mapping else item) }}"
+    _name: "{{ _name_raw | regex_replace('\\s+#.*$', '') | trim }}"
+    _version: "{{ (item.version if (_is_mapping and (item.version is defined)) else '') | trim }}"
+    _state: >-
+      {{
+        (item.state | default(npm_global_default_state))
+        if _is_mapping else
+        npm_global_default_state
+      }}
+    _spec: "{{ _name ~ '@' ~ _version if _version|length > 0 else _name }}"
+  become: true
+  become_user: "{{ (npm_global_as_user if npm_global_as_user|length > 0 else omit) }}"
+  community.general.npm:
+    name: "{{ _spec }}"
+    global: true
+    state: "{{ _state }}"
+    executable: "{{ npm_global_executable }}"
+    production: true
+    unsafe_perm: "{{ npm_global_unsafe_perm }}"
+  loop: "{{ npm_global_packages }}"
+  loop_control:
+    label: "{{ _spec }}"
+  tags: [npm, mcp]
+```
+
+### FILE: zsh/tasks/main.yml ===
+```yaml
+---
+- name: Check if Zsh is installed
+  command: which zsh
+  register: zsh_check
+  changed_when: false
+  failed_when: false
+
+- name: Install Zsh if not present
+  pacman:
+    name: zsh
+    state: present
+  become: true
+  when: zsh_check.rc != 0
+
+- name: Set Zsh as the default shell for the user
+  user:
+    name: "{{ target_user }}"
+    shell: /bin/zsh
+  become: true
+
+- name: Ensure .zshrc is symlinked from dotfiles
+  file:
+    src: "/home/{{ target_user }}/src/dotfiles/zsh/.zshrc"
+    dest: "/home/{{ target_user }}/.zshrc"
+    state: link
+  become: true
+  become_user: "{{ target_user }}"
+  
+- name: Check current permissions before
+  command: ls -ld /usr/share/zsh-theme-powerlevel10k
+  register: before_permissions
+  become: yes
+  ignore_errors: yes 
+```
+
+### FILE: luarocks311/tasks/main.yml ===
+```yaml
+---
+- name: Install prerequisites using pacman
+  become: true
+  community.general.pacman:
+    name:
+      - lua51
+      - base-devel
+      - unzip
+      - curl
+      - openssl
+    state: present
+
+- name: Download LuaRocks source archive
+  ansible.builtin.get_url:
+    url: https://luarocks.org/releases/luarocks-3.11.1.tar.gz
+    dest: /tmp/luarocks-3.11.1.tar.gz
+    mode: '0644'
+
+- name: Extract LuaRocks archive
+  ansible.builtin.unarchive:
+    src: /tmp/luarocks-3.11.1.tar.gz
+    dest: /tmp
+    remote_src: true
+
+- name: Configure LuaRocks build for Lua 5.1
+  ansible.builtin.command:
+    cmd: ./configure --prefix=/usr --with-lua=/usr --lua-version=5.1 --lua-suffix=5.1 --with-lua-interpreter=lua5.1
+    chdir: /tmp/luarocks-3.11.1
+  changed_when: false
+
+- name: Build LuaRocks
+  ansible.builtin.command:
+    cmd: make
+    chdir: /tmp/luarocks-3.11.1
+
+- name: Install LuaRocks
+  become: true
+  ansible.builtin.command:
+    cmd: make install
+    chdir: /tmp/luarocks-3.11.1
+```
+
+### FILE: rust/tasks/main.yml ===
+```yaml
+# Install rust
+
+- name: Add rustup, accept defaults
+  ansible.builtin.shell: "curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y"
+  tags: ["workstation-debian", "rust", "package", "workstation-fedora"]
+  become: true
+  become_user: "{{ target_user }}"
+
+- name: Add rust-analyzer, clippy, rustfmt
+  ansible.builtin.shell: "$HOME/.cargo/bin/rustup component add rustfmt clippy rust-analyzer"
+  tags: ["workstation-debian", "rust", "package", "workstation-fedora"]
+  become: true
+  become_user: "{{ target_user }}"
+```
+
+### FILE: nftables/defaults/main.yml ===
+```yaml
+---
+nftables_allowed_tcp_ports: [22]  # SSH by default
+nftables_allowed_udp_ports: []    # Add UDP ports if needed
+nftables_ipv4_lan_sets: ["10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16", "169.254.0.0/16"]
+nftables_ipv6_lan_sets: ["fd00::/8", "fe80::/10"]
+```
+
+### FILE: nftables/templates/nftables.conf.j2 ===
+```text
+flush ruleset
+
+table inet filter {
+  set LANv4 {
+    type ipv4_addr
+    flags interval
+    elements = { {{ nftables_ipv4_lan_sets | join(', ') }} }
+  }
+  set LANv6 {
+    type ipv6_addr
+    flags interval
+    elements = { {{ nftables_ipv6_lan_sets | join(', ') }} }
+  }
+
+  chain input {
+    type filter hook input priority filter; policy drop;
+    iif "lo" accept comment "Accept loopback traffic i.e. local inter-process communications"
+    ct state invalid drop comment "Drop invalid connections"
+    ct state { established, related } accept comment "Accept established and related traffic"
+    meta l4proto { icmp, ipv6-icmp } accept comment "Accept ICMP"
+    ip protocol igmp accept comment "Accept IGMP"
+    udp dport mdns ip6 daddr ff02::fb accept comment "Accept mDNS (IPv6)"
+    udp dport mdns ip daddr 224.0.0.251 accept comment "Accept mDNS (IPv4)"
+    ip6 saddr @LANv6 accept comment "Accept local IPv6 traffic"
+    ip saddr @LANv4 accept comment "Accept local IPv4 traffic"
+    {% if nftables_allowed_tcp_ports %}
+    tcp dport { {{ nftables_allowed_tcp_ports | join(', ') }} } accept comment "Accept specified TCP ports"
+    {% endif %}
+    {% if nftables_allowed_udp_ports %}
+    udp dport { {{ nftables_allowed_udp_ports | join(', ') }} } accept comment "Accept specified UDP ports"
+    {% endif %}
+  }
+
+  chain forward {
+    type filter hook forward priority filter; policy drop;
+    # No forwarding by default; enable if needed for router setups
+  }
+
+  chain output {
+    type filter hook output priority filter; policy accept;
+    # Accept all outbound traffic
+  }
+}
+```
+
+### FILE: nftables/tasks/main.yml ===
+```yaml
+---
+- name: Install nftables package
+  community.general.pacman:
+    name: nftables
+    state: present
+
+- name: Deploy nftables configuration
+  ansible.builtin.template:
+    src: nftables.conf.j2
+    dest: /etc/nftables.conf
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Reload nftables
+
+- name: Enable and start nftables service
+  ansible.builtin.systemd:
+    name: nftables.service
+    enabled: true
+    state: started
+```
+
+### FILE: nftables/handlers/main.yml ===
+```yaml
+---
+- name: Reload nftables
+  ansible.builtin.systemd:
+    name: nftables.service
+    state: reloaded
+```
+
+### FILE: hwdev_serial/defaults/main.yml ===
+```yaml
+---
+# Target user to grant serial access (your repo already defines target_user for dotfiles)
+target_user: "{{ target_user | default('henning') }}"
+
+# Core serial/UI tools to install from pacman (minimal)
+hwdev_core_packages:
+  - minicom         # classic serial terminal
+  - picocom         # tiny serial terminal
+  - screen          # fallback terminal multiplexer/serial
+  - python-pyserial # pyserial for quick scripts
+  - usbutils        # lsusb
+  - avrdude         # AVR flashing
+  - dfu-util        # DFU bootloaders (STM32, etc.)
+  - openocd         # JTAG/SWD debug
+  - stlink          # ST-Link utility
+  - esptool         # ESP8266/ESP32 flashing
+  - subversion
+  - bc
+  - ccache
+  - tftp-hpa
+  - swig
+
+# Enable this to install a lean OpenWrt/RUT field & build toolkit
+hwdev_openwrt_tooling: true
+
+# OpenWrt build deps & useful field tools (Arch package names)
+# Note: 'base-devel' is a group; skip if you already have it.
+hwdev_openwrt_packages:
+  - base-devel      # make, gcc, etc. (group)
+  - gawk
+  - gettext
+  - ncurses
+  - zlib
+  - rsync
+  - file
+  - time            # measure build steps
+  - inetutils       # provides 'telnet' client
+  # - sshpass       # optionally, for scripted auth (prefer keys)
+
+# Whether to deploy udev rules that (a) give group=uucp, mode=0660, and
+# (b) set ID_MM_DEVICE_IGNORE=1 so ModemManager doesn't grab dev boards.
+hwdev_install_udev_rules: true
+
+# Whether to try to restart services that tend to hold ttys (safer to leave false)
+hwdev_restart_networkmanager: false
+hwdev_restart_modemmanager: false
+```
+
+### FILE: hwdev_serial/files/99-serial-dev.rules ===
+```text
+# Common serial adapters / dev boards
+# - group=uucp, mode=0660 so users in 'uucp' can access without sudo
+# - ID_MM_DEVICE_IGNORE=1 prevents ModemManager from grabbing and blocking ports
+
+# Generic ACM devices (Arduino, STM32 CDC ACM, RP Pico, etc.)
+SUBSYSTEM=="tty", KERNEL=="ttyACM[0-9]*", GROUP="uucp", MODE="0660", ENV{ID_MM_DEVICE_IGNORE}="1"
+
+# FTDI (0403:*), covers many dev boards & USB-UARTs
+SUBSYSTEM=="tty", ATTRS{idVendor}=="0403", GROUP="uucp", MODE="0660", ENV{ID_MM_DEVICE_IGNORE}="1"
+
+# Silicon Labs CP210x (10c4:ea60 and variants)
+SUBSYSTEM=="tty", ATTRS{idVendor}=="10c4", GROUP="uucp", MODE="0660", ENV{ID_MM_DEVICE_IGNORE}="1"
+
+# WCH CH340/CH341 (1a86:7523 etc.)
+SUBSYSTEM=="tty", ATTRS{idVendor}=="1a86", GROUP="uucp", MODE="0660", ENV{ID_MM_DEVICE_IGNORE}="1"
+
+# Prolific PL2303 (067b:*) widely used in USB-UART dongles
+SUBSYSTEM=="tty", ATTRS{idVendor}=="067b", GROUP="uucp", MODE="0660", ENV{ID_MM_DEVICE_IGNORE}="1"
+
+# Arduino SA (2341:*) incl. genuine boards
+SUBSYSTEM=="tty", ATTRS{idVendor}=="2341", GROUP="uucp", MODE="0660", ENV{ID_MM_DEVICE_IGNORE}="1"
+
+# Raspberry Pi Pico (2e8a:*) in CDC mode
+SUBSYSTEM=="tty", ATTRS{idVendor}=="2e8a", GROUP="uucp", MODE="0660", ENV{ID_MM_DEVICE_IGNORE}="1"
+```
+
+### FILE: hwdev_serial/tasks/main.yml ===
+```yaml
+---
+- name: Ensure serial dev groups exist (Arch default, but keep idempotent)
+  become: true
+  ansible.builtin.group:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - uucp
+    - lock
+
+- name: Add {{ target_user }} to serial groups (uucp, lock)
+  become: true
+  ansible.builtin.user:
+    name: "{{ target_user }}"
+    groups: [uucp, lock]
+    append: true
+
+- name: Install core HW dev/serial packages
+  become: true
+  ansible.builtin.pacman:
+    name: "{{ hwdev_core_packages }}"
+    state: present
+    update_cache: true
+
+- name: Install OpenWrt build + field tools (if enabled)
+  become: true
+  when: hwdev_openwrt_tooling | bool
+  ansible.builtin.pacman:
+    name: "{{ hwdev_openwrt_packages }}"
+    state: present
+
+- name: Deploy udev rules for common dev boards and serial adapters
+  become: true
+  when: hwdev_install_udev_rules | bool
+  ansible.builtin.copy:
+    src: 99-serial-dev.rules
+    dest: /etc/udev/rules.d/99-serial-dev.rules
+    owner: root
+    group: root
+    mode: "0644"
+  notify:
+    - reload udev
+    - retrigger tty uevents
+
+# Optional: restart services that may have grabbed ttys before rules applied
+- name: Maybe restart NetworkManager
+  when: hwdev_restart_networkmanager | bool
+  ansible.builtin.meta: flush_handlers
+
+- name: Maybe restart ModemManager
+  when: hwdev_restart_modemmanager | bool
+  ansible.builtin.meta: flush_handlers
+
+- name: Post-run note about login session
+  ansible.builtin.debug:
+    msg: >
+      '{{ target_user }}' was added to groups [uucp, lock]. Log out and back in
+      (or reboot) for group membership to take effect.
+```
+
+### FILE: hwdev_serial/handlers/main.yml ===
+```yaml
+---
+# These names MUST match the 'notify' entries in tasks/main.yml
+
+- name: reload udev
+  become: true
+  ansible.builtin.command: udevadm control --reload
+  changed_when: false
+
+- name: retrigger tty uevents
+  become: true
+  ansible.builtin.command: udevadm trigger --subsystem-match=tty
+  changed_when: false
+
+- name: restart NetworkManager
+  become: true
+  ansible.builtin.systemd:
+    name: NetworkManager
+    state: restarted
+
+- name: restart ModemManager
+  become: true
+  ansible.builtin.systemd:
+    name: ModemManager
+    state: restarted
+  failed_when: false
+```
+
+### FILE: dns/defaults/main.yml ===
+```yaml
+---
+# Choose ONE provider:
+#   - systemd-resolved   (recommended)
+#   - openresolv
+dns_provider: "systemd-resolved"
+
+# If true, uninstall the non-selected provider to avoid conflicts/signature mismatches
+dns_remove_conflicts: true
+
+# Configure NetworkManager to cooperate with the chosen provider (only if NM is installed)
+#   - for systemd-resolved: sets [main] dns=systemd-resolved
+#   - for openresolv:       sets [main] dns=default
+dns_configure_networkmanager: true
+
+# Path to the systemd-resolved stub resolv.conf
+dns_resolved_stub: "/run/systemd/resolve/stub-resolv.conf"
+
+# Temporary resolvers to seed /etc/resolv.conf if needed (openresolv path)
+dns_fallback_nameservers:
+  - "1.1.1.1"
+  - "9.9.9.9"
+
+# Optional sanity check with your WireGuard role:
+# If you keep DNS= lines in /etc/wireguard/wg0.conf, you MUST have a resolvconf provider.
+# Set this to the same location/name as in your WireGuard role to enable the check.
+wg_conf_dir: "/etc/wireguard"
+wg_interface: "wg0"
+dns_fail_if_wg_dns_without_provider: true
+```
+
+### FILE: dns/tasks/main.yml ===
+```yaml
+---
+- name: Assert Arch Linux (to avoid surprises)
+  ansible.builtin.assert:
+    that:
+      - ansible_distribution | lower == "archlinux"
+    fail_msg: "This dns role currently targets Arch Linux."
+    success_msg: "Arch Linux detected."
+
+# Optional WireGuard sanity: if DNS= present in wg conf, we must provide resolvconf
+- name: Stat WireGuard config
+  become: true
+  ansible.builtin.stat:
+    path: "{{ wg_conf_dir }}/{{ wg_interface }}.conf"
+  register: _wgconf
+
+- name: Read WireGuard config (if present)
+  become: true
+  ansible.builtin.slurp:
+    path: "{{ wg_conf_dir }}/{{ wg_interface }}.conf"
+  register: _wgconf_content
+  when: _wgconf.stat.exists
+
+- name: Detect DNS= lines in WireGuard config
+  ansible.builtin.set_fact:
+    _wg_has_dns: >-
+      {{
+        (_wgconf_content.content | default('') | b64decode).splitlines()
+        | select('search', '^\\s*DNS\\s*=')
+        | list | length > 0
+      }}
+  when: _wgconf.stat.exists
+
+- name: Fail fast if DNS= is present but no known provider chosen
+  ansible.builtin.fail:
+    msg: >-
+      Your WireGuard config includes DNS= but dns_provider is not one of
+      ['systemd-resolved','openresolv']. Set dns_provider accordingly.
+  when:
+    - dns_fail_if_wg_dns_without_provider | bool
+    - _wgconf.stat.exists
+    - _wg_has_dns | default(false)
+    - dns_provider not in ['systemd-resolved', 'openresolv']
+
+# ------------------------------
+# Detect whether NetworkManager is installed
+# ------------------------------
+- name: Detect if NetworkManager is installed (Arch package 'networkmanager')
+  ansible.builtin.command: pacman -Q networkmanager
+  register: _nm_q
+  changed_when: false
+  failed_when: false
+
+- name: Set fact nm_installed
+  ansible.builtin.set_fact:
+    nm_installed: "{{ _nm_q.rc == 0 }}"
+
+- name: Debug NM state
+  ansible.builtin.debug:
+    msg: >-
+      NetworkManager detected: {{ nm_installed }}.
+      DNS provider: {{ dns_provider }}.
+  when: (ansible_verbosity | default(0) | int) > 0
+
+# ------------------------------
+# Provider: systemd-resolved
+# ------------------------------
+- name: Install systemd-resolvconf (provides /usr/bin/resolvconf)
+  become: true
+  ansible.builtin.pacman:
+    name: systemd-resolvconf
+    state: present
+    update_cache: true
+  when: dns_provider == "systemd-resolved"
+
+- name: Enable and start systemd-resolved
+  become: true
+  ansible.builtin.systemd:
+    name: systemd-resolved
+    enabled: true
+    state: started
+  when: dns_provider == "systemd-resolved"
+
+- name: Point /etc/resolv.conf to the systemd-resolved stub
+  become: true
+  ansible.builtin.file:
+    src: "{{ dns_resolved_stub }}"
+    dest: /etc/resolv.conf
+    state: link
+    force: true
+  notify: reload systemd-resolved
+  when: dns_provider == "systemd-resolved"
+
+- name: Configure NetworkManager for systemd-resolved (only if installed)
+  become: true
+  ansible.builtin.copy:
+    dest: /etc/NetworkManager/conf.d/99-dns.conf
+    owner: root
+    group: root
+    mode: "0644"
+    content: |
+      [main]
+      dns=systemd-resolved
+  notify: restart NetworkManager
+  when:
+    - dns_provider == "systemd-resolved"
+    - dns_configure_networkmanager | bool
+    - nm_installed | bool
+
+- name: Remove openresolv if present (avoid conflicts)
+  become: true
+  ansible.builtin.pacman:
+    name: openresolv
+    state: absent
+  when: dns_provider == "systemd-resolved" and dns_remove_conflicts | bool
+
+# ------------------------------
+# Provider: openresolv
+# ------------------------------
+- name: Install openresolv (provides /usr/bin/resolvconf)
+  become: true
+  ansible.builtin.pacman:
+    name: openresolv
+    state: present
+    update_cache: true
+  when: dns_provider == "openresolv"
+
+- name: Ensure /etc/resolv.conf is a regular file (not a symlink)
+  become: true
+  ansible.builtin.file:
+    path: /etc/resolv.conf
+    state: absent
+  when: dns_provider == "openresolv"
+
+- name: Seed a minimal /etc/resolv.conf (temporary baseline)
+  become: true
+  ansible.builtin.copy:
+    dest: /etc/resolv.conf
+    owner: root
+    group: root
+    mode: "0644"
+    content: |
+      {% for ns in dns_fallback_nameservers %}
+      nameserver {{ ns }}
+      {% endfor %}
+  when: dns_provider == "openresolv"
+
+- name: Attempt to populate resolv.conf from resolvconf (ignore errors if no sources yet)
+  become: true
+  ansible.builtin.command: resolvconf -u
+  register: _resolvconf_u
+  changed_when: "'not found' not in (_resolvconf_u.stderr | default(''))"
+  failed_when: false
+  when: dns_provider == "openresolv"
+
+- name: Configure NetworkManager for openresolv/default handling (only if installed)
+  become: true
+  ansible.builtin.copy:
+    dest: /etc/NetworkManager/conf.d/99-dns.conf
+    owner: root
+    group: root
+    mode: "0644"
+    content: |
+      [main]
+      dns=default
+  notify: restart NetworkManager
+  when:
+    - dns_provider == "openresolv"
+    - dns_configure_networkmanager | bool
+    - nm_installed | bool
+
+- name: Remove systemd-resolvconf if present (avoid conflicts)
+  become: true
+  ansible.builtin.pacman:
+    name: systemd-resolvconf
+    state: absent
+  when: dns_provider == "openresolv" and dns_remove_conflicts | bool
+```
+
+### FILE: dns/handlers/main.yml ===
+```yaml
+---
+- name: restart systemd-resolved
+  become: true
+  ansible.builtin.systemd:
+    name: systemd-resolved
+    state: restarted
+
+- name: reload systemd-resolved
+  become: true
+  ansible.builtin.systemd:
+    name: systemd-resolved
+    state: reloaded
+
+- name: restart NetworkManager
+  become: true
+  ansible.builtin.systemd:
+    name: NetworkManager
+    state: restarted
+```
+
+### FILE: homebrew/tasks/main.yml ===
+```yaml
+# Update homebrew and upgrade all packages
+- name: Update and upgrade all installed packages
+  community.general.homebrew:
+    update_homebrew: true
+    upgrade_all: true
+  tags: ["homebrew", "workstation-macos", "package"]
+  become_user: "{{ target_user }}"
+```
+
+### FILE: aur/tasks/main.yml ===
+```yaml
+---
+- name: Ensure target user is in wheel group
+  user:
+    name: "{{ target_user }}"
+    groups: wheel
+    append: yes
+  become: true
+  tags: ['aur']
+  
+- name: Backup original sudoers file
+  ansible.builtin.copy:
+    src: /etc/sudoers
+    dest: /etc/sudoers.ansible_backup
+    owner: "{{ 'root' }}"
+    mode: "0644"
+    remote_src: yes
+  become: true
+  tags: ['aur']
+
+- name: Allow wheel group to sudo without password
+  lineinfile:
+    path: /etc/sudoers
+    regexp: '^# %wheel ALL=\(ALL:ALL\) ALL'
+    line: '%wheel ALL=(ALL:ALL) NOPASSWD: ALL'
+    validate: /usr/sbin/visudo -cf %s
+  become: true
+  tags: ['aur']
+
+- name: Install paru build dependencies
+  community.general.pacman:
+    name: rust
+    state: present
+  become: true
+  tags: ['aur']
+
+- name: Build paru package (no install or dep sync)
+  ansible.builtin.shell:
+    cmd: "makepkg --noconfirm"
+    chdir: "/home/{{ target_user }}/src/external/paru-git"
+  become: true
+  become_user: "{{ target_user }}"
+  args:
+    creates: "/home/{{ target_user }}/src/external/paru-git/paru-git*.pkg.tar.zst"
+  tags: ['aur']
+
+- name: Find built paru package
+  find:
+    paths: "/home/{{ target_user }}/src/external/paru-git"
+    patterns: "*.pkg.tar.zst"
+  register: paru_package
+  become: true
+  tags: ['aur']
+
+- name: Select main (non-debug) paru package
+  set_fact:
+    main_paru_package: "{{ paru_package.files | rejectattr('path', 'contains', '-debug-') | first }}"
+  tags: ['aur']
+
+- name: Install paru package as root
+  command: "pacman -U --noconfirm {{ main_paru_package.path }}"
+  args:
+    creates: /usr/bin/paru
+  become: true
+  tags: ['aur']
+  
+- name: Revert sudoers to original
+  ansible.builtin.copy:
+    src: /etc/sudoers.ansible_backup
+    dest: /etc/sudoers
+    owner: "{{ 'root' }}"
+    mode: "0644"
+    remote_src: yes
+    validate: /usr/sbin/visudo -cf %s
+  become: true
+  tags: ['aur']
+```
+
+### FILE: docker_mcp/defaults/main.yml ===
+```yaml
+---
+# Who should own and run the compose stack (must have access to Docker)
+mcp_owner: "{{ target_user | default(ansible_user_id) }}"
+
+# Where to put things
+mcp_project_dir: "/home/{{ mcp_owner }}/.config/mcp"
+mcp_compose_file: "docker-compose.mcp.yml"
+mcp_repo_url: "https://github.com/ckreiling/mcp-server-docker.git"
+mcp_repo_dir: "/home/{{ mcp_owner }}/.local/src/mcp-server-docker"
+
+# Build/run behavior
+# Use host networking to avoid veth/bridge issues on your kernel
+mcp_network_mode: "host"          # "host" or "bridge"
+
+# Compose bring-up behavior
+mcp_compose_pull_policy: "never"  # "never" | "missing" | "always" | "policy"
+
+# Optional Neovim glue for the owner
+mcp_install_nvim_glue: true
+
+# Optional user systemd service (auto-start after login)
+mcp_install_user_service: true
+mcp_user_service_name: "mcp-docker.service"
+mcp_enable_lingering: true    # keep user services running after logout
+```
+
+### FILE: docker_mcp/templates/mcp-docker.service.j2 ===
+```text
+[Unit]
+Description=MCP server via Docker Compose (user)
+After=default.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=%h/.config/mcp
+RemainAfterExit=yes
+ExecStart=/usr/bin/docker compose up -d --no-color --pull {{ mcp_compose_pull_policy }}
+ExecStop=/usr/bin/docker compose down
+TimeoutStartSec=0
+
+[Install]
+WantedBy=default.target
+```
+
+### FILE: docker_mcp/templates/docker-compose.mcp.yml.j2 ===
+```text
+services:
+  mcp-docker:
+    image: mcp-server-docker:latest
+    restart: unless-stopped
+    stdin_open: true
+    tty: true
+{% if mcp_network_mode == 'host' %}
+    network_mode: host
+{% endif %}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+```
+
+### FILE: docker_mcp/tasks/main.yml ===
+```yaml
+---
+# Ensure directories exist for the chosen owner
+- name: Ensure project directories exist (user-owned)
+  become: true
+  become_user: "{{ mcp_owner }}"
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: "0755"
+  loop:
+    - "{{ mcp_repo_dir | dirname }}"
+    - "{{ mcp_project_dir }}"
+    - "/home/{{ mcp_owner }}/.config/nvim/lua/plugins"
+
+# Fetch upstream sources (user-owned)
+- name: Clone mcp-server-docker (upstream)
+  become: true
+  become_user: "{{ mcp_owner }}"
+  ansible.builtin.git:
+    repo: "{{ mcp_repo_url }}"
+    dest: "{{ mcp_repo_dir }}"
+    version: "main"
+    update: yes
+
+# --- BuildKit sanity (helpful error if daemon misconfigured) --------------------
+- name: Stat /etc/docker/daemon.json
+  become: true
+  ansible.builtin.stat:
+    path: /etc/docker/daemon.json
+  register: _daemon_json_stat
+
+- name: Read /etc/docker/daemon.json (if present)
+  become: true
+  ansible.builtin.slurp:
+    path: /etc/docker/daemon.json
+  register: _daemon_json_slurp
+  when: _daemon_json_stat.stat.exists
+
+- name: Parse daemon.json to a dict (if present)
+  ansible.builtin.set_fact:
+    _daemon_json: "{{ _daemon_json_slurp.content | b64decode | from_json }}"
+  when: _daemon_json_stat.stat.exists
+
+- name: Extract features.buildkit (fallback signal)
+  ansible.builtin.set_fact:
+    _daemon_buildkit: "{{ (_daemon_json.features.buildkit | default(false)) | bool }}"
+  when: _daemon_json_stat.stat.exists
+
+- name: Detect BuildKit via `docker info` (best-effort)
+  become: true
+  become_user: "{{ mcp_owner }}"
+  ansible.builtin.shell: |
+    docker info 2>/dev/null \
+      | awk -F': *' 'tolower($1) ~ /^buildkit$/ {print tolower($2)}' \
+      | tail -n1
+  register: _buildkit_detect
+  changed_when: false
+  failed_when: false
+
+- name: Assert BuildKit is enabled on the Docker daemon
+  ansible.builtin.assert:
+    that:
+      - (_buildkit_detect.stdout | default('') | lower) is search('true') or (_daemon_buildkit | default(false) | bool)
+    fail_msg: >-
+      Docker BuildKit appears to be disabled. The Dockerfile uses 'RUN --mount=type=cache',
+      which requires BuildKit. Ensure /etc/docker/daemon.json contains:
+      {"features": {"buildkit": true}} and Docker has been restarted.
+    success_msg: "BuildKit detected."
+
+# --- Build image using Buildx as the user --------------------------------------
+- name: Check that the Buildx plugin is available
+  become: true
+  become_user: "{{ mcp_owner }}"
+  ansible.builtin.command: docker buildx version
+  register: _bx_version
+  changed_when: false
+  failed_when: false
+
+- name: Fail clearly if Buildx is missing
+  ansible.builtin.fail:
+    msg: >-
+      Docker Buildx plugin is not installed for {{ mcp_owner }}.
+      On Arch, install 'docker-buildx'. Then log out/in (group refresh) and re-run.
+  when: _bx_version.rc != 0
+
+- name: Ensure a usable buildx builder (create if missing)
+  become: true
+  become_user: "{{ mcp_owner }}"
+  ansible.builtin.command: docker buildx inspect
+  register: _bx_inspect
+  changed_when: false
+  failed_when: false
+
+- name: Create and select a buildx builder (if missing)
+  become: true
+  become_user: "{{ mcp_owner }}"
+  ansible.builtin.command: docker buildx create --driver docker-container --use
+  when: _bx_inspect.rc != 0
+
+- name: "Build local image: mcp-server-docker:latest (via buildx + BuildKit)"
+  become: true
+  become_user: "{{ mcp_owner }}"
+  ansible.builtin.shell: >
+    docker buildx build
+    {% if mcp_network_mode == 'host' %} --network=host {% endif %}
+    --load -t mcp-server-docker:latest .
+  args:
+    chdir: "{{ mcp_repo_dir }}"
+  environment:
+    DOCKER_BUILDKIT: "1"
+
+# --- Runtime (compose) ----------------------------------------------------------
+- name: Drop Compose file for MCP Docker service (user-owned)
+  become: true
+  become_user: "{{ mcp_owner }}"
+  ansible.builtin.template:
+    src: docker-compose.mcp.yml.j2
+    dest: "{{ mcp_project_dir }}/{{ mcp_compose_file }}"
+    mode: "0644"
+
+- name: Ensure MCP Docker service is up via Compose (user-owned)
+  become: true
+  become_user: "{{ mcp_owner }}"
+  community.docker.docker_compose_v2:
+    project_src: "{{ mcp_project_dir }}"
+    files:
+      - "{{ mcp_compose_file }}"
+    state: present
+    pull: "{{ mcp_compose_pull_policy }}"
+
+# --- Optional user-level systemd service ---------------------------------------
+- name: Enable lingering for {{ mcp_owner }} (optional)
+  become: true
+  when: mcp_install_user_service | bool and mcp_enable_lingering | bool
+  ansible.builtin.command: "loginctl enable-linger {{ mcp_owner }}"
+  changed_when: false
+  failed_when: false
+
+- name: Ensure user systemd dir exists
+  become: true
+  become_user: "{{ mcp_owner }}"
+  when: mcp_install_user_service | bool
+  ansible.builtin.file:
+    path: "~/.config/systemd/user"
+    state: directory
+    mode: "0755"
+
+- name: Install user systemd unit for MCP
+  become: true
+  become_user: "{{ mcp_owner }}"
+  when: mcp_install_user_service | bool
+  ansible.builtin.template:
+    src: mcp-docker.service.j2
+    dest: "~/.config/systemd/user/{{ mcp_user_service_name }}"
+    mode: "0644"
+
+- name: Reload user systemd and enable service
+  become: true
+  become_user: "{{ mcp_owner }}"
+  when: mcp_install_user_service | bool
+  ansible.builtin.command: "systemctl --user daemon-reload"
+  changed_when: false
+  failed_when: false
+
+- name: Enable and start MCP user service
+  become: true
+  become_user: "{{ mcp_owner }}"
+  when: mcp_install_user_service | bool
+  ansible.builtin.command: "systemctl --user enable --now {{ mcp_user_service_name }}"
+  register: _mcp_user_service_enable
+  changed_when: "'Created symlink' in (_mcp_user_service_enable.stdout | default('')) or 'Started' in (_mcp_user_service_enable.stdout | default(''))"
+  failed_when: false
+```
+
+### FILE: copy/tasks/main.yml ===
+```yaml
+---
+- name: Stat source paths to determine files vs folders
+  ansible.builtin.stat:
+    path: "{{ item.src }}"
+  loop: "{{ copy }}"
+  register: src_stat
+  tags: ["copy"]
+
+- name: Ensure destination directories exist for files
+  ansible.builtin.file:
+    path: "{{ item.0.dest | dirname }}"
+    state: directory
+    owner: "{{ 'root' if item.0.dest.startswith('/usr/') or item.0.dest.startswith('/etc/') else target_user }}"
+    mode: "0755"
+  loop: "{{ copy | zip(src_stat.results) | selectattr('1.stat.isreg', 'equalto', true) }}"
+  become: true
+  tags: ["copy", "files"]
+  
+- name: Copy individual files
+  ansible.builtin.copy:
+    src: "{{ item.0.src }}"
+    dest: "{{ item.0.dest }}"
+    owner: "{{ 'root' if item.0.dest.startswith('/usr/') or item.0.dest.startswith('/etc/') else target_user }}"
+    mode: "0644"
+    remote_src: false
+  loop: "{{ copy | zip(src_stat.results) | selectattr('1.stat.isreg', 'equalto', true) }}"
+  become: true
+  tags: ["copy", "files"]
+
+- name: Copy full folders
+  ansible.posix.synchronize:
+    src: "{{ item.0.src }}"
+    dest: "{{ item.0.dest }}"
+    archive: true
+    recursive: true
+    owner: true
+    group: true
+    perms: true
+    mode: push
+    rsync_opts:
+      - "--no-motd"
+      - "--chown={{ 'root:root' if item.0.dest.startswith('/usr/') or item.0.dest.startswith('/etc/') else target_user + ':' + target_user }}"
+      - "--chmod=D0755,F0644"
+  loop: "{{ copy | zip(src_stat.results) | selectattr('1.stat.isdir', 'equalto', true) }}"
+  become: true
+  tags: ["copy", "folders"]
+```
+
+### FILE: acpi/tasks/main.yml ===
+```yaml
+---
+- name: Ensure acpid is enabled and running
+  ansible.builtin.systemd:
+    name: acpid.service
+    state: started
+    enabled: true
+
+- name: Deploy custom ACPI handler script
+  ansible.builtin.copy:
+    dest: /etc/acpi/handler.sh
+    content: |
+      #!/bin/bash
+      # Default acpi script that takes an entry for all actions
+      case "$1" in
+          button/power)
+              case "$2" in
+                  PBTN|PWRF)
+                      logger 'PowerButton pressed'
+                      ;;
+                  *)
+                      logger "ACPI action undefined: $2"
+                      ;;
+              esac
+              ;;
+          button/sleep)
+              case "$2" in
+                  SLPB|SBTN)
+                      logger 'SleepButton pressed'
+                      ;;
+                  *)
+                      logger "ACPI action undefined: $2"
+                      ;;
+              esac
+              ;;
+          ac_adapter)
+              case "$2" in
+                  AC|ACAD|ADP0)
+                      case "$4" in
+                          00000000)
+                              logger 'AC unpluged'
+                              ;;
+                          00000001)
+                              logger 'AC pluged'
+                              ;;
+                      esac
+                      ;;
+                  *)
+                      logger "ACPI action undefined: $2"
+                      ;;
+              esac
+              ;;
+          battery)
+              case "$2" in
+                  BAT0)
+                      case "$4" in
+                          00000000)
+                              logger 'Battery online'
+                              ;;
+                          00000001)
+                              logger 'Battery offline'
+                              ;;
+                      esac
+                      ;;
+                  CPU0)
+                      ;;
+                  *)  logger "ACPI action undefined: $2" ;;
+              esac
+              ;;
+          button/lid)
+              case "$3" in
+                  close)
+                      logger 'LID closed'
+                      ;;
+                  open)
+                      logger 'LID opened'
+                      ;;
+                  *)
+                      logger "ACPI action undefined: $3"
+                      ;;
+              esac
+              ;;
+          button/mute)
+              # Handle mute (F1)
+              for user in $(who | awk '{print $1}' | sort -u); do
+                  uid=$(id -u $user)
+                  su - $user -c "XDG_RUNTIME_DIR=/run/user/$uid DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$uid/bus wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
+              done
+              ;;
+          button/volumedown)
+              # Handle volume down (F2)
+              for user in $(who | awk '{print $1}' | sort -u); do
+                  uid=$(id -u $user)
+                  su - $user -c "XDG_RUNTIME_DIR=/run/user/$uid DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$uid/bus wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"
+              done
+              ;;
+          button/volumeup)
+              # Handle volume up (F3)
+              for user in $(who | awk '{print $1}' | sort -u); do
+                  uid=$(id -u $user)
+                  su - $user -c "XDG_RUNTIME_DIR=/run/user/$uid DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$uid/bus wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+"
+              done
+              ;;
+          button/micmute)
+              # Handle mic mute (F4)
+              for user in $(who | awk '{print $1}' | sort -u); do
+                  uid=$(id -u $user)
+                  su - $user -c "XDG_RUNTIME_DIR=/run/user/$uid DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$uid/bus wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"
+              done
+              ;;
+          video/brightnessdown)
+              # Handle brightness down (F5)
+              /usr/bin/brightnessctl s 10%-
+              ;;
+          video/brightnessup)
+              # Handle brightness up (F6)
+              /usr/bin/brightnessctl s 10%+
+              ;;
+          video/switchmode)
+              # Handle display switch (F7) - Optional: Cycle monitors or adjust as needed
+              logger "Display switch event triggered: $2"
+              ;;
+          *)
+              logger "ACPI group/action undefined: $1 / $2"
+              ;;
+      esac
+      # vim:set ts=4 sw=4 ft=sh et:
+    mode: '0755'
+    backup: yes
+
+- name: Restart acpid service after handler modification
+  ansible.builtin.systemd:
+    name: acpid.service
+    state: restarted
+```
+
+### FILE: dnf/tasks/main.yml ===
+```yaml
+- name: Add RPM Fusion, Microsoft VS Code repositories
+  ansible.builtin.rpm_key:
+    state: present
+    key: "{{ item }}"
+  loop: "{{ rpm_repo_keys }}"
+  tags: ['dnf', 'workstation-fedora', 'package']
+  
+- name: Check VS Code repository exists
+  ansible.builtin.stat:
+    path: "/etc/yum.repos.d/vscode.repo"
+  register: vscoderepo
+  tags: ['dnf', 'workstation-fedora', 'package']  
+
+- name: Add VS Code Repository to Yum Repos
+  ansible.builtin.command: sh -c 'echo -e "[code]\nname=Visual Studio Code\nbaseurl=https://packages.microsoft.com/yumrepos/vscode\nenabled=1\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc" > /etc/yum.repos.d/vscode.repo'
+  when: not vscoderepo.stat.exists
+  tags: ['dnf', 'workstation-fedora', 'package']  
+
+- name: Check VS Code repository exists
+  ansible.builtin.stat:
+    path: "/etc/yum.repos.d/google-kubernetes.repo"
+  register: gk8srepo
+  tags: ['dnf', 'workstation-fedora', 'package']  
+
+- name: Update listing and install packages
+  ansible.builtin.dnf:
+    name:
+      - "{{ item }}"
+    state: latest
+  loop: "{{ dnf_installed_packages }}"
+  tags: ['dnf', 'workstation-fedora', 'package']  
+
+- name: Remove unneeded packages
+  ansible.builtin.dnf:
+    name:
+    - "{{ item }}"
+    state: absent
+  loop: "{{ dnf_removed_packages }}"
+  tags: ['dnf', 'workstation-fedora', 'package']  
+
+- name: Upgrade all packages
+  ansible.builtin.dnf:
+    name: "*"
+    state: latest
+  tags: ['dnf', 'workstation-fedora', 'package']    
+
+- name: Autoremove unneeded packages installed as dependencies
+  ansible.builtin.dnf:
+    autoremove: yes
+  tags: ['dnf', 'workstation-fedora', 'package']    
+```
+
+### FILE: fonts/tasks/main.yml ===
+```yaml
+# Create ~/.fonts directory if it does not exist of target user
+- name: Create ~/.fonts directory if it does not exist of target user
+  ansible.builtin.file:
+    path: /home/{{ target_user }}/.fonts
+    state: directory
+    mode: "0755"
+    owner: "{{ target_user }}"
+    group: "{{ target_user }}"    
+  tags: ['fonts']
+
+# Update font cache assuming package manager fonts were updated
+- name: Update font cache
+  ansible.builtin.command: fc-cache -fv
+  tags: ['fonts']
+```
+
+### FILE: apparmor/defaults/main.yml ===
+```yaml
+---
+apparmor_user: "{{ lookup('env', 'USER') }}"
+esp_mount: /boot
+apparmor_params:
+  - "lsm=landlock,lockdown,yama,integrity,apparmor,bpf"
+  - "apparmor=1"
+  - "security=apparmor"
+```
+
+### FILE: apparmor/templates/apparmor-notify.desktop.j2 ===
+```text
+[Desktop Entry]
+Type=Application
+Name=AppArmor Notify
+Comment=Receive on screen notifications of AppArmor denials
+TryExec=aa-notify
+Exec=aa-notify -p -s 1 -w 60 -f /var/log/audit/audit.log
+NoDisplay=true
+```
+
+### FILE: apparmor/tasks/main.yml ===
+```yaml
+---
+- name: Install required packages for AppArmor and related tools
+  community.general.pacman:
+    name:
+      - apparmor
+      - audit
+      - python-notify2
+      - python-psutil
+    state: present
+
+- name: Create audit group if it does not exist
+  ansible.builtin.group:
+    name: audit
+    system: true
+
+- name: Add user to audit group
+  ansible.builtin.user:
+    name: "{{ apparmor_user }}"
+    groups: audit
+    append: true
+
+- name: Configure auditd to use audit group for log access
+  ansible.builtin.lineinfile:
+    path: /etc/audit/auditd.conf
+    regexp: '^log_group\s*='
+    line: 'log_group = audit'
+    state: present
+
+- name: Enable and start auditd service
+  ansible.builtin.systemd:
+    name: auditd.service
+    enabled: true
+    state: started
+
+- name: Enable and start apparmor service
+  ansible.builtin.systemd:
+    name: apparmor.service
+    enabled: true
+    state: started
+
+- name: Enable profile caching in AppArmor parser configuration
+  ansible.builtin.replace:
+    path: /etc/apparmor/parser.conf
+    regexp: '^#write-cache$'
+    replace: 'write-cache'
+
+- name: Detect if using UKI
+  ansible.builtin.command: bootctl status
+  register: boot_status
+  changed_when: false
+
+- name: Set fact for UKI usage
+  ansible.builtin.set_fact:
+    is_uki: "{{ 'systemd-stub' in boot_status.stdout }}"
+
+- name: Set dummy current_options_list for traditional skip
+  ansible.builtin.set_fact:
+    current_options_list: {'results': []}
+  when: is_uki
+
+- name: Handle traditional boot entries if not UKI
+  block:
+    - name: Set entry directory
+      ansible.builtin.set_fact:
+        entry_dir: "{{ esp_mount }}/loader/entries"
+
+    - name: Find all boot entry files
+      ansible.builtin.find:
+        paths: "{{ entry_dir }}"
+        patterns: '*.conf'
+        file_type: file
+      register: boot_entries
+
+    - name: Fail if no boot entry files found
+      ansible.builtin.fail:
+        msg: "No boot entry files found in {{ entry_dir }}. Verify systemd-boot configuration and esp_mount variable."
+      when: boot_entries.matched == 0
+
+    - name: Get current kernel options from each systemd-boot entry
+      ansible.builtin.command: grep '^options' {{ item.path }}
+      loop: "{{ boot_entries.files }}"
+      register: current_options_list
+      changed_when: false
+      ignore_errors: true
+
+    - name: Append LSM kernel parameter to each entry if not present
+      ansible.builtin.lineinfile:
+        path: "{{ item.item.path }}"
+        regexp: '^options'
+        line: "options {{ (item.stdout | regex_replace('^options\\s*', '')) + ' lsm=landlock,lockdown,yama,integrity,apparmor,bpf' if item.stdout else 'lsm=landlock,lockdown,yama,integrity,apparmor,bpf' }}"
+        state: present
+        create: false
+      loop: "{{ current_options_list.results }}"
+      loop_control:
+        label: "{{ item.item.path }} - LSM"
+      when: '"lsm=landlock,lockdown,yama,integrity,apparmor,bpf" not in item.stdout'
+      notify: Reboot system
+
+    - name: Append apparmor=1 kernel parameter to each entry if not present
+      ansible.builtin.lineinfile:
+        path: "{{ item.item.path }}"
+        regexp: '^options'
+        line: "options {{ (item.stdout | regex_replace('^options\\s*', '')) + ' apparmor=1' if item.stdout else 'apparmor=1' }}"
+        state: present
+        create: false
+      loop: "{{ current_options_list.results }}"
+      loop_control:
+        label: "{{ item.item.path }} - apparmor=1"
+      when: '"apparmor=1" not in item.stdout'
+      notify: Reboot system
+
+    - name: Append security=apparmor kernel parameter to each entry if not present
+      ansible.builtin.lineinfile:
+        path: "{{ item.item.path }}"
+        regexp: '^options'
+        line: "options {{ (item.stdout | regex_replace('^options\\s*', '')) + ' security=apparmor' if item.stdout else 'security=apparmor' }}"
+        state: present
+        create: false
+      loop: "{{ current_options_list.results }}"
+      loop_control:
+        label: "{{ item.item.path }} - security=apparmor"
+      when: '"security=apparmor" not in item.stdout'
+      notify: Reboot system
+  when: not is_uki
+
+- name: Handle UKI kernel parameters if using UKI
+  block:
+    - name: Read current kernel cmdline
+      ansible.builtin.slurp:
+        src: /etc/kernel/cmdline
+      register: current_cmdline_slurp
+      ignore_errors: true
+
+    - name: Set current cmdline fact
+      ansible.builtin.set_fact:
+        current_cmdline: "{{ current_cmdline_slurp.content | b64decode | default('') | trim }}"
+
+    - name: Set new cmdline with missing AppArmor parameters
+      ansible.builtin.set_fact:
+        new_cmdline: "{{ current_cmdline + ' ' + (apparmor_params | reject('in', current_cmdline.split()) | join(' ')) | trim }}"
+
+    - name: Write updated kernel cmdline if changed
+      ansible.builtin.copy:
+        content: "{{ new_cmdline }}\n"
+        dest: /etc/kernel/cmdline
+        mode: '0644'
+      when: new_cmdline != current_cmdline
+      notify: Reboot system
+
+    - name: Regenerate UKI if cmdline changed
+      ansible.builtin.command: mkinitcpio -P
+      when: new_cmdline != current_cmdline
+      notify: Reboot system
+  when: is_uki
+
+- name: Set user home directory
+  ansible.builtin.set_fact:
+    user_home: "{{ '/root' if apparmor_user == 'root' else '/home/' + apparmor_user }}"
+
+- name: Ensure autostart directory exists
+  ansible.builtin.file:
+    path: "{{ user_home }}/.config/autostart"
+    state: directory
+    owner: "{{ apparmor_user }}"
+    group: "{{ apparmor_user }}"
+    mode: '0755'
+
+- name: Deploy AppArmor notify desktop file for notifications
+  ansible.builtin.template:
+    src: apparmor-notify.desktop.j2
+    dest: "{{ user_home }}/.config/autostart/apparmor-notify.desktop"
+    owner: "{{ apparmor_user }}"
+    group: "{{ apparmor_user }}"
+    mode: '0644'
+```
+
+### FILE: apparmor/handlers/main.yml ===
+```yaml
+---
+- name: Reboot system
+  ansible.builtin.debug:
+    msg: "Kernel parameters have been updated. Please reboot the system manually to apply the changes and activate AppArmor fully."
+```
+
+### FILE: folders/tasks/main.yml ===
+```yaml
+# Task for user-owned directories
+- name: Create user-owned directories
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    state: directory
+    mode: "0755"
+  loop: "{{ create_folders | selectattr('path', 'match', '^/home/') | list }}"
+  become: true
+  become_user: "{{ target_user }}"
+  tags: ["folders"]
+
+# Task for system directories
+- name: Create system directories
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    state: directory
+    owner: root
+    mode: "0755"
+  loop: "{{ create_folders | selectattr('path', 'match', '^/usr/|^/etc/') | list }}"
+  become: true
+  tags: ["folders"]
+```
+
+### FILE: tmux/tasks/main.yml ===
+```yaml
+- name: Set up tmux package manager
+  ansible.builtin.git:
+    repo: "https://github.com/tmux-plugins/tpm.git"
+    dest: "/home/{{ target_user }}/.tmux/plugins/tpm"
+    force: no
+  become: true
+  become_user: "{{ target_user }}"
+  tags: ['workstation-arch','workstation-debian', 'tmux', 'workstation-fedora']
+```
+
+### FILE: audio/tasks/main.yml ===
+```yaml
+---
+- name: Enable and start PipeWire service for the user
+  ansible.builtin.systemd:
+    name: pipewire.service
+    state: started
+    enabled: true
+    scope: user
+  become: false
+
+- name: Enable and start PipeWire Pulse service for the user
+  ansible.builtin.systemd:
+    name: pipewire-pulse.service
+    state: started
+    enabled: true
+    scope: user
+  become: false
+
+- name: Enable and start WirePlumber service for the user
+  ansible.builtin.systemd:
+    name: wireplumber.service
+    state: started
+    enabled: true
+    scope: user
+  become: false
+```
+
+### FILE: docker_engine/defaults/main.yml ===
+```yaml
+---
+# Users to add to the docker group (append, non-destructive)
+docker_users:
+  - "{{ ansible_user_id }}"
+
+# Manage /etc/docker/daemon.json (merge-safe)
+docker_manage_daemon_json: true
+
+# Enable BuildKit (required by Dockerfiles using RUN --mount)
+docker_enable_buildkit: true
+
+# Extra daemon.json content you want to merge in (optional)
+# Example:
+# docker_daemon_json_extra:
+#   log-driver: "json-file"
+#   log-opts:
+#     max-size: "10m"
+#     max-file: "3"
+docker_daemon_json_extra: {}
+```
+
+### FILE: docker_engine/tasks/main.yml ===
+```yaml
+---
+# 1) Packages for Docker + the Ansible docker modules on Arch
+- name: Install Docker and dependencies (Arch)
+  become: yes
+  pacman:
+    name:
+      - docker
+      - docker-compose        # compose v2; fine on Arch
+      - docker-buildx         # <-- Buildx plugin (required for BuildKit builds)
+      - python
+      - python-pip
+      - python-requests       # required by community.docker
+      - python-docker         # Docker SDK for Python
+    state: present
+    update_cache: yes
+
+# 2) Ensure docker service enabled/started
+- name: Enable & start docker
+  become: yes
+  service:
+    name: docker
+    enabled: true
+    state: started
+
+# 3) Ensure /etc/docker exists
+- name: Ensure /etc/docker exists
+  become: yes
+  file:
+    path: /etc/docker
+    state: directory
+    mode: "0755"
+
+# 4) Optionally manage daemon.json (merge-safe)
+- name: Stat existing /etc/docker/daemon.json
+  become: yes
+  stat:
+    path: /etc/docker/daemon.json
+  register: docker_daemon_json_stat
+  when: docker_manage_daemon_json
+
+- name: Read existing /etc/docker/daemon.json (if present)
+  become: yes
+  slurp:
+    path: /etc/docker/daemon.json
+  register: docker_daemon_json_slurp
+  when:
+    - docker_manage_daemon_json
+    - docker_daemon_json_stat.stat.exists
+
+- name: Build target daemon.json dict
+  become: yes
+  set_fact:
+    docker_daemon_json_target: >-
+      {{
+        (
+          (docker_daemon_json_slurp.content | b64decode | from_json)
+          if docker_daemon_json_stat.stat.exists
+          else {}
+        )
+        | combine(
+            {"features": {"buildkit": docker_enable_buildkit|bool}},
+            recursive=True
+          )
+        | combine(docker_daemon_json_extra, recursive=True)
+      }}
+  when: docker_manage_daemon_json
+
+- name: Write /etc/docker/daemon.json (merge-safe)
+  become: yes
+  copy:
+    dest: /etc/docker/daemon.json
+    mode: "0644"
+    content: "{{ docker_daemon_json_target | to_nice_json }}"
+  notify: restart docker
+  when: docker_manage_daemon_json
+
+# Ensure handlers run right now so other roles see the new daemon settings
+- name: Restart docker immediately if daemon.json changed
+  meta: flush_handlers
+
+# 5) Ensure users are in the docker group (append, idempotent)
+- name: Ensure docker group exists
+  become: yes
+  group:
+    name: docker
+    state: present
+
+- name: Add users to docker group
+  become: yes
+  user:
+    name: "{{ item }}"
+    groups: docker
+    append: true
+  loop: "{{ docker_users | default([]) }}"
+```
+
+### FILE: docker_engine/handlers/main.yml ===
+```yaml
+---
+- name: restart docker
+  become: yes
+  service:
+    name: docker
+    state: restarted
+```
+
+### FILE: permissions/tasks/main.yml ===
+```yaml
+- name: Debug before permissions
+  debug:
+    msg: "{{ before_permissions.stdout | default('Directory not found') }}"
+
+- name: Ensure powerlevel10k theme directory has execute permissions
+  file:
+    path: /usr/share/zsh-theme-powerlevel10k
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+  become: yes
+  tags: ["permissions"]
+
+- name: Check current permissions after
+  command: ls -ld /usr/share/zsh-theme-powerlevel10k
+  register: after_permissions
+  become: yes
+
+- name: Debug after permissions
+  debug:
+    msg: "{{ after_permissions.stdout }}"
+
+- name: Grant reboot permission without sudo password
+  lineinfile:
+    path: /etc/sudoers.d/reboot-permissions
+    create: yes
+    owner: root
+    group: root
+    mode: "0440"
+    line: '{{ ansible_user_id }} ALL=(ALL) NOPASSWD: /sbin/reboot'
+    validate: 'visudo -cf %s'
+  become: yes
+  tags: ["permissions"]
+```
+
+### FILE: hyprland/tasks/main.yml ===
+```yaml
+---
+- name: Display instructions to start Hyprland
+  debug:
+    msg: |
+      Hyprland setup is complete. To start it:
+      1. Source your shell config: 'source ~/.zshrc' (or restart your shell).
+      2. Switch to a TTY with Ctrl+Alt+F2.
+      3. Run 'Hyprland'.
+      If it doesn’t start, check logs in '~/.config/hypr/hyprland.log' or the console output.
+```
+
+### FILE: aur-packages/tasks/main.yml ===
+```yaml
+---
+- name: Backup original sudoers file for pacman configuration
+  ansible.builtin.copy:
+    src: /etc/sudoers
+    dest: /etc/sudoers.pacman_backup
+    owner: root
+    mode: "0644"
+    remote_src: yes
+  become: true
+  tags: ['aur']
+
+- name: Allow target user to run pacman without password
+  lineinfile:
+    path: /etc/sudoers
+    line: '{{ target_user }} ALL=(ALL) NOPASSWD: /usr/bin/pacman *'
+    validate: /usr/sbin/visudo -cf %s
+  become: true
+  tags: ['aur']
+
+- name: Install packages from aur_installed_packages list
+  kewlfft.aur.aur:
+    name: "{{ item }}"
+    use: paru
+    state: present
+  with_items: "{{ aur_installed_packages }}"
+  become: true
+  become_user: "{{ target_user }}"
+  when: aur_installed_packages is defined
+  tags: ['aur']
+
+- name: Update repo packages first (faster and reduces AUR work)
+  community.general.pacman:
+    update_cache: true
+    upgrade: true
+  become: true
+
+- name: Update AUR packages (retry on transient AUR RPC errors)
+  ansible.builtin.command:
+    cmd: "paru -Sua --noconfirm --skipreview"
+  become: true
+  become_user: "{{ target_user }}"
+  register: paru_upgrade
+  retries: 5
+  delay: 10
+  until: paru_upgrade.rc == 0 or
+         ('there is nothing to do' in (paru_upgrade.stdout | default('')))
+  failed_when: >
+    (paru_upgrade.rc != 0)
+    and ('there is nothing to do' not in (paru_upgrade.stdout | default('')))
+    and ('Connection reset by peer' not in (paru_upgrade.stderr | default('')))
+    and ('timed out' not in (paru_upgrade.stderr | default('')))
+    and ('Temporary failure' not in (paru_upgrade.stderr | default('')))
+  changed_when: "'there is nothing to do' not in (paru_upgrade.stdout | default(''))"
+
+- name: Revert sudoers after pacman configuration
+  ansible.builtin.copy:
+    src: /etc/sudoers.pacman_backup
+    dest: /etc/sudoers
+    owner: root
+    mode: "0644"
+    remote_src: yes
+    validate: /usr/sbin/visudo -cf %s
+  become: true
+  tags: ['aur']
+```
+
+### FILE: nvim/tasks/main.yml ===
+```yaml
+- name: Check if ~/.config/nvim exists
+  ansible.builtin.stat:
+    path: "~/.config/nvim"
+  register: nvim_dir
+  tags: ['dotfiles', 'nvim']
+  become: true
+  become_user: "{{ target_user }}"
+
+- name: Install LazyVim Neovim Setup
+  ansible.builtin.git:
+    repo: https://github.com/LazyVim/starter
+    dest: ~/.config/nvim
+    version: main
+    force: yes
+  tags: ['dotfiles', 'nvim']
+  become: true
+  become_user: "{{ target_user }}"
+  when: nvim_dir.stat.exists == False
+  
+# --- Python provider venv for Neovim -----------------------------------------
+
+- name: Ensure ~/.venvs exists
+  ansible.builtin.file:
+    path: "/home/{{ target_user }}/.venvs"
+    state: directory
+    owner: "{{ target_user }}"
+    group: "{{ target_user }}"
+    mode: "0755"
+  tags: ['dotfiles', 'nvim']
+
+- name: Create Neovim Python venv if missing
+  ansible.builtin.command: "python -m venv /home/{{ target_user }}/.venvs/nvim"
+  args:
+    creates: "/home/{{ target_user }}/.venvs/nvim/bin/python"
+  become: true
+  become_user: "{{ target_user }}"
+  tags: ['dotfiles', 'nvim']
+
+- name: Ensure pip is present in the venv (bootstrap with ensurepip)
+  ansible.builtin.command: "/home/{{ target_user }}/.venvs/nvim/bin/python -m ensurepip --upgrade"
+  args:
+    creates: "/home/{{ target_user }}/.venvs/nvim/bin/pip"
+  become: true
+  become_user: "{{ target_user }}"
+  tags: ['dotfiles', 'nvim']
+
+- name: Upgrade pip and install pynvim + debugpy in the venv
+  ansible.builtin.pip:
+    name:
+      - pip
+      - pynvim
+      - debugpy
+    state: latest
+    virtualenv: "/home/{{ target_user }}/.venvs/nvim"
+    virtualenv_command: "python -m venv"
+  become: true
+  become_user: "{{ target_user }}"
+  tags: ['dotfiles', 'nvim']
+```
+
+### FILE: sddm/tasks/main.yml ===
+```yaml
+- name: Enable SDDM service
+  ansible.builtin.service:
+    name: sddm
+    enabled: true
+  become: true
+  tags: ["sddm"]
+```
+
+### FILE: pacman/tasks/main.yml ===
+```yaml
+- name: Install reflector for mirrorlist management
+  ansible.builtin.pacman:
+    name: reflector
+    state: present
+  tags: ['pacman', 'workstation-arch', 'package']
+
+- name: Ensure mirrorlist is not empty
+  ansible.builtin.stat:
+    path: /etc/pacman.d/mirrorlist
+  register: mirrorlist_stat
+  tags: ['pacman', 'workstation-arch', 'package']
+
+- name: Populate mirrorlist if empty or missing
+  ansible.builtin.command:
+    cmd: reflector --latest 10 --sort rate --save /etc/pacman.d/mirrorlist
+  when: ansible_distribution == 'Archlinux' and (not mirrorlist_stat.stat.exists or mirrorlist_stat.stat.size == 0)
+  tags: ['pacman', 'workstation-arch', 'package']
+
+- name: Ensure multilib repository is enabled
+  ansible.builtin.blockinfile:
+    path: /etc/pacman.conf
+    block: |
+      [multilib]
+      Include = /etc/pacman.d/mirrorlist
+    marker: "# {mark} ANSIBLE MANAGED BLOCK - multilib"
+    state: present
+  tags: ['pacman', 'workstation-arch', 'package']
+
+- name: Initialize keyring
+  ansible.builtin.command:
+    cmd: pacman-key --init
+    creates: /etc/pacman.d/gnupg/gpg.conf
+  tags: ['pacman', 'workstation-arch', 'package']
+
+- name: Populate Arch Linux keyring
+  ansible.builtin.command:
+    cmd: pacman-key --populate archlinux
+    creates: /etc/pacman.d/gnupg/archlinux.gpg
+  tags: ['pacman', 'workstation-arch', 'package']
+
+- name: Update package database
+  ansible.builtin.pacman:
+    update_cache: true
+  tags: ['pacman', 'workstation-arch', 'package']
+
+- name: Install base-devel and git for AUR support
+  ansible.builtin.pacman:
+    name:
+      - base-devel
+      - git
+    state: present
+  tags: ['pacman', 'workstation-arch', 'package']
+
+- name: Install specified packages
+  ansible.builtin.pacman:
+    name: "{{ pacman_installed_packages }}"
+    state: present
+  when: pacman_installed_packages is defined and pacman_installed_packages | length > 0
+  tags: ['pacman', 'workstation-arch', 'package']
+
+- name: Enable color
+  ansible.builtin.lineinfile:
+    path: /etc/pacman.conf
+    regexp: '^#Color$'
+    line: 'Color'
+  tags: ['pacman', 'workstation-arch', 'package']
+
+- name: Enable ParallelDownloads
+  ansible.builtin.lineinfile:
+    path: /etc/pacman.conf
+    regexp: '^#ParallelDownloads'
+    line: 'ParallelDownloads = 5'
+  tags: ['pacman', 'workstation-arch', 'package']
+```
+
+### FILE: apt/tasks/main.yml ===
+```yaml
+# Update and upgrade all apt installed packages
+- name: Update and upgrade all installed packages
+  ansible.builtin.apt:
+    upgrade: yes
+    update_cache: yes
+  tags: ['apt', 'workstation-debian', 'package']
+
+# Remove unneed packages
+- name: Remove packages
+  ansible.builtin.apt:
+    name:  "{{ apt_removed_packages | join(', ') }}"
+    state: absent
+  tags: ['apt', 'workstation-debian', 'package']
+
+# Install / Check packages with apt
+# Using list of items variable: apt_installed_packages
+- name: anstall packages
+  ansible.builtin.apt:
+    pkg: "{{ apt_installed_packages }}"
+  tags: ['apt', 'workstation-debian', 'package']
+
+- name: Remove useless packages from the cache
+  ansible.builtin.apt:
+    autoclean: yes
+  tags: ['apt', 'workstation-debian', 'package']
+
+- name: Auto remove packages no longer required and delete their configuration files
+  ansible.builtin.apt:
+    autoremove: yes
+    purge: true    
+  tags: ['apt', 'workstation-debian', 'package']
+```
+
+### FILE: wireguard/defaults/main.yml ===
+```yaml
+---
+# Directory where WireGuard configs live
+wg_conf_dir: /etc/wireguard
+
+# Name of the interface (your config should be /etc/wireguard/{{ wg_interface }}.conf)
+wg_interface: wg0
+
+# Whether to try to enable/start the systemd unit (only if the config file exists)
+wg_enable_service: false
+
+# Create a placeholder config file (false by default so we don't commit secrets or mislead)
+wg_create_placeholder: false
+
+# File mode for actual config files you place later
+wg_config_mode: "0600"
+
+# Try to load the kernel module (safe on Arch; module is often built-in)
+wg_load_module: true
+
+# Install and use a dynamic nftables-based killswitch
+wg_killswitch_enable: true
+
+# Install convenience commands wg-on / wg-off
+wg_install_helpers: true
+
+# Optional: if you want to allow LAN egress even when the killswitch is active,
+# set a CIDR (like "192.168.0.0/16" or "10.0.0.0/8"). Leave empty to block LAN egress too.
+wg_killswitch_allow_lan_cidr: ""
+
+# DNS handling for wg-quick when your wg.conf includes DNS=
+#   - "auto"   : detect DNS= in the config; if present, install openresolv
+#   - "openresolv" : force-install openresolv
+#   - "systemd-resolved" : install systemd-resolvconf (you should also enable systemd-resolved)
+#   - "none"   : do nothing (only safe if your config has no DNS= lines)
+wg_dns_provider: "auto"
+```
+
+### FILE: wireguard/tasks/main.yml ===
+```yaml
+---
+- name: Install WireGuard userspace tools
+  become: true
+  ansible.builtin.pacman:
+    name:
+      - wireguard-tools
+    state: present
+    update_cache: true
+
+- name: Ensure WireGuard config directory exists with strict permissions
+  become: true
+  ansible.builtin.file:
+    path: "{{ wg_conf_dir }}"
+    state: directory
+    owner: root
+    group: root
+    mode: "0700"
+
+- name: (Optional) create a placeholder config file (kept empty)
+  become: true
+  ansible.builtin.copy:
+    dest: "{{ wg_conf_dir }}/{{ wg_interface }}.conf"
+    content: |
+      # Placeholder created by Ansible. Put your real config here.
+      # NOTE: Do NOT commit your actual WireGuard config to version control.
+      # TIP: Add the following lines to enable the killswitch automatically:
+      # PostUp=/usr/local/lib/wireguard-killswitch-up.sh %i
+      # PostDown=/usr/local/lib/wireguard-killswitch-down.sh %i
+    owner: root
+    group: root
+    mode: "{{ wg_config_mode }}"
+    force: no
+  when: wg_create_placeholder | bool
+
+- name: Attempt to load the 'wireguard' kernel module (safe/no-fail if built-in)
+  become: true
+  ansible.builtin.command: modprobe wireguard
+  changed_when: false
+  failed_when: false
+  when: wg_load_module | bool
+
+# --- DNS provider handling for wg-quick (resolvconf requirement) ---
+
+- name: Stat interface config to check for DNS handling
+  become: true
+  ansible.builtin.stat:
+    path: "{{ wg_conf_dir }}/{{ wg_interface }}.conf"
+  register: wg_conf
+
+- name: Read interface config to detect DNS= lines
+  become: true
+  ansible.builtin.slurp:
+    path: "{{ wg_conf_dir }}/{{ wg_interface }}.conf"
+  register: wg_conf_content
+  when: wg_conf.stat.exists
+
+- name: Set fact whether DNS lines exist
+  ansible.builtin.set_fact:
+    wg_conf_has_dns: "{{ (wg_conf_content['content'] | b64decode).splitlines() | select('match', '^[[:space:]]*DNS[[:space:]]*=') | list | length > 0 }}"
+  when: wg_conf.stat.exists
+
+- name: Install DNS provider for wg-quick (auto/openresolv/systemd-resolved)
+  become: true
+  when: >
+    (wg_dns_provider == 'openresolv')
+    or (wg_dns_provider == 'systemd-resolved')
+    or (wg_dns_provider == 'auto' and wg_conf.stat.exists and wg_conf_has_dns)
+  block:
+    - name: Ensure openresolv is installed (chosen or auto)
+      ansible.builtin.pacman:
+        name: openresolv
+        state: present
+      when: wg_dns_provider in ['openresolv', 'auto']
+
+    - name: Ensure systemd-resolvconf is installed (explicitly chosen)
+      ansible.builtin.pacman:
+        name: systemd-resolvconf
+        state: present
+      when: wg_dns_provider == 'systemd-resolved'
+
+# --- Killswitch scripts and helpers ---
+
+- name: Install killswitch "up" script
+  become: true
+  ansible.builtin.copy:
+    dest: /usr/local/lib/wireguard-killswitch-up.sh
+    mode: "0755"
+    owner: root
+    group: root
+    content: |
+      #!/usr/bin/env bash
+      # Enable nftables killswitch for a WireGuard interface.
+      # Usage: wireguard-killswitch-up.sh <iface>   (iface defaults to wg0)
+      set -euo pipefail
+
+      IFACE="${1:-wg0}"
+      CONF="/etc/wireguard/${IFACE}.conf"
+
+      if [[ ! -f "$CONF" ]]; then
+        echo "WireGuard config not found: $CONF" >&2
+        exit 1
+      fi
+
+      ENDPOINT_LINE="$(awk -F'=' '/^[[:space:]]*Endpoint[[:space:]]*=/{gsub(/[[:space:]\r]/,"",$2); print $2}' "$CONF" | head -n1 || true)"
+      if [[ -z "${ENDPOINT_LINE:-}" ]]; then
+        echo "No Endpoint found in $CONF. Killswitch will block handshake unless LAN is allowed." >&2
+      fi
+
+      HOST=""
+      PORT=""
+      if [[ -n "${ENDPOINT_LINE:-}" ]]; then
+        HOST="${ENDPOINT_LINE%:*}"
+        PORT="${ENDPOINT_LINE##*:}"
+      fi
+
+      EP_IPv4=""
+      EP_IPv6=""
+      if [[ -n "${HOST:-}" ]]; then
+        while read -r ip _; do
+          if [[ "$ip" == *:* ]]; then
+            [[ -z "$EP_IPv6" ]] && EP_IPv6="$ip"
+          else
+            [[ -z "$EP_IPv4" ]] && EP_IPv4="$ip"
+          fi
+        done < <(getent ahosts "$HOST" || true)
+      fi
+
+      ALLOW_LAN_CIDR="{{ wg_killswitch_allow_lan_cidr | default('') }}"
+
+      NFT_SCRIPT="$(mktemp)"
+      trap 'rm -f "$NFT_SCRIPT"' EXIT
+
+      {
+        echo 'table inet wgks {'
+        echo '  chain output {'
+        echo '    type filter hook output priority 0; policy drop;'
+        echo '    iifname "lo" accept'
+        echo "    oifname \"${IFACE}\" accept"
+        echo '    ct state established,related accept'
+        if [[ -n "$EP_IPv4" && -n "${PORT:-}" ]]; then
+          echo "    ip daddr ${EP_IPv4} udp dport ${PORT} accept"
+        fi
+        if [[ -n "$EP_IPv6" && -n "${PORT:-}" ]]; then
+          echo "    ip6 daddr ${EP_IPv6} udp dport ${PORT} accept"
+        fi
+        if [[ -n "$ALLOW_LAN_CIDR" ]]; then
+          echo "    ip daddr ${ALLOW_LAN_CIDR} accept"
+        fi
+        echo '  }'
+        echo '}'
+      } > "$NFT_SCRIPT"
+
+      if nft list table inet wgks >/dev/null 2>&1; then
+        nft delete table inet wgks || true
+      fi
+      nft -f "$NFT_SCRIPT"
+
+      echo "Killswitch enabled (table inet wgks)."
+      nft list table inet wgks || true
+
+- name: Install killswitch "down" script
+  become: true
+  ansible.builtin.copy:
+    dest: /usr/local/lib/wireguard-killswitch-down.sh
+    mode: "0755"
+    owner: root
+    group: root
+    content: |
+      #!/usr/bin/env bash
+      set -euo pipefail
+      nft delete table inet wgks 2>/dev/null || true
+      echo "Killswitch disabled (table inet wgks removed)."
+
+- name: Install helper commands wg-on / wg-off
+  become: true
+  when: wg_install_helpers | bool
+  block:
+    - name: Install wg-on
+      ansible.builtin.copy:
+        dest: /usr/local/bin/wg-on
+        mode: "0755"
+        owner: root
+        group: root
+        content: |
+          #!/usr/bin/env bash
+          set -euo pipefail
+          IFACE="${1:-{{ wg_interface }}}"
+          systemctl start "wg-quick@${IFACE}"
+          systemctl enable "wg-quick@${IFACE}" >/dev/null 2>&1 || true
+          systemctl --no-pager --full status "wg-quick@${IFACE}" || true
+          echo "WireGuard ${IFACE} is ON (killswitch active)."
+
+    - name: Install wg-off
+      ansible.builtin.copy:
+        dest: /usr/local/bin/wg-off
+        mode: "0755"
+        owner: root
+        group: root
+        content: |
+          #!/usr/bin/env bash
+          set -euo pipefail
+          IFACE="${1:-{{ wg_interface }}}"
+          systemctl stop "wg-quick@${IFACE}" || true
+          systemctl disable "wg-quick@${IFACE}" >/dev/null 2>&1 || true
+          /usr/local/lib/wireguard-killswitch-down.sh || true
+          echo "WireGuard ${IFACE} is OFF (killswitch removed)."
+
+- name: Check if interface config exists
+  become: true
+  ansible.builtin.stat:
+    path: "{{ wg_conf_dir }}/{{ wg_interface }}.conf"
+  register: wg_conf_2
+
+- name: Enable wg-quick@{{ wg_interface }} (only if config exists and requested)
+  become: true
+  ansible.builtin.systemd:
+    name: "wg-quick@{{ wg_interface }}"
+    enabled: true
+  when:
+    - wg_enable_service | bool
+    - wg_conf_2.stat.exists
+
+- name: Start (or restart) wg-quick@{{ wg_interface }} (only if config exists and requested)
+  become: true
+  ansible.builtin.systemd:
+    name: "wg-quick@{{ wg_interface }}"
+    state: restarted
+  when:
+    - wg_enable_service | bool
+    - wg_conf_2.stat.exists
+```
+
+--- END OF DUMP ---
+61 files processed, 107090 bytes total source‑code size.
+
+## JSON manifest (for downstream indexing)
+```json
+[
+  {
+    "path": "concat_gipity.py",
+    "lines": 530,
+    "sha256": "e8f611c9750ae6d2853af4bfae6f57929f6a0c2954213b56de15236573446335"
+  },
+  {
+    "path": "thunderbird_headless/defaults/main.yml",
+    "lines": 35,
+    "sha256": "8c02ab6329d4b22bdc61ea9d0a4d8b10baff4b97c8d05df6b5c53873e6cd88f5"
+  },
+  {
+    "path": "thunderbird_headless/meta/main.yml",
+    "lines": 12,
+    "sha256": "ca07139bfb0199cffe571fcfdc26f6743e768126c6e127cf52ca0814afc4d01d"
+  },
+  {
+    "path": "thunderbird_headless/templates/thunderbird-gui-wrapper.sh.j2",
+    "lines": 22,
+    "sha256": "04e33ed15d49567d2d56f883ecfaa0f2802a2347dad335f333d2cde1f1e4a3a6"
+  },
+  {
+    "path": "thunderbird_headless/templates/thunderbird-headless.service.j2",
+    "lines": 34,
+    "sha256": "444ef8d00508cb1313e92f6a35f22a3c7bb308fa59be3b5eebd4169100b2912f"
+  },
+  {
+    "path": "thunderbird_headless/templates/thunderbird.desktop.j2",
+    "lines": 168,
+    "sha256": "b90112213322e9170db571938101fe7fd05e34ae58581470e306b88503226d78"
+  },
+  {
+    "path": "thunderbird_headless/templates/thunderbird-headless-refresh.service.j2",
+    "lines": 20,
+    "sha256": "fd8bba6e1433a2de324a41faa308f512088de611f9b22436fe7ae418c1c46f5a"
+  },
+  {
+    "path": "thunderbird_headless/templates/thunderbird-headless-refresh.timer.j2",
+    "lines": 13,
+    "sha256": "ba2b3004a45b75e45741984cb519ed0430b0cefdc8d3eb822dc03430b0ae78a2"
+  },
+  {
+    "path": "thunderbird_headless/tasks/main.yml",
+    "lines": 160,
+    "sha256": "2effd5042939746227ebe8dcf46f1243dc3a8cecf0159ffd93afffee945d0add"
+  },
+  {
+    "path": "thunderbird_headless/handlers/main.yml",
+    "lines": 14,
+    "sha256": "5cd8f6204bc2e87cac31075c4ad8aca1ff13c5064e209e30c28efe22a4c4f923"
+  },
+  {
+    "path": "mcp_hub_ui/defaults/main.yml",
+    "lines": 29,
+    "sha256": "7c2b4b768ef2e62161c951c4c93f99065ab3190e88773522c24488184a4ac1c2"
+  },
+  {
+    "path": "mcp_hub_ui/templates/mcp-hub-ui.service.j2",
+    "lines": 19,
+    "sha256": "34aa008346944aff06f603ac0f7f5fe4cb2a69c5e5ac4f3108c76c91ade8570d"
+  },
+  {
+    "path": "mcp_hub_ui/tasks/main.yml",
+    "lines": 124,
+    "sha256": "4a73b2d2edb6cc5c201096d1e0f89c4e5e3aa6aa9b2109f2ad13b00072749388"
+  },
+  {
+    "path": "repos/tasks/main.yml",
+    "lines": 44,
+    "sha256": "6927bb640ba2447bccb4e9ad37e8da445fa397080ec5281caec9d35c1144194e"
+  },
+  {
+    "path": "links/tasks/main.yml",
+    "lines": 26,
+    "sha256": "b31cf5778404f9f8a272543a6e73978ce16cf20ece30fdf23ab5f618683af501"
+  },
+  {
+    "path": "dotfiles/tasks/main.yml",
+    "lines": 23,
+    "sha256": "d47d7a3766f5a7fde9e86f51b8b6e52168823ee765ae89fbb6a4526e95ae413b"
+  },
+  {
+    "path": "npm_global/defaults/main.yml",
+    "lines": 20,
+    "sha256": "0cdfbd134dffca63402c89c71c66a9b07c226e410ed2a9faba2ffb9610631f58"
+  },
+  {
+    "path": "npm_global/tasks/main.yml",
+    "lines": 47,
+    "sha256": "98d6ad8e929999a64808ba75b9502c8143e63e4df7f860589286609f7f23e903"
+  },
+  {
+    "path": "zsh/tasks/main.yml",
+    "lines": 33,
+    "sha256": "04c03791d9bf00760ed1be08520a0a52f639f063dd0c7839b8583ac56df38658"
+  },
+  {
+    "path": "luarocks311/tasks/main.yml",
+    "lines": 40,
+    "sha256": "9c5be3aa1584097eb1c2a642ca1d3abae74d939cfd900ff197f89dee3c1e911e"
+  },
+  {
+    "path": "rust/tasks/main.yml",
+    "lines": 13,
+    "sha256": "9746284a4483e38553d5ceb6c7ecbb938e98cb51512812921610b5a87fd90a2f"
+  },
+  {
+    "path": "nftables/defaults/main.yml",
+    "lines": 5,
+    "sha256": "7df028c3485310beda1811900e3ccbd7a99122ca50b207a0a48ca33e53f2f4d8"
+  },
+  {
+    "path": "nftables/templates/nftables.conf.j2",
+    "lines": 43,
+    "sha256": "4a391a4cdb80b3723fd433cfd7da2a7b3c07ba421cd754b024e96d7449962e82"
+  },
+  {
+    "path": "nftables/tasks/main.yml",
+    "lines": 20,
+    "sha256": "c8a5705e6b090f50e9b10dd82fd8eb77c3728e1b721bf15e7ab88479a71b3449"
+  },
+  {
+    "path": "nftables/handlers/main.yml",
+    "lines": 5,
+    "sha256": "e4da6e462eabf8e34e2b33f0e2f4e8e8cb9effbcf59bd79827a2826b494e6817"
+  },
+  {
+    "path": "hwdev_serial/defaults/main.yml",
+    "lines": 47,
+    "sha256": "586634024d7ec15eeb3819339b2fee6f9affc7a79755b33a3e649e5a474a29fd"
+  },
+  {
+    "path": "hwdev_serial/files/99-serial-dev.rules",
+    "lines": 25,
+    "sha256": "d4034cab8f85a11a9394d5ce0c99ea96605765bab17c2eb4dede8d6839c1d09f"
+  },
+  {
+    "path": "hwdev_serial/tasks/main.yml",
+    "lines": 59,
+    "sha256": "0542d925d9ff61cda667f094e13a7fd8189877817d05c383535e8fa256daf8a4"
+  },
+  {
+    "path": "hwdev_serial/handlers/main.yml",
+    "lines": 26,
+    "sha256": "4c2c16be2938f57fb7735f8553f6cbe76ed5183f703c696e2f44683f05b478a2"
+  },
+  {
+    "path": "dns/defaults/main.yml",
+    "lines": 29,
+    "sha256": "2c3824509462daf42b58db43a9007f0501e41389e3f2cac062ee18cdfd7cd81e"
+  },
+  {
+    "path": "dns/tasks/main.yml",
+    "lines": 177,
+    "sha256": "1ba50610542577ac6a853791a0d307fb323c16279759eef4aafcc35a8cfa7ba1"
+  },
+  {
+    "path": "dns/handlers/main.yml",
+    "lines": 19,
+    "sha256": "616f2bdd8edf4214a3375e764a811dbf0befc037e87a3bc482310b45aba7b939"
+  },
+  {
+    "path": "homebrew/tasks/main.yml",
+    "lines": 7,
+    "sha256": "40aa59e8f1caaa018463bc9678916353fde7bc4a533ef1ebe1c3a4d9637ab12e"
+  },
+  {
+    "path": "aur/tasks/main.yml",
+    "lines": 75,
+    "sha256": "aa63bbaa2c478d9912a45cbe3486283981083ba818dbe9320bc8360cb8bd27f5"
+  },
+  {
+    "path": "docker_mcp/defaults/main.yml",
+    "lines": 25,
+    "sha256": "85f5c143066a267c08abbb7a5ed64487e0453767fa6358474ca7144065889dc5"
+  },
+  {
+    "path": "docker_mcp/templates/mcp-docker.service.j2",
+    "lines": 15,
+    "sha256": "5a103b487323a3f3193d01221aca5f9faee89c626e21205243854ac3b74a9717"
+  },
+  {
+    "path": "docker_mcp/templates/docker-compose.mcp.yml.j2",
+    "lines": 12,
+    "sha256": "149ef83287a671033b08b30ba724c01aa717ef04e21fd5c98be83026d90dc9e9"
+  },
+  {
+    "path": "docker_mcp/tasks/main.yml",
+    "lines": 173,
+    "sha256": "54da3dc4120de2bbc603826d75da93caad956d7fe0b9b20ac5402b7326f56533"
+  },
+  {
+    "path": "copy/tasks/main.yml",
+    "lines": 46,
+    "sha256": "a1f4955a5d9c3707417990106c2456c03cbe3011752ddc7c7c76c3cabf5d1b54"
+  },
+  {
+    "path": "acpi/tasks/main.yml",
+    "lines": 133,
+    "sha256": "7ed634e307d32407a4858df1f3ec1a8b594cde12b338421b29d17f413c06ff1d"
+  },
+  {
+    "path": "dnf/tasks/main.yml",
+    "lines": 50,
+    "sha256": "8d95fef544af9fe8e81e4d3cf6e96c61f3a1eeddf12522705ad30f7dd850f719"
+  },
+  {
+    "path": "fonts/tasks/main.yml",
+    "lines": 14,
+    "sha256": "0edf81178b823f5527340364cd1c2deb2daf60a2a90ad6fba4437502f3ff9194"
+  },
+  {
+    "path": "apparmor/defaults/main.yml",
+    "lines": 7,
+    "sha256": "0720a18cfe229463798f3318e653f5318ca504b56888e26faa6d373839595002"
+  },
+  {
+    "path": "apparmor/templates/apparmor-notify.desktop.j2",
+    "lines": 7,
+    "sha256": "aa1d9ed1789f68a885a9db29c5316d2fc4653e49cbbac4f4a9e8241095d0edde"
+  },
+  {
+    "path": "apparmor/tasks/main.yml",
+    "lines": 174,
+    "sha256": "af4a6e43d27b1f53369ee8dec592607c7ecdfce4ea990087b6247bef4d87fe2a"
+  },
+  {
+    "path": "apparmor/handlers/main.yml",
+    "lines": 4,
+    "sha256": "16edadf6e3651b1b2f8b26d3b09a95b383845d8965d903caa7d115a7885f7e20"
+  },
+  {
+    "path": "folders/tasks/main.yml",
+    "lines": 21,
+    "sha256": "7d007c18e548244d5a6765b8eb1b36c34f82c9d15f11243984b986d289b05fa2"
+  },
+  {
+    "path": "tmux/tasks/main.yml",
+    "lines": 8,
+    "sha256": "8c9313c2e64863a21a0f2ca4ac3ed69640c75a0f89bc98cd07c975dd03ba182b"
+  },
+  {
+    "path": "audio/tasks/main.yml",
+    "lines": 24,
+    "sha256": "69796aa4bdd8f46d769b1253bf17129772c45a10130d514ed924a675541b4f95"
+  },
+  {
+    "path": "docker_engine/defaults/main.yml",
+    "lines": 20,
+    "sha256": "e5e5a4917a71e31f90990e16092e902ae40d372a03611ed53a1e9b3b308e2a02"
+  },
+  {
+    "path": "docker_engine/tasks/main.yml",
+    "lines": 95,
+    "sha256": "f2c9fd7fa217c349d2c8909ec7eed1231953094a929ea6fa9126c4e9fcee5b78"
+  },
+  {
+    "path": "docker_engine/handlers/main.yml",
+    "lines": 7,
+    "sha256": "3957dc2f161a941909eb5569c5c556c3664ffa57f558bbd5608b0924d14e0e38"
+  },
+  {
+    "path": "permissions/tasks/main.yml",
+    "lines": 34,
+    "sha256": "66fc9c8fb73b8805c5c9f1a87820e46700dda8c1474d663a31fd9fd706e581a3"
+  },
+  {
+    "path": "hyprland/tasks/main.yml",
+    "lines": 9,
+    "sha256": "15e75774de98a8358d05cd52abf8deb740a821b51a2d880bcf069bfc596c89e9"
+  },
+  {
+    "path": "aur-packages/tasks/main.yml",
+    "lines": 64,
+    "sha256": "94f1e597052351703329b2bc4f89c00c9d5a6a2aeb7db3f94087d24ce7298b76"
+  },
+  {
+    "path": "nvim/tasks/main.yml",
+    "lines": 59,
+    "sha256": "ce70e155077980e1a700017460ea197f8b621a92dfd6ea19678f6e9a87265efa"
+  },
+  {
+    "path": "sddm/tasks/main.yml",
+    "lines": 6,
+    "sha256": "e4b73aa3cd9147d42e7ae8dd4722ec5ae7923239ce896647fa037b7c8dd333fd"
+  },
+  {
+    "path": "pacman/tasks/main.yml",
+    "lines": 73,
+    "sha256": "ea613e533730dec6e2ede2cbcbc535af9adebc4e708a0bc3130a60c8af8c5938"
+  },
+  {
+    "path": "apt/tasks/main.yml",
+    "lines": 31,
+    "sha256": "3d720432f47df78cd5e6c5350dbc451701d4d4c17cd1fc8826c118922c1fafc6"
+  },
+  {
+    "path": "wireguard/defaults/main.yml",
+    "lines": 36,
+    "sha256": "c871baddbf55f7edc8c72d3e6c4d8ca2246d0c55cbe0a7bcba0a38a1422e1718"
+  },
+  {
+    "path": "wireguard/tasks/main.yml",
+    "lines": 231,
+    "sha256": "3e8009f55f0efd0a215ccaf424d516c200364f9320c781dcb8cf6ea4ca1b9187"
+  }
+]
+```

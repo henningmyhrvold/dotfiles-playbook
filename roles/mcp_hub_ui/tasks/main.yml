@@ -59,6 +59,21 @@
   failed_when: false
   tags: [mcp_hub_ui]
 
+- name: "Assert MCP Hub config exists"
+  when: mcp_hub_ui_enabled | bool
+  become: true
+  become_user: "{{ mcp_hub_ui_user }}"
+  ansible.builtin.stat:
+    path: "{{ mcp_hub_ui_config }}"
+  register: _hub_cfg
+  tags: [mcp_hub_ui]
+
+- name: "Fail early if config is missing"
+  when: mcp_hub_ui_enabled | bool and (not _hub_cfg.stat.exists)
+  ansible.builtin.fail:
+    msg: "MCP Hub config not found at {{ mcp_hub_ui_config }}. Create/link it from your dotfiles, then re-run."
+  tags: [mcp_hub_ui]
+
 - name: "Enable/Start mcp-hub-ui.service"
   when: mcp_hub_ui_enabled | bool
   become: true

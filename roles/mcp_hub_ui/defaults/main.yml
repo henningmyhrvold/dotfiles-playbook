@@ -27,3 +27,7 @@ mcp_hub_ui_extra_args:
 # How long to wait for the port to come up after (re)starting (seconds)
 mcp_hub_ui_wait_timeout: 90
 
+mcp_hub_ui_config: "{{ lookup('env','HOME') ~ '/.config/mcp/hub.json' }}"
+
+
+
