@@ -53,3 +53,4 @@
           #   "max-file": "3"
     - { role: docker_mcp, tags: ["docker_mcp"] }
     - { role: mcp_hub_ui, tags: ["mcp_hub_ui"] }
+    - { role: claude_desktop_wayland, tags: ["claude_desktop_wayland"] }

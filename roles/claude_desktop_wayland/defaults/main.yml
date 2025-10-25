@@ -1,0 +1,25 @@
+---
+# Users to receive the override (local precedence over /usr/share/applications)
+# You can supply either a list of usernames (strings) or a list of dicts {name, home}
+# By default, it targets the current ansible user.
+claude_desktop_users:
+  - name: "{{ ansible_user_id }}"
+    home: "{{ ansible_env.HOME }}"
+
+# Glob(s) to find the system desktop files to override.
+claude_desktop_system_globs:
+  - "/usr/share/applications/claude*.desktop"
+
+# The exact Exec= payload you want (Wayland + flags).
+# Edit safely here; the role will inject it into Exec= via regex.
+claude_desktop_exec:
+  "env ELECTRON_OZONE_PLATFORM_HINT=wayland OZONE_PLATFORM=wayland XDG_CURRENT_DESKTOP=Hyprland GTK_USE_PORTAL=1 claude-desktop-native --ozone-platform=wayland --enable-features=UseOzonePlatform,WaylandWindowDecorations,WaylandFractionalScaleV1 --enable-wayland-ime --force-device-scale-factor=1"
+
+# If true, also rewrite Name= to show a Wayland suffix (purely cosmetic)
+claude_desktop_rename_entry: true
+claude_desktop_name_suffix: " (Wayland)"
+
+# If a matching desktop file has a different binary name, you can provide
+# alternative Exec lines per file (map of filename => Exec string). Optional.
+claude_desktop_per_file_exec: {}
+
