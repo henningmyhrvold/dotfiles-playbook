@@ -1,91 +1,111 @@
 ---
+# 0. Build a normalized claude_desktop_users list if it wasn't provided.
+#    We derive it from target_user / dotfiles_home (from all.yml),
+#    or fall back to ansible_user_id and a guessed /home/<user>.
+- name: Derive target user/home for Claude desktop override
+  ansible.builtin.set_fact:
+    _effective_user: >-
+      {{ (claude_desktop_users | length > 0)
+         | ternary(claude_desktop_users[0].name,
+                   (target_user | default(ansible_user_id))) }}
+    _effective_home: >-
+      {{ (claude_desktop_users | length > 0)
+         | ternary(claude_desktop_users[0].home,
+                   (dotfiles_home
+                    | default('/home/' + (target_user | default(ansible_user_id)))) ) }}
+
+- name: Normalize claude_desktop_users list
+  ansible.builtin.set_fact:
+    _claude_users_normalized:
+      - name: "{{ _effective_user }}"
+        home: "{{ _effective_home }}"
+
+# 1. Find Claude desktop files shipped by the package in /usr/share/applications
 - name: Gather Claude desktop entries in system directory
   ansible.builtin.find:
-    paths: "{{ item }}"
-    patterns: "*.desktop"
+    paths: "{{ claude_desktop_system_dir }}"
+    patterns: "{{ claude_desktop_patterns }}"
     file_type: file
-  loop: "{{ claude_desktop_system_globs }}"
   register: _claude_desktop_found
 
+# 2. Flatten to just a list of full paths
 - name: Flatten found files
   ansible.builtin.set_fact:
-    _claude_desktop_system_files: "{{ (_claude_desktop_found.results | map(attribute='files') | list) | flatten | map(attribute='path') | list }}"
+    _claude_desktop_system_files: "{{ _claude_desktop_found.files | map(attribute='path') | list }}"
 
+# 3. Debug if we found nothing
 - name: No Claude desktop files found (debug hint)
   ansible.builtin.debug:
-    msg: "No system desktop entries found under {{ claude_desktop_system_globs }}. Nothing to override."
+    msg: >-
+      No system desktop entries found under {{ claude_desktop_system_dir }}
+      matching {{ claude_desktop_patterns }}. Nothing to override.
   when: _claude_desktop_system_files | length == 0
 
-- name: Ensure per-user application dirs exist
+# 4. Ensure ~/.local/share/applications exists for the (effective) user
+- name: Ensure per-user application dir exists
   ansible.builtin.file:
-    path: "{{ (item is string) | ternary( ('~' + item + '/.local/share/applications'), (item.home ~ '/.local/share/applications') ) }}"
+    path: "{{ item.home }}/.local/share/applications"
     state: directory
     mode: "0755"
-  loop: "{{ claude_desktop_users }}"
+    owner: "{{ item.name }}"
+    group: "{{ item.name }}"
+  loop: "{{ _claude_users_normalized }}"
 
-- name: Copy each system desktop file to each user override location
-  vars:
-    _user_home: "{{ (user is string) | ternary( lookup('ansible.builtin.env','HOME'), (user.home | default('')) ) }}"
-    _user_name: "{{ (user is string) | ternary( user, (user.name | default(ansible_user_id)) ) }}"
-    _dest_dir:  "{{ (user is string) | ternary( ('~' + user + '/.local/share/applications'), (user.home ~ '/.local/share/applications') ) }}"
-  loop: "{{ claude_desktop_users | product(_claude_desktop_system_files) | list }}"
-  loop_control:
-    loop_var: combo
-  vars:
-    user: "{{ combo.0 }}"
-    src_file: "{{ combo.1 }}"
+# 5. Copy each system desktop file to that user's local override dir
+- name: Copy each system desktop file to user override location
   ansible.builtin.copy:
-    src: "{{ src_file }}"
-    dest: "{{ _dest_dir }}/{{ src_file | basename }}"
+    src: "{{ item.0 }}"
+    dest: "{{ item.1.home }}/.local/share/applications/{{ item.0 | basename }}"
     mode: "0644"
+    owner: "{{ item.1.name }}"
+    group: "{{ item.1.name }}"
     remote_src: true
+  loop: "{{ _claude_desktop_system_files | product(_claude_users_normalized) | list }}"
+  when: _claude_desktop_system_files | length > 0
 
-- name: Compute Exec replacement for each file (supports per-file override)
-  ansible.builtin.set_fact:
-    _claude_exec_map: "{{ _claude_exec_map | default({}) | combine({ item: (claude_desktop_per_file_exec.get(item | basename, claude_desktop_exec)) }) }}"
-  loop: "{{ _claude_desktop_system_files }}"
-
-# Regex-patch Exec= (idempotent). Works regardless of the original value.
-- name: Patch Exec= in per-user desktop overrides
+# 6. Rewrite Exec= line with Wayland flags
+- name: Patch Exec= in per-user desktop overrides (regex)
   vars:
-    _dest_dir: "{{ (user is string) | ternary( ('~' + user + '/.local/share/applications'), (user.home ~ '/.local/share/applications') ) }}"
-  loop: "{{ claude_desktop_users | product(_claude_desktop_system_files) | list }}"
-  loop_control:
-    loop_var: combo
-  vars:
-    user: "{{ combo.0 }}"
-    src_file: "{{ combo.1 }}"
-    dst_file: "{{ _dest_dir }}/{{ src_file | basename }}"
-    wanted_exec: "{{ _claude_exec_map[src_file] }}"
+    _src_base: "{{ item.0 | basename }}"
+    _dst_file: "{{ item.1.home }}/.local/share/applications/{{ _src_base }}"
+    _wanted_exec: "{{ claude_desktop_per_file_exec.get(_src_base, claude_desktop_exec) }}"
   ansible.builtin.replace:
-    path: "{{ dst_file }}"
+    path: "{{ _dst_file }}"
     regexp: '^Exec=.*$'
-    replace: "Exec={{ wanted_exec }}"
+    replace: "Exec={{ _wanted_exec }}"
+  loop: "{{ _claude_desktop_system_files | product(_claude_users_normalized) | list }}"
+  when: _claude_desktop_system_files | length > 0
 
-# Optional: Make the launcher name show "(Wayland)"
-- name: Optionally adjust Name= in per-user desktop overrides
-  when: claude_desktop_rename_entry
+# 7. Ensure Name= exists (if missing)
+- name: Ensure Name= exists (if missing)
   vars:
-    _dest_dir: "{{ (user is string) | ternary( ('~' + user + '/.local/share/applications'), (user.home ~ '/.local/share/applications') ) }}"
-  loop: "{{ claude_desktop_users | product(_claude_desktop_system_files) | list }}"
-  loop_control:
-    loop_var: combo
-  vars:
-    user: "{{ combo.0 }}"
-    src_file: "{{ combo.1 }}"
-    dst_file: "{{ _dest_dir }}/{{ src_file | basename }}"
-  block:
-    - name: Ensure Name= exists; if missing, append it
-      ansible.builtin.lineinfile:
-        path: "{{ dst_file }}"
-        regexp: '^Name='
-        line: "Name=Claude"
-        insertafter: '^\[Desktop Entry\]'
-      register: _name_line
+    _src_base: "{{ item.0 | basename }}"
+    _dst_file: "{{ item.1.home }}/.local/share/applications/{{ _src_base }}"
+  ansible.builtin.lineinfile:
+    path: "{{ _dst_file }}"
+    regexp: '^Name='
+    line: "Name=Claude"
+    insertafter: '^\[Desktop Entry\]'
+    owner: "{{ item.1.name }}"
+    group: "{{ item.1.name }}"
+  loop: "{{ _claude_desktop_system_files | product(_claude_users_normalized) | list }}"
+  when:
+    - claude_desktop_rename_entry
+    - _claude_desktop_system_files | length > 0
 
-    - name: Add suffix to Name= (Wayland)
-      ansible.builtin.replace:
-        path: "{{ dst_file }}"
-        regexp: '^Name=(.*?)(\s*\(Wayland\))?$'
-        replace: "Name=\\1{{ claude_desktop_name_suffix }}"
+# 8. Add suffix " (Wayland)" to Name=
+- name: Add Wayland suffix to Name=
+  vars:
+    _src_base: "{{ item.0 | basename }}"
+    _dst_file: "{{ item.1.home }}/.local/share/applications/{{ _src_base }}"
+  ansible.builtin.replace:
+    path: "{{ _dst_file }}"
+    regexp: '^Name=(.*?)(\s*\(Wayland\))?$'
+    replace: "Name=\\1{{ claude_desktop_name_suffix }}"
+    owner: "{{ item.1.name }}"
+    group: "{{ item.1.name }}"
+  loop: "{{ _claude_desktop_system_files | product(_claude_users_normalized) | list }}"
+  when:
+    - claude_desktop_rename_entry
+    - _claude_desktop_system_files | length > 0
 
