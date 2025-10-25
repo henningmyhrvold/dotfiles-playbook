@@ -1,7 +1,9 @@
 ---
-# 0. Build a normalized claude_desktop_users list if it wasn't provided.
-#    We derive it from target_user / dotfiles_home (from all.yml),
-#    or fall back to ansible_user_id and a guessed /home/<user>.
+# 0. Work out which user we care about (henning) and their home (/home/henning).
+#    We derive from:
+#    - claude_desktop_users (if provided explicitly), else
+#    - target_user / dotfiles_home (from all.yml), else
+#    - ansible_user_id
 - name: Derive target user/home for Claude desktop override
   ansible.builtin.set_fact:
     _effective_user: >-
@@ -14,13 +16,18 @@
                    (dotfiles_home
                     | default('/home/' + (target_user | default(ansible_user_id)))) ) }}
 
+# Also derive the full icon path we want to enforce in the .desktop file.
+- name: Derive icon path
+  ansible.builtin.set_fact:
+    _effective_icon_path: "{{ _effective_home }}/{{ claude_desktop_icon_relative }}"
+
 - name: Normalize claude_desktop_users list
   ansible.builtin.set_fact:
     _claude_users_normalized:
       - name: "{{ _effective_user }}"
         home: "{{ _effective_home }}"
 
-# 1. Find Claude desktop files shipped by the package in /usr/share/applications
+# 1. Find Claude desktop files shipped in /usr/share/applications
 - name: Gather Claude desktop entries in system directory
   ansible.builtin.find:
     paths: "{{ claude_desktop_system_dir }}"
@@ -28,12 +35,12 @@
     file_type: file
   register: _claude_desktop_found
 
-# 2. Flatten to just a list of full paths
+# 2. Flatten to just a list of absolute paths
 - name: Flatten found files
   ansible.builtin.set_fact:
     _claude_desktop_system_files: "{{ _claude_desktop_found.files | map(attribute='path') | list }}"
 
-# 3. Debug if we found nothing
+# 3. Debug if none found
 - name: No Claude desktop files found (debug hint)
   ansible.builtin.debug:
     msg: >-
@@ -41,7 +48,7 @@
       matching {{ claude_desktop_patterns }}. Nothing to override.
   when: _claude_desktop_system_files | length == 0
 
-# 4. Ensure ~/.local/share/applications exists for the (effective) user
+# 4. Ensure ~/.local/share/applications exists for the target user
 - name: Ensure per-user application dir exists
   ansible.builtin.file:
     path: "{{ item.home }}/.local/share/applications"
@@ -51,7 +58,7 @@
     group: "{{ item.name }}"
   loop: "{{ _claude_users_normalized }}"
 
-# 5. Copy each system desktop file to that user's local override dir
+# 5. Copy each system desktop file into the per-user override location
 - name: Copy each system desktop file to user override location
   ansible.builtin.copy:
     src: "{{ item.0 }}"
@@ -76,7 +83,20 @@
   loop: "{{ _claude_desktop_system_files | product(_claude_users_normalized) | list }}"
   when: _claude_desktop_system_files | length > 0
 
-# 7. Ensure Name= exists (if missing)
+# 7. Set Icon= line to point at the user's custom icon
+#    (~/Pictures/icons/calude-icon2.png, resolved to an absolute path)
+- name: Patch Icon= in per-user desktop overrides
+  vars:
+    _src_base: "{{ item.0 | basename }}"
+    _dst_file: "{{ item.1.home }}/.local/share/applications/{{ _src_base }}"
+  ansible.builtin.replace:
+    path: "{{ _dst_file }}"
+    regexp: '^Icon=.*$'
+    replace: "Icon={{ _effective_icon_path }}"
+  loop: "{{ _claude_desktop_system_files | product(_claude_users_normalized) | list }}"
+  when: _claude_desktop_system_files | length > 0
+
+# 8. Ensure Name= exists (if missing)
 - name: Ensure Name= exists (if missing)
   vars:
     _src_base: "{{ item.0 | basename }}"
@@ -93,7 +113,7 @@
     - claude_desktop_rename_entry
     - _claude_desktop_system_files | length > 0
 
-# 8. Add suffix " (Wayland)" to Name=
+# 9. Add " (Wayland)" suffix to Name=
 - name: Add Wayland suffix to Name=
   vars:
     _src_base: "{{ item.0 | basename }}"
