@@ -30,4 +30,4 @@ claude_desktop_per_file_exec: {}
 claude_desktop_rename_entry: true
 claude_desktop_name_suffix: " (Wayland)"
 
-claude_desktop_icon_relative: "Pictures/icons/calude-logo2.png"
+claude_desktop_icon_relative: "Pictures/icons/claude-logo2.png"
