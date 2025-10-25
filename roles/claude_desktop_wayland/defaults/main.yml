@@ -19,7 +19,8 @@ claude_desktop_exec: >-
   XDG_CURRENT_DESKTOP=Hyprland GTK_USE_PORTAL=1
   claude-desktop-native --ozone-platform=wayland
   --enable-features=UseOzonePlatform,WaylandWindowDecorations,WaylandFractionalScaleV1
-  --enable-wayland-ime --force-device-scale-factor=1
+  --enable-wayland-ime --force-device-scale-factor=1 %u
+
 
 # Optional map of per-file overrides:
 #   { "claude-desktop-native.desktop": "<custom Exec...>" }
