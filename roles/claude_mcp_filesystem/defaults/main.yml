@@ -1,9 +1,4 @@
 ---
-# roles/claude_mcp_filesystem/defaults/main.yml
-#
-# This role configures Claude Desktop to use the filesystem MCP server
-#
-
 # User who owns Claude Desktop
 claude_user: "{{ target_user | default(ansible_user_id) }}"
 
@@ -17,9 +12,14 @@ claude_backup_config: true
 # Directories that the filesystem MCP server can access
 # Claude will be able to read/write files in these directories only
 filesystem_allowed_directories:
-  - "/home/{{ claude_user }}/src"
-  - "/home/{{ claude_user }}/Documents"
+  - "/home/{{ claude_user }}/src/dotfiles"
+  - "/home/{{ claude_user }}/src/dotfiles-playbook"
 
 # NPM registry for the MCP server package
 # Using npx will automatically download and run the server when needed
 filesystem_server_package: "@modelcontextprotocol/server-filesystem"
+
+# Whether to handle invalid JSON gracefully (recommended: true)
+# If true, invalid JSON will be backed up and replaced with valid config
+# If false, the role will fail on invalid JSON
+claude_handle_invalid_json: true

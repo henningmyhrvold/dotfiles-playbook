@@ -39,13 +39,48 @@
   when: claude_config_stat.stat.exists
   tags: [claude_mcp_filesystem]
 
-- name: Parse existing config to JSON
+- name: Try to parse existing config as JSON
   ansible.builtin.set_fact:
     existing_config: "{{ claude_config_slurp.content | b64decode | from_json }}"
   when: claude_config_stat.stat.exists
+  register: parse_result
+  ignore_errors: true
   tags: [claude_mcp_filesystem]
 
-- name: Backup existing Claude Desktop config
+- name: Display warning for invalid JSON
+  ansible.builtin.debug:
+    msg:
+      - "⚠️  WARNING: Existing Claude Desktop config contains invalid JSON"
+      - "File: {{ claude_config_file }}"
+      - "The file will be backed up and replaced with valid configuration"
+      - "Backup location: {{ claude_config_file }}.backup-invalid-{{ ansible_date_time.epoch }}"
+  when:
+    - claude_config_stat.stat.exists
+    - parse_result is failed
+  tags: [claude_mcp_filesystem]
+
+- name: Backup invalid config file
+  become: true
+  become_user: "{{ claude_user }}"
+  ansible.builtin.copy:
+    src: "{{ claude_config_file }}"
+    dest: "{{ claude_config_file }}.backup-invalid-{{ ansible_date_time.epoch }}"
+    mode: "0644"
+    remote_src: true
+  when:
+    - claude_config_stat.stat.exists
+    - parse_result is failed
+  tags: [claude_mcp_filesystem]
+
+- name: Set empty config if parsing failed or file doesn't exist
+  ansible.builtin.set_fact:
+    existing_config: {}
+  when: >
+    (not claude_config_stat.stat.exists) or
+    (parse_result is failed)
+  tags: [claude_mcp_filesystem]
+
+- name: Backup existing valid config (if it exists and is valid)
   become: true
   become_user: "{{ claude_user }}"
   ansible.builtin.copy:
@@ -56,6 +91,7 @@
   when:
     - claude_backup_config | bool
     - claude_config_stat.stat.exists
+    - parse_result is succeeded
   tags: [claude_mcp_filesystem]
 
 - name: Build filesystem MCP server configuration
@@ -66,7 +102,7 @@
       env: {}
   tags: [claude_mcp_filesystem]
 
-- name: Build target configuration (new or merged)
+- name: Build target configuration (merge with existing)
   ansible.builtin.set_fact:
     target_config: >-
       {{
@@ -81,13 +117,14 @@
       }}
   tags: [claude_mcp_filesystem]
 
-- name: Write Claude Desktop configuration
+- name: Write Claude Desktop configuration using template
   become: true
   become_user: "{{ claude_user }}"
-  ansible.builtin.copy:
+  ansible.builtin.template:
+    src: claude_desktop_config.json.j2
     dest: "{{ claude_config_file }}"
-    content: "{{ target_config | to_nice_json }}"
     mode: "0644"
+    backup: false
   register: config_written
   tags: [claude_mcp_filesystem]
 
@@ -108,6 +145,9 @@
       - "Configuration: {{ claude_config_file }}"
       - "Accessible directories:"
       - "{{ filesystem_allowed_directories | to_nice_yaml }}"
+      - ""
+      - "Total MCP servers in config: {{ target_config.mcpServers.keys() | list | length }}"
+      - "Active servers: {{ target_config.mcpServers.keys() | list | join(', ') }}"
       - ""
       - "NEXT STEPS:"
       - "1. Restart Claude Desktop completely (quit, don't just close)"

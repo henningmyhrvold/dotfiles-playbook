@@ -212,7 +212,6 @@ dotfiles_links:
   - { src: "mcp/hub.json", dest: ".config/mcp/hub.json" }
   - { src: "claude/claude-logo.png", dest: "Pictures/icons/claude-logo.png" }
   - { src: "claude/claude-logo2.png", dest: "Pictures/icons/claude-logo2.png" }
-  - { src: "claude/claude_desktop_config.json", dest: ".config/Claude/claude_desktop_config.json" }
   - { src: "cool-retro-term/cool-retro-term-my-futuristic.json", dest: ".config/cool-retro-term/cool-retro-term-my-futuristic.json"}
 
 regular_links:
