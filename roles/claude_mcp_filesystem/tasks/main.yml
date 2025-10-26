@@ -1,0 +1,119 @@
+---
+- name: Ensure npm/npx is available
+  become: true
+  community.general.pacman:
+    name: npm
+    state: present
+  tags: [claude_mcp_filesystem]
+
+- name: Verify npx is in PATH
+  ansible.builtin.command: which npx
+  register: npx_check
+  changed_when: false
+  failed_when: npx_check.rc != 0
+  tags: [claude_mcp_filesystem]
+
+- name: Ensure Claude Desktop config directory exists
+  become: true
+  become_user: "{{ claude_user }}"
+  ansible.builtin.file:
+    path: "{{ claude_config_dir }}"
+    state: directory
+    mode: "0755"
+  tags: [claude_mcp_filesystem]
+
+- name: Check if Claude Desktop config already exists
+  become: true
+  become_user: "{{ claude_user }}"
+  ansible.builtin.stat:
+    path: "{{ claude_config_file }}"
+  register: claude_config_stat
+  tags: [claude_mcp_filesystem]
+
+- name: Read existing Claude Desktop config
+  become: true
+  become_user: "{{ claude_user }}"
+  ansible.builtin.slurp:
+    path: "{{ claude_config_file }}"
+  register: claude_config_slurp
+  when: claude_config_stat.stat.exists
+  tags: [claude_mcp_filesystem]
+
+- name: Parse existing config to JSON
+  ansible.builtin.set_fact:
+    existing_config: "{{ claude_config_slurp.content | b64decode | from_json }}"
+  when: claude_config_stat.stat.exists
+  tags: [claude_mcp_filesystem]
+
+- name: Backup existing Claude Desktop config
+  become: true
+  become_user: "{{ claude_user }}"
+  ansible.builtin.copy:
+    src: "{{ claude_config_file }}"
+    dest: "{{ claude_config_file }}.backup-{{ ansible_date_time.epoch }}"
+    mode: "0644"
+    remote_src: true
+  when:
+    - claude_backup_config | bool
+    - claude_config_stat.stat.exists
+  tags: [claude_mcp_filesystem]
+
+- name: Build filesystem MCP server configuration
+  ansible.builtin.set_fact:
+    filesystem_server_config:
+      command: "npx"
+      args: "{{ ['-y', filesystem_server_package] + filesystem_allowed_directories }}"
+      env: {}
+  tags: [claude_mcp_filesystem]
+
+- name: Build target configuration (new or merged)
+  ansible.builtin.set_fact:
+    target_config: >-
+      {{
+        (existing_config | default({}))
+        | combine(
+            {
+              'mcpServers': (existing_config.mcpServers | default({}))
+              | combine({'filesystem': filesystem_server_config})
+            },
+            recursive=True
+          )
+      }}
+  tags: [claude_mcp_filesystem]
+
+- name: Write Claude Desktop configuration
+  become: true
+  become_user: "{{ claude_user }}"
+  ansible.builtin.copy:
+    dest: "{{ claude_config_file }}"
+    content: "{{ target_config | to_nice_json }}"
+    mode: "0644"
+  register: config_written
+  tags: [claude_mcp_filesystem]
+
+- name: Validate JSON syntax
+  ansible.builtin.command:
+    cmd: "jq empty {{ claude_config_file }}"
+  become: true
+  become_user: "{{ claude_user }}"
+  changed_when: false
+  tags: [claude_mcp_filesystem]
+
+- name: Display configuration summary
+  ansible.builtin.debug:
+    msg:
+      - "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+      - "✓ Claude Desktop filesystem MCP server configured"
+      - ""
+      - "Configuration: {{ claude_config_file }}"
+      - "Accessible directories:"
+      - "{{ filesystem_allowed_directories | to_nice_yaml }}"
+      - ""
+      - "NEXT STEPS:"
+      - "1. Restart Claude Desktop completely (quit, don't just close)"
+      - "2. Look for MCP icon (🔌) in bottom-right of Claude Desktop"
+      - "3. Click it to verify 'filesystem' server shows green"
+      - "4. Test: Ask Claude 'Can you list files in my ~/src directory?'"
+      - "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+  when: config_written.changed
+  tags: [claude_mcp_filesystem]
