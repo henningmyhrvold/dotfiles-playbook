@@ -152,6 +152,11 @@ dns_configure_networkmanager: true
 # Serial role settings
 hwdev_openwrt_tooling: true
 
+# MCP Filesystem readable directories
+filesystem_allowed_directories:
+  - "/home/henning/src/dotfiles"
+  - "/home/henning/src/dotfiles-playbook"
+
 # These directories will be created if they don't exist.
 create_folders:
   - { path: "{{ dotfiles_home }}/Pictures" }
