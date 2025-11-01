@@ -128,8 +128,10 @@ pacman_installed_packages:
 
 # --- AUR Packages ---
 aur_installed_packages:
+  - claude-code
   - oh-my-zsh-git
   - zen-browser-bin
+  - google-chrome
   - zsh-theme-powerlevel10k-git
   - ttf-meslo-nerd-font-powerlevel10k
   - omnissa-horizon-client
