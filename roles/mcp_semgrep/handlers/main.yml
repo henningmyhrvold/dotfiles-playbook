@@ -1,0 +1,20 @@
+---
+# handlers/main.yml for mcp_semgrep role
+
+- name: restart mcp semgrep
+  community.docker.docker_compose_v2:
+    project_src: "{{ mcp_semgrep_dir }}"
+    files:
+      - docker-compose.mcp-semgrep.yml
+    state: restarted
+  become: true
+  become_user: "{{ mcp_owner }}"
+  listen: "restart mcp semgrep"
+
+- name: reload systemd user
+  ansible.builtin.systemd:
+    daemon_reload: yes
+    scope: user
+  become: true
+  become_user: "{{ mcp_owner }}"
+  listen: "reload systemd user"

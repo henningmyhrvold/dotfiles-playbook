@@ -1,0 +1,28 @@
+---
+# defaults/main.yml for mcp_filesystem role
+
+# Owner and directories
+mcp_owner: "{{ target_user | default(ansible_user_id) }}"
+mcp_base_dir: "/home/{{ mcp_owner }}/.config"
+mcp_filesystem_dir: "{{ mcp_base_dir }}/mcp-filesystem"
+
+# Allowed directories (read-only access)
+mcp_filesystem_allowed_dirs:
+  - "/home/{{ mcp_owner }}/src"
+  - "/home/{{ mcp_owner }}/projects"
+  - "/home/{{ mcp_owner }}/code"
+  - "/home/{{ mcp_owner }}/Documents"
+
+# Docker configuration
+mcp_filesystem_container_name: "mcp-filesystem"
+mcp_filesystem_image: "node:20-alpine"
+mcp_network_mode: "bridge"
+mcp_docker_network: "mcp-network"
+
+# NPM package
+mcp_filesystem_npm_package: "@modelcontextprotocol/server-filesystem"
+
+# Systemd configuration
+mcp_filesystem_service_name: "mcp-filesystem.service"
+mcp_enable_lingering: true
+mcp_compose_pull_policy: "missing"

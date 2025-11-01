@@ -54,5 +54,22 @@
     - { role: docker_mcp, tags: ["docker_mcp"] }
     - { role: mcp_hub_ui, tags: ["mcp_hub_ui"] }
     - { role: claude_desktop_wayland, tags: ["claude_desktop_wayland"] }
-    - { role: claude_mcp_filesystem, tags: ["claude_mcp_filesystem"] }
-    - { role: claude_mcp_python_repl, tags: ["claude_mcp_python_repl"] }
+    - { role: claude_desktop_mcp_filesystem, tags: ["claude_desktop_mcp_filesystem"] }
+    - role: mcp_filesystem
+      when: mcp_filesystem_enabled | default(true)
+      tags: ["mcp", "mcp_filesystem"]
+    - role: mcp_github
+      when: mcp_github_enabled | default(true)
+      tags: ["mcp", "mcp_github"]
+    - role: mcp_obsidian
+      when: mcp_obsidian_enabled | default(true)
+      tags: ["mcp", "mcp_obsidian"]
+    - role: mcp_ref
+      when: mcp_ref_enabled | default(true)
+      tags: ["mcp", "mcp_ref"]
+    - role: mcp_semgrep
+      when: mcp_semgrep_enabled | default(true)
+      tags: ["mcp", "mcp_semgrep"]
+    # Claude Code CLI (must run after MCP servers)
+    - role: claude_code
+      tags: ["claude_code"]

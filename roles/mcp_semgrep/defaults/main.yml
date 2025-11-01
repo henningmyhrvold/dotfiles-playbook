@@ -1,0 +1,32 @@
+---
+# defaults/main.yml for mcp_semgrep role
+
+# Owner and directories
+mcp_owner: "{{ target_user | default(ansible_user_id) }}"
+mcp_base_dir: "/home/{{ mcp_owner }}/.config"
+mcp_semgrep_dir: "{{ mcp_base_dir }}/mcp-semgrep"
+
+# Directories to scan
+mcp_semgrep_scan_dirs:
+  - "/home/{{ mcp_owner }}/src"
+  - "/home/{{ mcp_owner }}/projects"
+
+# Semgrep API token (optional, for pro features)
+semgrep_api_token: "{{ lookup('env', 'SEMGREP_API_TOKEN') | default('', true) }}"
+
+# Docker configuration
+mcp_semgrep_container_name: "mcp-semgrep"
+mcp_semgrep_image: "returntocorp/semgrep:latest"
+mcp_network_mode: "bridge"
+mcp_docker_network: "mcp-network"
+
+# NPM package for MCP wrapper
+mcp_semgrep_npm_package: "@modelcontextprotocol/server-semgrep"
+
+# Systemd configuration
+mcp_semgrep_service_name: "mcp-semgrep.service"
+mcp_enable_lingering: true
+mcp_compose_pull_policy: "missing"
+
+# Semgrep rules
+mcp_semgrep_rules: "auto"  # or "p/security-audit", "p/owasp-top-ten", etc.

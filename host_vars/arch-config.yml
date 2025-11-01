@@ -116,6 +116,7 @@ pacman_installed_packages:
   # --- Productivity ---
   - gedit
   - thunderbird
+  - obsidian
   # --- HW Development ---
   - subversion
   - bc
@@ -155,10 +156,38 @@ dns_configure_networkmanager: true
 # Serial role settings
 hwdev_openwrt_tooling: true
 
-# MCP Filesystem readable directories
+# MCP Filesystem claude desktop readable directories
 filesystem_allowed_directories:
   - "/home/henning/src/dotfiles"
   - "/home/henning/src/dotfiles-playbook"
+
+# ============================================================================
+# Claude Code MCP Configuration
+# ============================================================================
+
+# Which MCP servers to enable
+mcp_filesystem_enabled: true
+mcp_github_enabled: true
+mcp_obsidian_enabled: true
+mcp_ref_enabled: true
+mcp_semgrep_enabled: true
+
+# Filesystem MCP - directories Claude Code can access
+mcp_filesystem_allowed_dirs:
+  - "/home/henning/src"
+  - "/home/henning/projects"
+  - "/home/henning/Documents"
+
+# Obsidian MCP - vault location
+mcp_obsidian_vault_path: "/home/henning/Documents/ObsidianVault"
+
+# Semgrep MCP - directories to scan
+mcp_semgrep_scan_dirs:
+  - "/home/henning/src"
+
+# MCP Common settings
+mcp_network_mode: "host"
+mcp_enable_lingering: true
 
 # These directories will be created if they don't exist.
 create_folders:

@@ -1,0 +1,24 @@
+---
+# defaults/main.yml for mcp_github role
+
+# Owner and directories
+mcp_owner: "{{ target_user | default(ansible_user_id) }}"
+mcp_base_dir: "/home/{{ mcp_owner }}/.config"
+mcp_github_dir: "{{ mcp_base_dir }}/mcp-github"
+
+# GitHub token (from environment)
+github_token: "{{ lookup('env', 'GITHUB_TOKEN') }}"
+
+# Docker configuration
+mcp_github_container_name: "mcp-github"
+mcp_github_image: "node:20-alpine"
+mcp_network_mode: "bridge"
+mcp_docker_network: "mcp-network"
+
+# NPM package
+mcp_github_npm_package: "@modelcontextprotocol/server-github"
+
+# Systemd configuration
+mcp_github_service_name: "mcp-github.service"
+mcp_enable_lingering: true
+mcp_compose_pull_policy: "missing"

@@ -1,0 +1,111 @@
+---
+# tasks/main.yml for mcp_github role
+
+- name: Check if GitHub token is available
+  ansible.builtin.set_fact:
+    _github_token_available: "{{ github_token is defined and github_token | length > 0 }}"
+
+- name: Display warning if GitHub token is missing
+  ansible.builtin.debug:
+    msg: |
+      ⚠️  WARNING: GITHUB_TOKEN not set.
+      GitHub MCP server will be deployed WITHOUT authentication.
+      The container will start but may not function properly.
+
+      To fix:
+      1. Get token from https://github.com/settings/tokens
+      2. Add to ~/.zshrc: export GITHUB_TOKEN="ghp_..."
+      3. Run: source ~/.zshrc
+      4. Re-run playbook with: ansible-playbook arch.yml --tags mcp_github
+  when: not _github_token_available
+
+- name: Ensure MCP github directory exists
+  ansible.builtin.file:
+    path: "{{ mcp_github_dir }}"
+    state: directory
+    mode: "0755"
+  become: true
+  become_user: "{{ mcp_owner }}"
+
+- name: Create Docker network for MCP servers
+  community.docker.docker_network:
+    name: "{{ mcp_docker_network }}"
+    state: present
+  become: true
+
+- name: Deploy Docker Compose file for github MCP
+  ansible.builtin.template:
+    src: docker-compose.mcp-github.yml.j2
+    dest: "{{ mcp_github_dir }}/docker-compose.mcp-github.yml"
+    mode: "0644"
+  become: true
+  become_user: "{{ mcp_owner }}"
+  notify: restart mcp github
+
+- name: Ensure github MCP service is running
+  community.docker.docker_compose_v2:
+    project_src: "{{ mcp_github_dir }}"
+    files:
+      - docker-compose.mcp-github.yml
+    state: present
+    pull: "{{ mcp_compose_pull_policy }}"
+  become: true
+  become_user: "{{ mcp_owner }}"
+  when: _github_token_available  # Only start if token exists
+
+- name: Enable lingering for {{ mcp_owner }}
+  ansible.builtin.command: "loginctl enable-linger {{ mcp_owner }}"
+  when: mcp_enable_lingering | bool
+  changed_when: false
+  failed_when: false
+  become: true
+
+- name: Ensure systemd user directory exists
+  ansible.builtin.file:
+    path: "~/.config/systemd/user"
+    state: directory
+    mode: "0755"
+  become: true
+  become_user: "{{ mcp_owner }}"
+
+- name: Install systemd user service for github MCP
+  ansible.builtin.template:
+    src: mcp-github.service.j2
+    dest: "~/.config/systemd/user/{{ mcp_github_service_name }}"
+    mode: "0644"
+  become: true
+  become_user: "{{ mcp_owner }}"
+  notify: reload systemd user
+
+- name: Enable github MCP service (but don't start without token)
+  ansible.builtin.systemd:
+    name: "{{ mcp_github_service_name }}"
+    scope: user
+    enabled: yes
+    daemon_reload: yes
+    state: "{{ 'started' if _github_token_available else 'stopped' }}"
+  become: true
+  become_user: "{{ mcp_owner }}"
+
+- name: Register github MCP server for claude_code
+  ansible.builtin.set_fact:
+    mcp_servers_registered: "{{ mcp_servers_registered | default([]) + [mcp_github_info] }}"
+  vars:
+    mcp_github_info:
+      name: "github"
+      type: "stdio"
+      command: "docker"
+      args:
+        - "exec"
+        - "-i"
+        - "{{ mcp_github_container_name }}"
+        - "npx"
+        - "{{ mcp_github_npm_package }}"
+      env: "{{ {'GITHUB_PERSONAL_ACCESS_TOKEN': github_token} if _github_token_available else {} }}"
+  delegate_to: localhost
+  delegate_facts: true
+  when: _github_token_available  # Only register if token exists
+
+- name: Display GitHub MCP status
+  ansible.builtin.debug:
+    msg: "{{ 'GitHub MCP configured and started' if _github_token_available else 'GitHub MCP files created but NOT started (missing token)' }}"

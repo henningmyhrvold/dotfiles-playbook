@@ -1,0 +1,87 @@
+---
+# tasks/main.yml for mcp_ref role
+
+- name: Ensure MCP ref directory exists
+  ansible.builtin.file:
+    path: "{{ mcp_ref_dir }}"
+    state: directory
+    mode: "0755"
+  become: true
+  become_user: "{{ mcp_owner }}"
+
+- name: Create Docker network for MCP servers
+  community.docker.docker_network:
+    name: "{{ mcp_docker_network }}"
+    state: present
+  become: true
+
+- name: Deploy Docker Compose file for ref MCP
+  ansible.builtin.template:
+    src: docker-compose.mcp-ref.yml.j2
+    dest: "{{ mcp_ref_dir }}/docker-compose.mcp-ref.yml"
+    mode: "0644"
+  become: true
+  become_user: "{{ mcp_owner }}"
+  notify: restart mcp ref
+
+- name: Ensure ref MCP service is running
+  community.docker.docker_compose_v2:
+    project_src: "{{ mcp_ref_dir }}"
+    files:
+      - docker-compose.mcp-ref.yml
+    state: present
+    pull: "{{ mcp_compose_pull_policy }}"
+  become: true
+  become_user: "{{ mcp_owner }}"
+
+- name: Enable lingering for {{ mcp_owner }}
+  ansible.builtin.command: "loginctl enable-linger {{ mcp_owner }}"
+  when: mcp_enable_lingering | bool
+  changed_when: false
+  failed_when: false
+  become: true
+
+- name: Ensure systemd user directory exists
+  ansible.builtin.file:
+    path: "~/.config/systemd/user"
+    state: directory
+    mode: "0755"
+  become: true
+  become_user: "{{ mcp_owner }}"
+
+- name: Install systemd user service for ref MCP
+  ansible.builtin.template:
+    src: mcp-ref.service.j2
+    dest: "~/.config/systemd/user/{{ mcp_ref_service_name }}"
+    mode: "0644"
+  become: true
+  become_user: "{{ mcp_owner }}"
+  notify: reload systemd user
+
+- name: Enable and start ref MCP service
+  ansible.builtin.systemd:
+    name: "{{ mcp_ref_service_name }}"
+    scope: user
+    enabled: yes
+    daemon_reload: yes
+    state: started
+  become: true
+  become_user: "{{ mcp_owner }}"
+
+- name: Register ref MCP server for claude_code
+  ansible.builtin.set_fact:
+    mcp_servers_registered: "{{ mcp_servers_registered | default([]) + [mcp_ref_info] }}"
+  vars:
+    mcp_ref_info:
+      name: "ref"
+      type: "stdio"
+      command: "docker"
+      args:
+        - "exec"
+        - "-i"
+        - "{{ mcp_ref_container_name }}"
+        - "npx"
+        - "{{ mcp_ref_npm_package }}"
+      env: {}
+  delegate_to: localhost
+  delegate_facts: true

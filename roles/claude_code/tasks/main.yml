@@ -1,0 +1,95 @@
+---
+# tasks/main.yml for claude_code role
+
+- name: Ensure Node.js and npm are installed
+  community.general.pacman:
+    name:
+      - nodejs
+      - npm
+    state: present
+  become: yes
+  tags: [install]
+
+- name: Check if Claude Code CLI is installed
+  ansible.builtin.command: which claude
+  register: _claude_check
+  changed_when: false
+  failed_when: false
+  become: true
+  become_user: "{{ claude_code_owner }}"
+  tags: [install]
+
+- name: Install Claude Code CLI via npm
+  ansible.builtin.command: npm install -g {{ claude_code_npm_package }}
+  environment:
+    npm_config_prefix: "{{ npm_global_prefix }}"
+  when: _claude_check.rc != 0
+  become: true
+  become_user: "{{ claude_code_owner }}"
+  tags: [install]
+
+- name: Ensure npm global bin is in PATH (zshrc)
+  ansible.builtin.lineinfile:
+    path: "{{ claude_code_home }}/.zshrc"
+    line: 'export PATH="{{ npm_global_prefix }}/bin:$PATH"'
+    create: yes
+    state: present
+  become: true
+  become_user: "{{ claude_code_owner }}"
+  when: _claude_check.rc != 0
+  tags: [install, config]
+
+- name: Ensure npm global bin is in PATH (bashrc)
+  ansible.builtin.lineinfile:
+    path: "{{ claude_code_home }}/.bashrc"
+    line: 'export PATH="{{ npm_global_prefix }}/bin:$PATH"'
+    create: yes
+    state: present
+  become: true
+  become_user: "{{ claude_code_owner }}"
+  when: _claude_check.rc != 0
+  tags: [install, config]
+
+- name: Create Claude Code configuration directory
+  ansible.builtin.file:
+    path: "{{ claude_code_config_dir }}"
+    state: directory
+    mode: '0755'
+  become: true
+  become_user: "{{ claude_code_owner }}"
+  tags: [config]
+
+- name: Generate Claude Code configuration from registered MCP servers
+  ansible.builtin.template:
+    src: claude-config.json.j2
+    dest: "{{ claude_code_config_dir }}/.claude.json"
+    mode: '0600'
+  become: true
+  become_user: "{{ claude_code_owner }}"
+  tags: [config]
+
+- name: Display Claude Code setup summary
+  ansible.builtin.debug:
+    msg: |
+      Configuration:
+      • Config file: {{ claude_code_config_dir }}/.claude.json
+      • Registered MCP servers: {{ mcp_servers_registered | length }}
+      Usage:
+      1. Ensure MCP servers are running:
+         systemctl --user status 'mcp-*'
+      2. Start Claude Code:
+         cd ~/src/your-project
+         claude
+      3. Check MCP status inside Claude:
+         /mcp
+
+      Registered MCP Servers:
+      {% for server in mcp_servers_registered %}
+         • {{ server.name }}
+      {% endfor %}
+
+      Manage MCP servers:
+      systemctl --user status 'mcp-*'
+      systemctl --user restart mcp-github
+      journalctl --user -u mcp-filesystem -f
+  tags: [always]

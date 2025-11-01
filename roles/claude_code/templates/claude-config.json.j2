@@ -1,0 +1,16 @@
+{
+  "projects": {},
+  "mcpServers": {
+{% for server in mcp_servers_registered %}
+    "{{ server.name }}": {
+      "type": "{{ server.type | default('stdio') }}",
+      "command": "{{ server.command }}",
+      "args": {{ server.args | to_json }}
+{% if server.env is defined and server.env | length > 0 %}
+      ,
+      "env": {{ server.env | to_json }}
+{% endif %}
+    }{{ "," if not loop.last else "" }}
+{% endfor %}
+  }
+}

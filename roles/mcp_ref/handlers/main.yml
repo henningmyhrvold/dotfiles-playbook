@@ -1,0 +1,20 @@
+---
+# handlers/main.yml for mcp_ref role
+
+- name: restart mcp ref
+  community.docker.docker_compose_v2:
+    project_src: "{{ mcp_ref_dir }}"
+    files:
+      - docker-compose.mcp-ref.yml
+    state: restarted
+  become: true
+  become_user: "{{ mcp_owner }}"
+  listen: "restart mcp ref"
+
+- name: reload systemd user
+  ansible.builtin.systemd:
+    daemon_reload: yes
+    scope: user
+  become: true
+  become_user: "{{ mcp_owner }}"
+  listen: "reload systemd user"
