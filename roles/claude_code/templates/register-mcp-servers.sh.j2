@@ -1,0 +1,25 @@
+#!/bin/bash
+set -e
+
+# Remove existing servers first (ignore errors if they don't exist)
+claude mcp remove filesystem 2>/dev/null || true
+claude mcp remove ref 2>/dev/null || true
+claude mcp remove github 2>/dev/null || true
+
+# Add filesystem server
+claude mcp add --transport stdio filesystem -- \
+  docker exec -i mcp-filesystem npx @modelcontextprotocol/server-filesystem \
+  {{ mcp_filesystem_allowed_dirs | join(' ') }}
+
+# Add ref server
+claude mcp add --transport stdio ref -- \
+  docker exec -i mcp-ref npx @upstash/context7-mcp
+
+# Add github server (only if token is set)
+{% if github_token %}
+claude mcp add --transport stdio github \
+  --env GITHUB_PERSONAL_ACCESS_TOKEN="{{ github_token }}" -- \
+  docker exec -i mcp-github npx @modelcontextprotocol/server-github
+{% endif %}
+
+echo "MCP servers registered. Run 'claude mcp list' to verify."

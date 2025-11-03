@@ -1,16 +1,79 @@
 {
   "projects": {},
   "mcpServers": {
-{% for server in mcp_servers_registered %}
-    "{{ server.name }}": {
-      "type": "{{ server.type | default('stdio') }}",
-      "command": "{{ server.command }}",
-      "args": {{ server.args | to_json }}
-{% if server.env is defined and server.env | length > 0 %}
-      ,
-      "env": {{ server.env | to_json }}
+{% set containers = _mcp_containers.stdout_lines %}
+{% set comma_needed = namespace(value=false) %}
+{% for container in containers %}
+{% if container == 'mcp-filesystem' %}
+{% if comma_needed.value %},
 {% endif %}
-    }{{ "," if not loop.last else "" }}
+    "filesystem": {
+      "type": "stdio",
+      "command": "docker",
+      "args": ["exec", "-i", "{{ container }}", "npx", "@modelcontextprotocol/server-filesystem"{{ ', "' + mcp_filesystem_allowed_dirs | join('", "') + '"' }}],
+      "env": {}
+    }
+{% set comma_needed.value = true %}
+{% endif %}
+{% if container == 'mcp-github' %}
+{% if comma_needed.value %},
+{% endif %}
+    "github": {
+      "type": "stdio",
+      "command": "docker",
+      "args": ["exec", "-i", "{{ container }}", "npx", "@modelcontextprotocol/server-github"],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "{{ github_token }}"
+      }
+    }
+{% set comma_needed.value = true %}
+{% endif %}
+{% if container == 'mcp-obsidian' %}
+{% if comma_needed.value %},
+{% endif %}
+    "obsidian": {
+      "type": "stdio",
+      "command": "docker",
+      "args": ["exec", "-i", "{{ container }}", "npx", "mcp-obsidian", "/vault"],
+      "env": {}
+    }
+{% set comma_needed.value = true %}
+{% endif %}
+{% if container == 'mcp-ref' %}
+{% if comma_needed.value %},
+{% endif %}
+    "ref": {
+      "type": "stdio",
+      "command": "docker",
+      "args": ["exec", "-i", "{{ container }}", "npx", "@upstash/context7-mcp"],
+      "env": {}
+    }
+{% set comma_needed.value = true %}
+{% endif %}
+{% if container == 'mcp-semgrep' %}
+{% if comma_needed.value %},
+{% endif %}
+    "semgrep": {
+      "type": "stdio",
+      "command": "docker",
+      "args": ["exec", "-i", "{{ container }}", "npx", "@modelcontextprotocol/server-semgrep"],
+      "env": {}
+    }
+{% set comma_needed.value = true %}
+{% endif %}
+{% if container == 'mcp-exa' %}
+{% if comma_needed.value %},
+{% endif %}
+    "exa": {
+      "type": "stdio",
+      "command": "docker",
+      "args": ["exec", "-i", "{{ container }}", "npx", "@modelcontextprotocol/server-exa"],
+      "env": {
+        "EXA_API_KEY": "{{ exa_api_key }}"
+      }
+    }
+{% set comma_needed.value = true %}
+{% endif %}
 {% endfor %}
   }
 }

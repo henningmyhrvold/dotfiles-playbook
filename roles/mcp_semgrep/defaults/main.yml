@@ -16,7 +16,7 @@ semgrep_api_token: "{{ lookup('env', 'SEMGREP_API_TOKEN') | default('', true) }}
 
 # Docker configuration
 mcp_semgrep_container_name: "mcp-semgrep"
-mcp_semgrep_image: "returntocorp/semgrep:latest"
+mcp_semgrep_image: "node:20-alpine"
 mcp_network_mode: "bridge"
 mcp_docker_network: "mcp-network"
 

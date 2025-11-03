@@ -1,13 +1,11 @@
-# docker-compose.mcp-semgrep.yml.j2
-# Managed by Ansible
-
 services:
   {{ mcp_semgrep_container_name }}:
     image: {{ mcp_semgrep_image }}
     container_name: {{ mcp_semgrep_container_name }}
     restart: unless-stopped
     working_dir: /app
-    command: sh -c "pip install {{ mcp_semgrep_npm_package }} && exec python -m mcp_semgrep"
+    # Changed from pip to npm
+    command: sh -c "npm install -g {{ mcp_semgrep_npm_package }} && exec npx {{ mcp_semgrep_npm_package }}"
     stdin_open: true
     tty: true
     volumes:

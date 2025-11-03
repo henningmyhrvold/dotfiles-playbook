@@ -116,7 +116,6 @@ pacman_installed_packages:
   # --- Productivity ---
   - gedit
   - thunderbird
-  - obsidian
   # --- HW Development ---
   - subversion
   - bc
@@ -144,6 +143,9 @@ aur_installed_packages:
 # --- NPM Packages ---
 npm_global_packages:
   - mcp-hub@latest
+  - '@modelcontextprotocol/server-filesystem@latest'
+  - '@modelcontextprotocol/server-github@latest'
+  - '@upstash/context7-mcp@latest'
 
 # --- Dotfiles Configuration ---
 configure_dotfiles: true
