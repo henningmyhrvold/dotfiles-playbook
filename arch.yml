@@ -61,9 +61,6 @@
     - role: mcp_github
       when: mcp_github_enabled | default(true)
       tags: ["mcp", "mcp_github"]
-    - role: mcp_obsidian
-      when: mcp_obsidian_enabled | default(true)
-      tags: ["mcp", "mcp_obsidian"]
     - role: mcp_ref
       when: mcp_ref_enabled | default(true)
       tags: ["mcp", "mcp_ref"]

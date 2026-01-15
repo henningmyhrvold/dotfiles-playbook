@@ -1,0 +1,6309 @@
+## GPT‑Ready Project Dump
+## Generated on 2026-01-14T22:04:18.898436
+## Scanned directory: /home/henning/src/dotfiles-playbook
+## Output file: /home/henning/src/dotfiles-playbook/project_code.txt
+
+## Architecture Overview
+
+- No Python packages detected; repository consists of top‑level scripts/files.
+## File tree (excluding ignored / binary files)
+
+dotfiles-playbook/
+├── .claude/
+│   └── settings.local.json
+├── group_vars/
+│   └── all.yml
+├── host_vars/
+│   ├── arch-config.yml
+│   ├── debian-config.yml
+│   ├── fedora-config.yml
+│   └── macos-config.yml
+└── roles/
+    ├── acpi/
+    │   └── tasks/
+    │       └── main.yml
+    ├── apparmor/
+    │   ├── defaults/
+    │   │   └── main.yml
+    │   ├── handlers/
+    │   │   └── main.yml
+    │   ├── tasks/
+    │   │   └── main.yml
+    │   └── templates/
+    │       └── apparmor-notify.desktop.j2
+    ├── apt/
+    │   └── tasks/
+    │       └── main.yml
+    ├── audio/
+    │   └── tasks/
+    │       └── main.yml
+    ├── aur/
+    │   └── tasks/
+    │       └── main.yml
+    ├── aur-packages/
+    │   └── tasks/
+    │       └── main.yml
+    ├── claude_code/
+    │   ├── defaults/
+    │   │   └── main.yml
+    │   ├── handlers/
+    │   │   └── main.yml
+    │   ├── tasks/
+    │   │   └── main.yml
+    │   └── templates/
+    │       ├── claude-config.json.j2
+    │       └── register-mcp-servers.sh.j2
+    ├── claude_desktop_mcp_filesystem/
+    │   ├── defaults/
+    │   │   └── main.yml
+    │   ├── tasks/
+    │   │   └── main.yml
+    │   └── templates/
+    │       └── claude_desktop_config.json.j2
+    ├── claude_desktop_wayland/
+    │   ├── defaults/
+    │   │   └── main.yml
+    │   └── tasks/
+    │       └── main.yml
+    ├── copy/
+    │   └── tasks/
+    │       └── main.yml
+    ├── dnf/
+    │   └── tasks/
+    │       └── main.yml
+    ├── dns/
+    │   ├── defaults/
+    │   │   └── main.yml
+    │   ├── handlers/
+    │   │   └── main.yml
+    │   └── tasks/
+    │       └── main.yml
+    ├── docker_engine/
+    │   ├── defaults/
+    │   │   └── main.yml
+    │   ├── handlers/
+    │   │   └── main.yml
+    │   └── tasks/
+    │       └── main.yml
+    ├── docker_mcp/
+    │   ├── defaults/
+    │   │   └── main.yml
+    │   ├── tasks/
+    │   │   └── main.yml
+    │   └── templates/
+    │       ├── docker-compose.mcp.yml.j2
+    │       └── mcp-docker.service.j2
+    ├── dotfiles/
+    │   └── tasks/
+    │       └── main.yml
+    ├── folders/
+    │   └── tasks/
+    │       └── main.yml
+    ├── fonts/
+    │   └── tasks/
+    │       └── main.yml
+    ├── homebrew/
+    │   └── tasks/
+    │       └── main.yml
+    ├── hwdev_serial/
+    │   ├── defaults/
+    │   │   └── main.yml
+    │   ├── files/
+    │   │   └── 99-serial-dev.rules
+    │   ├── handlers/
+    │   │   └── main.yml
+    │   └── tasks/
+    │       └── main.yml
+    ├── hyprland/
+    │   └── tasks/
+    │       └── main.yml
+    ├── links/
+    │   └── tasks/
+    │       └── main.yml
+    ├── luarocks311/
+    │   └── tasks/
+    │       └── main.yml
+    ├── mcp_filesystem/
+    │   ├── defaults/
+    │   │   └── main.yml
+    │   ├── handlers/
+    │   │   └── main.yml
+    │   ├── tasks/
+    │   │   └── main.yml
+    │   └── templates/
+    │       ├── docker-compose.mcp-filesystem.yml.j2
+    │       └── mcp-filesystem.service.j2
+    ├── mcp_github/
+    │   ├── defaults/
+    │   │   └── main.yml
+    │   ├── handlers/
+    │   │   └── main.yml
+    │   ├── tasks/
+    │   │   └── main.yml
+    │   └── templates/
+    │       ├── docker-compose.mcp-github.yml.j2
+    │       └── mcp-github.service.j2
+    ├── mcp_hub_ui/
+    │   ├── defaults/
+    │   │   └── main.yml
+    │   ├── tasks/
+    │   │   └── main.yml
+    │   └── templates/
+    │       └── mcp-hub-ui.service.j2
+    ├── mcp_ref/
+    │   ├── defaults/
+    │   │   └── main.yml
+    │   ├── handlers/
+    │   │   └── main.yml
+    │   ├── tasks/
+    │   │   └── main.yml
+    │   └── templates/
+    │       ├── docker-compose.mcp-ref.yml.j2
+    │       └── mcp-ref.service.j2
+    ├── mcp_semgrep/
+    │   ├── defaults/
+    │   │   └── main.yml
+    │   ├── handlers/
+    │   │   └── main.yml
+    │   ├── tasks/
+    │   │   └── main.yml
+    │   └── templates/
+    │       ├── docker-compose.mcp-semgrep.yml.j2
+    │       └── mcp-semgrep.service.j2
+    ├── nftables/
+    │   ├── defaults/
+    │   │   └── main.yml
+    │   ├── handlers/
+    │   │   └── main.yml
+    │   ├── tasks/
+    │   │   └── main.yml
+    │   └── templates/
+    │       └── nftables.conf.j2
+    ├── npm_global/
+    │   ├── defaults/
+    │   │   └── main.yml
+    │   └── tasks/
+    │       └── main.yml
+    ├── nvim/
+    │   └── tasks/
+    │       └── main.yml
+    ├── pacman/
+    │   └── tasks/
+    │       └── main.yml
+    ├── permissions/
+    │   └── tasks/
+    │       └── main.yml
+    ├── repos/
+    │   └── tasks/
+    │       └── main.yml
+    ├── rust/
+    │   └── tasks/
+    │       └── main.yml
+    ├── sddm/
+    │   └── tasks/
+    │       └── main.yml
+    ├── thunderbird_headless/
+    │   ├── defaults/
+    │   │   └── main.yml
+    │   ├── handlers/
+    │   │   └── main.yml
+    │   ├── meta/
+    │   │   └── main.yml
+    │   ├── tasks/
+    │   │   └── main.yml
+    │   └── templates/
+    │       ├── thunderbird-gui-wrapper.sh.j2
+    │       ├── thunderbird-headless-refresh.service.j2
+    │       ├── thunderbird-headless-refresh.timer.j2
+    │       ├── thunderbird-headless.service.j2
+    │       └── thunderbird.desktop.j2
+    ├── tmux/
+    │   └── tasks/
+    │       └── main.yml
+    ├── wireguard/
+    │   ├── defaults/
+    │   │   └── main.yml
+    │   └── tasks/
+    │       └── main.yml
+    └── zsh/
+        └── tasks/
+            └── main.yml
+├── .claude.md
+├── .gitignore
+├── README.md
+├── ansible.cfg
+├── arch.yml
+├── bootstrap.sh
+├── debian.yml
+├── fedora.yml
+├── inventory
+├── macos.yml
+├── rename.sh
+├── requirements-arch.yml
+├── requirements-common.yml
+
+123 directories, 109 files
+
+## Concatenated source files
+
+### FILE: fedora.yml ===
+```yaml
+---
+- hosts: workstation_fedora
+  # Run with sudo, root
+  become: true
+
+  # Load default variables
+  vars_files:
+    - host_vars/fedora-config.yml
+    
+  roles:
+    - { role: repos, when: configure_repos, tags: ["repos"] }
+    - fedora
+    - { role: tmux, tags: ["tmux"] }
+```
+
+### FILE: arch.yml ===
+```yaml
+---
+- hosts: workstation_arch
+  # Run with sudo, root
+  become: true
+
+  # Load default variables
+  vars_files:
+    - host_vars/arch-config.yml
+
+  roles:
+    - { role: repos, when: configure_repos, tags: ["repos"] }
+    - { role: folders, tags: ["folders"] }
+    - { role: pacman, tags: ["pacman"] }
+    - { role: rust, tags: ["rust"] }
+    - { role: aur, tags: ["aur"] }
+    - { role: aur-packages, tags: ["aur-packages"] }
+    - { role: audio, tags: ["audio"] }
+    - { role: acpi, tags: ["acpi"] }
+    - { role: zsh, tags: ["zsh"] }
+    - { role: nvim, tags: ["nvim"] }
+    - { role: tmux, tags: ["tmux"] }
+    - { role: fonts, tags: ["fonts"] }
+    - { role: links, tags: ["links"] }
+    - { role: copy, tags: ["copy"] }
+    - { role: dotfiles, tags: ["dotfiles"] }
+    - { role: sddm, tags: ["sddm"] }
+    - { role: hyprland, tags: ["hyprland"] }
+    - { role: permissions, tags: ["permissions"] }
+    - { role: luarocks311, tags: ["luarocks311"] }
+    - role: thunderbird_headless
+      tags: ["thunderbird"]
+      vars:
+        thunderbird_enable_lingering: true
+        thunderbird_refresh_method: "timer"      # "timer" | "runtime_max" | "none"
+        thunderbird_refresh_interval: "1min"     # restart cadence
+        # thunderbird_use_xvfb: true             # uncomment only if MOZ_HEADLESS still fails
+    - { role: apparmor, tags: ["apparmor"] }
+    - { role: nftables, tags: ["nftables"] }
+    - { role: dns, tags: ["dns"] }
+    - { role: wireguard, tags: ["wireguard"] }
+    - { role: npm_global, tags: ["npm"] }
+    - { role: hwdev_serial, tags: ["hwdev_serial"] }
+    - role: docker_engine
+      vars:
+        docker_users:
+          - henning        # adjust to your user
+        docker_enable_buildkit: true
+        docker_daemon_json_extra:
+          # Example extras (optional):
+          # "log-driver": "json-file"
+          # "log-opts":
+          #   "max-size": "10m"
+          #   "max-file": "3"
+    - { role: docker_mcp, tags: ["docker_mcp"] }
+    - { role: mcp_hub_ui, tags: ["mcp_hub_ui"] }
+    - { role: claude_desktop_wayland, tags: ["claude_desktop_wayland"] }
+    - { role: claude_desktop_mcp_filesystem, tags: ["claude_desktop_mcp_filesystem"] }
+    - role: mcp_filesystem
+      when: mcp_filesystem_enabled | default(true)
+      tags: ["mcp", "mcp_filesystem"]
+    - role: mcp_github
+      when: mcp_github_enabled | default(true)
+      tags: ["mcp", "mcp_github"]
+    - role: mcp_ref
+      when: mcp_ref_enabled | default(true)
+      tags: ["mcp", "mcp_ref"]
+    - role: mcp_semgrep
+      when: mcp_semgrep_enabled | default(true)
+      tags: ["mcp", "mcp_semgrep"]
+    # Claude Code CLI (must run after MCP servers)
+    - role: claude_code
+      tags: ["claude_code"]
+```
+
+### FILE: ansible.cfg ===
+```ini
+[defaults]
+inventory = inventory
+callback_result_format = yaml
+roles_path = ./roles:/etc/ansible/roles
+collections_path = ~/.ansible/collections:/usr/share/ansible/collections
+```
+
+### FILE: macos.yml ===
+```yaml
+---
+- hosts: workstation_macos
+  # Run as root
+  become: true
+
+  # Load default variables
+  vars_files:
+    - host_vars/macos-config.yml
+
+  roles:
+    - { role: repos, when: configure_repos, tags: ["repos"] }
+    - macos
+    - { role: tmux, tags: ["tmux"] }
+```
+
+### FILE: requirements-arch.yml ===
+```yaml
+---
+collections:
+# Collection name:
+- community.general
+- kewlfft.aur
+```
+
+### FILE: bootstrap.sh ===
+```bash
+#!/usr/bin/env bash
+
+# Script to run on a new system to configure it.
+# 1. First, check if the distribution is Arch, Debian, Fedora, or MacOS. If it is not one of those, the script exits.
+# 2. Checks if Ansible is installed; exits with an error if not (Ansible is expected to be installed by post_install.sh).
+# 3. Checks if an SSH Ed25519 key exists. If it doesn't, create one.
+# 4. Installs Ansible requirements based on the distribution.
+# 5. Runs the Ansible playbook, prompting for sudo password.
+
+# Exit immediately if any command the script executes fails (returns a non-zero status).
+set -e
+
+##########################################
+## Variables
+##########################################
+
+DOTFILES="$HOME/src/dotfiles-playbook"
+DOTSSH="$HOME/.ssh"
+
+# System Flags
+isDebian="false"
+isFedora="false"
+isArch="false"
+isMacOS="false"
+
+# Check the OS
+if [ -f /etc/os-release ]; then
+  # Get os-release variables
+  # shellcheck source=/dev/null
+  . /etc/os-release
+  if [ "$ID" = "debian" ]; then
+    isDebian="true"
+  elif [ "$ID" = "fedora" ]; then
+    isFedora="true"
+  elif [ "$ID" = "arch" ]; then
+    isArch="true"
+  fi
+# Detect MacOS
+elif [[ "$OSTYPE" == "darwin"* ]]; then
+  isMacOS="true"
+fi
+
+# If the distribution is not one of the supported ones, exit.
+if [ "$isDebian" = "false" ] && [ "$isFedora" = "false" ] && [ "$isArch" = "false" ] && [ "$isMacOS" = "false" ]; then
+  echo "This distribution is not supported by this script. Only Arch, Debian, Fedora, and MacOS are supported."
+  exit 1
+fi
+
+##########################################
+## Functions
+##########################################
+
+# Checks if Ansible is installed; exits with an error if not.
+check_ansible() {
+  if ! [ -x "$(command -v ansible)" ]; then
+    echo "Error: Ansible is not installed. Please ensure Ansible is installed before running this script."
+    exit 1
+  fi
+}
+
+# Install Ansible requirements from a requirements file.
+install_ansible_requirements() {
+  if [ "$isArch" = "true" ]; then
+    ansible-galaxy install -r requirements-arch.yml
+  else
+    ansible-galaxy install -r requirements-common.yml
+  fi
+}
+
+# Creates an SSH Ed25519 key if one doesn't already exist.
+setup_ed25519_key() {
+  # Check if SSH Ed25519 key exists
+  if [ ! -f "$DOTSSH/id_ed25519" ]; then
+    echo "SSH Ed25519 key does not exist. Creating an Ed25519 SSH key..."
+    mkdir -p "$DOTSSH"
+    chmod 700 "$DOTSSH"
+    ssh-keygen -t ed25519 -f "$DOTSSH/id_ed25519" -N "" -C "$USER@$(uname -n)"
+    cat "$DOTSSH/id_ed25519.pub" >>"$DOTSSH/authorized_keys"
+    chmod 600 "$DOTSSH/authorized_keys"
+    echo "SSH key created and added to authorized_keys."
+  fi
+}
+
+#################################
+## Main Start of Script
+#################################
+
+check_ansible
+
+install_ansible_requirements
+
+setup_ed25519_key
+
+cd "$DOTFILES"
+
+# ==== Run Ansible Playbook ====
+echo "Running Ansible playbook..."
+
+# Common arguments for ansible-playbook
+COMMON_ARGS="--diff -v"
+
+# Arguments for privilege escalation (sudo)
+BECOME_ARGS="--ask-become-pass"
+
+if [ "$isDebian" = "true" ]; then
+  ansible-playbook $COMMON_ARGS $BECOME_ARGS "$DOTFILES/debian.yml"
+fi
+
+if [ "$isFedora" = "true" ]; then
+  ansible-playbook $COMMON_ARGS $BECOME_ARGS "$DOTFILES/fedora.yml"
+fi
+
+if [ "$isArch" = "true" ]; then
+  ansible-playbook $COMMON_ARGS $BECOME_ARGS "$DOTFILES/arch.yml"
+fi
+
+if [ "$isMacOS" = "true" ]; then
+  ansible-playbook $COMMON_ARGS $BECOME_ARGS "$DOTFILES/macos.yml"
+fi
+
+echo "Script finished."
+```
+
+### FILE: inventory ===
+```text
+[workstation_debian]
+127.0.0.1 ansible_connection=local
+
+[workstation_fedora]
+127.0.0.1 ansible_connection=local
+
+[workstation_arch]
+127.0.0.1 ansible_connection=local ansible_python_interpreter=/usr/bin/python3.13
+
+[workstation_macos]
+127.0.0.1 ansible_connection=local
+```
+
+### FILE: requirements-common.yml ===
+```yaml
+---
+collections:
+# Collection name:
+- community.general
+```
+
+### FILE: debian.yml ===
+```yaml
+---
+- hosts: workstation_debian
+  # Run as root
+  become: true
+
+  # Load default variables
+  vars_files:
+    - host_vars/debian-config.yml
+
+  roles:
+    - { role: repos, when: configure_repos, tags: ["repos"] }
+    - debian
+    - { role: tmux, tags: ["tmux"] }
+```
+
+### FILE: rename.sh ===
+```bash
+#!/usr/bin/env bash
+
+git grep -l henning | xargs sed -i 's/henning/youruser/g'
+```
+
+### FILE: .claude.md ===
+```markdown
+# Repository Context for AI Assistants
+
+## Overview
+
+This is an **Ansible-based dotfiles management and system configuration playbook** for automating the setup and configuration of Linux workstations (Arch, Debian, Fedora) and macOS machines. It provides Infrastructure-as-Code (IaC) for consistent, reproducible development environment setup.
+
+**Companion Repository:** [dotfiles](https://github.com/henningmyhrvold/dotfiles.git) - Contains actual configuration files (dotfiles) that are deployed and symlinked by this playbook.
+
+## Quick Start
+
+- **Bootstrap:** Run `./bootstrap.sh` to detect OS and execute appropriate playbook
+- **Manual execution:** `ansible-playbook arch.yml` (or debian.yml, fedora.yml, macos.yml)
+- **Selective execution:** Use tags like `ansible-playbook arch.yml --tags "zsh,nvim"`
+
+## Architecture
+
+### Directory Structure
+
+```
+.
+├── bootstrap.sh              # Main entry point - OS detection and playbook execution
+├── arch.yml                  # Arch Linux playbook
+├── debian.yml               # Debian playbook
+├── fedora.yml               # Fedora playbook
+├── macos.yml                # macOS playbook
+├── ansible.cfg              # Ansible configuration
+├── inventory                # Ansible inventory (local connections)
+├── roles/                   # 36 modular Ansible roles
+├── host_vars/               # OS-specific variables (arch-config.yml, debian-config.yml, etc.)
+├── group_vars/              # Global variables (all.yml)
+├── requirements-arch.yml    # AUR collection
+└── requirements-common.yml  # Community.general collection
+```
+
+### Key Configuration Files
+
+- **`host_vars/arch-config.yml`** - Primary configuration for Arch Linux:
+  - `pacman_installed_packages` - List of 100+ official packages
+  - `aur_installed_packages` - AUR-only packages
+  - `dotfiles_links` - Symlinks from dotfiles repo to home directory
+  - `create_folders` - Standard directory structure
+  - `npm_global_packages` - Global Node packages
+
+- **`group_vars/all.yml`** - Global defaults:
+  - `target_user: henning` - Target user for configuration
+  - `dotfiles_repo` - Git repository URL for dotfiles
+  - `dotfiles_home` - Home directory path
+
+- **`inventory`** - Ansible inventory with groups:
+  - `[workstation_arch]`
+  - `[workstation_debian]`
+  - `[workstation_fedora]`
+  - `[workstation_macos]`
+
+## Technology Stack
+
+### Desktop Environment (Wayland-based)
+- **Hyprland** - Wayland compositor
+- **SDDM** - Display manager
+- **Waybar** - Status bar
+- **Wofi** - Application launcher
+- **Hyprlock/Hypridle** - Lock and idle management
+
+### Development Tools
+- **Neovim** - Editor with LazyVim configuration
+- **Zsh** - Shell with Oh-My-Zsh and Powerlevel10k theme
+- **Tmux** - Terminal multiplexer
+- **Ghostty** - Terminal emulator
+
+### Programming Languages & Runtimes
+- Python (with venv for Neovim)
+- Rust
+- Go
+- Lua
+- Node.js/npm
+- Terraform
+
+### Infrastructure & Services
+- **Docker** - Container runtime with Buildx
+- **Wireguard** - VPN
+- **NFTables** - Firewall
+- **AppArmor** - Security
+- **systemd-resolved** - DNS
+
+### AI/Claude Integration
+- **Claude Desktop** (Wayland variant)
+- **Claude Code** (AUR package)
+- **MCP (Model Context Protocol)**:
+  - MCP Hub UI
+  - MCP Docker
+  - MCP Filesystem
+  - MCP Python REPL
+
+## Design Patterns
+
+### 1. Role-Based Organization
+All functionality is modularized into discrete Ansible roles (~36 total). Each role handles a specific component:
+
+```yaml
+# Example from arch.yml
+- { role: repos, when: configure_repos, tags: ["repos"] }
+- { role: pacman, when: configure_pacman, tags: ["pacman"] }
+- { role: aur, when: configure_aur, tags: ["aur"] }
+```
+
+### 2. Configuration-as-Data
+Complex configurations are defined as YAML data structures in host_vars:
+
+```yaml
+# Example from host_vars/arch-config.yml
+pacman_installed_packages:
+  - neovim
+  - tmux
+  - docker
+  # ... 100+ more
+
+dotfiles_links:
+  - { src: ".zshrc", dest: ".zshrc" }
+  - { src: ".config/nvim", dest: ".config/nvim" }
+  # ... etc
+```
+
+### 3. Conditional Execution
+Roles are conditionally executed using `when` conditions and `tags`:
+
+```bash
+# Run only specific roles
+ansible-playbook arch.yml --tags "zsh,nvim,tmux"
+```
+
+### 4. Dotfiles Integration Pattern
+1. Clone dotfiles repository to `~/dotfiles`
+2. Create symlinks from dotfiles to home directory
+3. Copy specific directories (themes, plugins)
+4. Make scripts executable
+
+### 5. User-Specific Customization
+Target user is parameterized to facilitate adaptation:
+
+```yaml
+target_user: henning
+dotfiles_home: "/home/{{ target_user }}"
+```
+
+## Important Conventions
+
+### Naming Conventions
+- **Roles:** Descriptive names indicating purpose (e.g., `docker_engine`, `claude_desktop_wayland`)
+- **Variables:** Prefixed with component name (e.g., `pacman_installed_packages`, `aur_installed_packages`)
+- **Files:** Lowercase with hyphens (e.g., `arch-config.yml`)
+
+### File Organization
+- **Tasks:** `roles/*/tasks/main.yml` - Main task entrypoint
+- **Defaults:** `roles/*/defaults/main.yml` - Default variables
+- **Handlers:** `roles/*/handlers/main.yml` - Service reload/restart handlers
+- **Templates:** `roles/*/templates/*.j2` - Jinja2 templates
+
+### Variable Precedence
+1. `host_vars/*-config.yml` - OS-specific overrides (highest priority)
+2. `group_vars/all.yml` - Global defaults
+3. `roles/*/defaults/main.yml` - Role defaults (lowest priority)
+
+## Common Operations
+
+### Adding a New Package
+Edit `host_vars/arch-config.yml`:
+
+```yaml
+pacman_installed_packages:
+  - package-name  # Official repos
+
+aur_installed_packages:
+  - package-name  # AUR only
+```
+
+### Adding a New Dotfile Symlink
+Edit `host_vars/arch-config.yml`:
+
+```yaml
+dotfiles_links:
+  - { src: ".config/app", dest: ".config/app" }
+```
+
+### Creating a New Role
+```bash
+mkdir -p roles/my_role/{tasks,defaults,handlers,templates}
+```
+
+Add to playbook:
+```yaml
+- { role: my_role, when: configure_my_role, tags: ["my_role"] }
+```
+
+### Testing Changes
+```bash
+# Dry run
+ansible-playbook arch.yml --check
+
+# Run specific role
+ansible-playbook arch.yml --tags "role_name"
+
+# Verbose output
+ansible-playbook arch.yml -v
+```
+
+## Development Workflow
+
+### Current State
+- **Branch:** main
+- **Recent focus:** MCP integration, Claude Desktop setup
+- **Uncommitted changes:** Check `git status` for current modifications
+
+### Making Changes
+1. **Modify configuration:** Edit `host_vars/arch-config.yml` or role files
+2. **Test locally:** Run playbook with `--check` or `--tags`
+3. **Commit:** Use conventional commits (e.g., "Add package X to arch config")
+4. **Apply:** Run full playbook or specific tags
+
+### Safety Considerations
+- Always test changes with `--check` before applying
+- Be careful with roles that modify system configurations (dns, nftables, wireguard)
+- Backup important configurations before major changes
+- Some roles require elevated privileges (sudo)
+
+## AI Assistant Guidelines
+
+### When Working on This Repository
+
+1. **Understand the scope:** This is a configuration management repository, not application code
+2. **Respect the architecture:** Use existing patterns (roles, host_vars, tags)
+3. **Test carefully:** System configuration changes can affect the entire workstation
+4. **Follow YAML conventions:** Consistent indentation, quoting, list formatting
+5. **Document changes:** Update this file if adding new patterns or conventions
+
+### Common Tasks
+
+- **Adding packages:** Modify `host_vars/arch-config.yml` lists
+- **Adding roles:** Create role directory structure, add to playbook
+- **Modifying configs:** Edit templates in `roles/*/templates/`
+- **Changing dotfiles:** Update dotfiles repository, then update symlinks list
+
+### What NOT to Do
+
+- Don't modify the dotfiles repository directly (that's a separate repo)
+- Don't hardcode paths or usernames (use variables)
+- Don't skip tags/conditionals (they enable selective execution)
+- Don't remove packages without understanding dependencies
+- Don't modify system files directly (use Ansible modules)
+
+## Troubleshooting
+
+### Common Issues
+
+1. **Ansible not found:** Run `bootstrap.sh` to install
+2. **Permission denied:** Ensure user has sudo privileges
+3. **AUR build failures:** Check AUR package status and dependencies
+4. **Symlink conflicts:** Check if files already exist in home directory
+5. **Role failures:** Run with `-v` for verbose output
+
+### Debug Commands
+
+```bash
+# Check Ansible version
+ansible --version
+
+# Test connectivity
+ansible all -m ping -i inventory
+
+# Dry run specific role
+ansible-playbook arch.yml --tags "role_name" --check
+
+# Verbose execution
+ansible-playbook arch.yml -vvv
+```
+
+## References
+
+- **Ansible Documentation:** https://docs.ansible.com/
+- **Arch Wiki:** https://wiki.archlinux.org/
+- **Hyprland Docs:** https://wiki.hyprland.org/
+- **Dotfiles Repository:** https://github.com/henningmyhrvold/dotfiles.git
+
+---
+
+**Last Updated:** 2025-11-01
+**Maintainer:** henning
+```
+
+### FILE: .gitignore ===
+```text
+.gptignore
+.claude.md
+.claude/
+concat_gipity.py
+project_code.txt
+```
+
+### FILE: README.md ===
+```markdown
+# Dotfiles-Playbook
+
+Ansible playbooks for Managing my Linux (Debian, Fedora, Arch), and MacOS Machines
+
+## Usage
+
+**Change the henning username with youruser**
+```bash
+git grep -l henning | xargs sed -i 's/henning/youruser/g'
+```
+
+Run `./bootstrap.sh`
+
+### What the Script Does
+
+- Script will check the Linux distribution and run the appropriate Ansible playbook and install required software and Ansible requirements for the target system.
+- Playbook is designed to work with a repository containing dotfiles and configuration files like my [dotfiles](https://github.com/henningmyhrvold/dotfiles.git) repository. These are configured in the configuration `yaml` files in the `group_vars` and `host_vars` folders.
+```
+
+### FILE: host_vars/debian-config.yml ===
+```yaml
+# Variables for playbooks
+# --- Dotfiles Configuration ---
+configure_dotfiles: true
+
+# These directories will be created if they don't exist.
+dotfiles_directories:
+  - "{{ dotfiles_home }}/.config/tmux"
+
+# Defines symlinks from the dotfiles repo to the home directory.
+dotfiles_links:
+  - { src: "tmux/tmux.conf", dest: ".config/tmux/tmux.conf" }
+
+apt_installed_packages:
+  - git
+  - tmux
+```
+
+### FILE: host_vars/fedora-config.yml ===
+```yaml
+# Variables for playbooks
+# --- Dotfiles Configuration ---
+configure_dotfiles: true
+
+# These directories will be created if they don't exist.
+dotfiles_directories:
+  - "{{ dotfiles_home }}/.config/tmux"
+
+# Defines symlinks from the dotfiles repo to the home directory.
+dotfiles_links:
+  - { src: "tmux/tmux.conf", dest: ".config/tmux/tmux.conf" }
+
+dnf_installed_packages:
+  - git
+  - tmux
+```
+
+### FILE: host_vars/arch-config.yml ===
+```yaml
+# Variables for playbooks for Arch Linux
+
+# --- Pacman Packages ---
+pacman_installed_packages:
+  # --- Wayland ---
+  - wayland
+  - wlr-randr
+  - xorg-xwayland
+  - xdg-desktop-portal
+  - xdg-desktop-portal-hyprland
+  - xdg-desktop-portal-gtk
+  - gtk3
+  - xdg-utils
+  - qt5-wayland
+  - qt6-wayland
+  # --- Hyprland ---
+  - hyprland
+  - hyprpaper
+  - hypridle
+  - hyprlock
+  - hyprutils
+  # --- Auth ---
+  - sddm
+  # --- Graphics Drivers ---
+  - mesa
+  # --- Audio ---
+  - pipewire
+  - pipewire-pulse
+  - wireplumber
+  - pavucontrol
+  # --- Possibly only thinkpad essensial ---
+  - sof-firmware
+  - alsa-ucm-conf
+  - vlc
+  # --- Networking ---
+  - wireless_tools
+  - wpa_supplicant
+  - network-manager-applet
+  - openssh
+  - openssl
+  - systemd-resolvconf
+  - nmap
+  - tcpdump
+  - wireshark-cli
+  # --- Display & Theming ---
+  - libinput
+  - waybar
+  - wofi
+  - acpid
+  - brightnessctl
+  # --- Notification ---
+  - dunst
+  - libnotify
+  - polkit-kde-agent
+  - tk
+  - python-gobject
+  # --- Screenshot ---
+  - grim
+  - slurp
+  # --- Fonts ---
+  - fontconfig
+  - noto-fonts
+  - noto-fonts-emoji
+  - ttf-cascadia-code-nerd
+  - ttf-dejavu
+  - ttf-liberation
+  # --- GNOME Apps ---
+  - nautilus
+  - loupe
+  - gnome-calendar
+  - gnome-calculator
+  - showtime
+  # --- CLI Tools & Shell ---
+  - ghostty
+  - neovim
+  - zsh
+  - zsh-autosuggestions
+  - tmux
+  - wget
+  - tree
+  - fzf
+  - fd
+  - jq
+  - lsof
+  - bat
+  - ripgrep
+  - htop
+  - smartmontools
+  - cliphist
+  - unzip
+  - curl
+  - rsync
+  - fastfetch
+  - wireguard-tools
+  - fwupd
+  - pacman-contrib
+  # --- Programming ---
+  - lua
+  - lua51
+  - stylua
+  - go
+  - python-uv
+  - python-dateutil
+  - python-pip
+  - python-pynvim
+  - python-requests
+  - python-docker
+  - nodejs
+  - npm
+  - direnv
+  - terraform
+  - direnv
+  - docker
+  - docker-buildx
+  - docker-compose
+  # --- Productivity ---
+  - gedit
+  - thunderbird
+  # --- HW Development ---
+  - subversion
+  - bc
+  - ccache
+  - time
+  - usbutils
+  - picocom
+  - minicom
+  - tftp-hpa
+
+# --- AUR Packages ---
+aur_installed_packages:
+  - claude-code
+  - oh-my-zsh-git
+  - zen-browser-bin
+  - google-chrome
+  - zsh-theme-powerlevel10k-git
+  - ttf-meslo-nerd-font-powerlevel10k
+  - omnissa-horizon-client
+  - claude-desktop-native
+  - cool-retro-term
+  - tio             # HW dev: Modern serial console
+  - kermit          # HW dev: A VTE-based, simple and froggy terminal emulator
+
+# --- NPM Packages ---
+npm_global_packages:
+  - mcp-hub@latest
+  - '@modelcontextprotocol/server-filesystem@latest'
+  - '@modelcontextprotocol/server-github@latest'
+  - '@upstash/context7-mcp@latest'
+
+# --- Dotfiles Configuration ---
+configure_dotfiles: true
+
+# --- DNS ---
+dns_provider: "systemd-resolved"
+dns_remove_conflicts: true
+dns_configure_networkmanager: true
+
+# Serial role settings
+hwdev_openwrt_tooling: true
+
+# MCP Filesystem claude desktop readable directories
+filesystem_allowed_directories:
+  - "/home/henning/src/dotfiles"
+  - "/home/henning/src/dotfiles-playbook"
+
+# ============================================================================
+# Claude Code MCP Configuration
+# ============================================================================
+
+# Which MCP servers to enable
+mcp_filesystem_enabled: true
+mcp_github_enabled: true
+mcp_obsidian_enabled: true
+mcp_ref_enabled: true
+mcp_semgrep_enabled: true
+
+# Filesystem MCP - directories Claude Code can access
+mcp_filesystem_allowed_dirs:
+  - "/home/henning/src"
+  - "/home/henning/projects"
+  - "/home/henning/Documents"
+
+# Obsidian MCP - vault location
+mcp_obsidian_vault_path: "/home/henning/Documents/ObsidianVault"
+
+# Semgrep MCP - directories to scan
+mcp_semgrep_scan_dirs:
+  - "/home/henning/src"
+
+# MCP Common settings
+mcp_network_mode: "host"
+mcp_enable_lingering: true
+
+# These directories will be created if they don't exist.
+create_folders:
+  - { path: "{{ dotfiles_home }}/Pictures" }
+  - { path: "{{ dotfiles_home }}/Pictures/wallpapers" }
+  - { path: "{{ dotfiles_home }}/Pictures/icons" }
+  - { path: "{{ dotfiles_home }}/Documents" }
+  - { path: "{{ dotfiles_home }}/Downloads" }
+  - { path: "{{ dotfiles_home }}/.config/colors" }
+  - { path: "{{ dotfiles_home }}/.config/nvim" }
+  - { path: "{{ dotfiles_home }}/.config/tmux" }
+  - { path: "{{ dotfiles_home }}/.config/tmux-sessionizer" }
+  - { path: "{{ dotfiles_home }}/.config/ghostty" }
+  - { path: "{{ dotfiles_home }}/.config/hypr" }
+  - { path: "{{ dotfiles_home }}/.config/waybar" }
+  - { path: "{{ dotfiles_home }}/.config/wofi" }
+  - { path: "{{ dotfiles_home }}/.config/dunst" }
+  - { path: "{{ dotfiles_home }}/.config/fontconfig" }
+  - { path: "{{ dotfiles_home }}/.config/cool-retro-term" }
+  - { path: "{{ dotfiles_home }}/.config/mcp" }
+  - { path: "{{ dotfiles_home }}/.config/Claude" }
+  - { path: "{{ dotfiles_home }}/.local/bin/" }
+  - { path: "{{ dotfiles_home }}/.zsh" }
+  - { path: "{{ dotfiles_home }}/.vim" }
+
+# Defines symlinks from the dotfiles repo to the home directory.
+dotfiles_links:
+  - { src: "zsh/.zshrc", dest: ".zshrc" }
+  - { src: "zsh/.zsh_profile", dest: ".zsh_profile" }
+  - { src: "zsh/.p10k.zsh", dest: ".p10k.zsh" }
+  - { src: "zsh/catppuccin_mocha-zsh-syntax-highlighting.zsh", dest: ".zsh/catppuccin_mocha-zsh-syntax-highlighting.zsh" }
+  - { src: "nvim/init.lua", dest: ".config/nvim/init.lua" }
+  - { src: "nvim/test.lua", dest: ".config/nvim/test.lua" }
+  - { src: "tmux/tmux.conf", dest: ".config/tmux/tmux.conf" }
+  - { src: "tmux-sessionizer/tmux-sessionizer.conf", dest: ".config/tmux-sessionizer/tmux-sessionizer.conf" }
+  - { src: "tmux-sessionizer/tmux-sessionizer.sh", dest: ".local/bin/tmux-sessionizer.sh" }
+  - { src: "tmux-sessionizer/tmux-status-color.sh", dest: ".local/bin/tmux-status-color.sh" }
+  - { src: "ghostty/config", dest: ".config/ghostty/config" }
+  - { src: "hypr/hyprland.conf", dest: ".config/hypr/hyprland.conf" }
+  - { src: "hypr/hyprlock.conf", dest: ".config/hypr/hyprlock.conf" }
+  - { src: "hypr/hypridle.conf", dest: ".config/hypr/hypridle.conf" }
+  - { src: "hypr/hyprpaper.conf", dest: ".config/hypr/hyprpaper.conf" }
+  - { src: "waybar/config.jsonc", dest: ".config/waybar/config.jsonc" }
+  - { src: "waybar/style.css", dest: ".config/waybar/style.css" }
+  - { src: "waybar/email_unread.sh", dest: ".config/waybar/email_unread.sh" }
+  - { src: "waybar/meetings.py", dest: ".config/waybar/meetings.py" }
+  - { src: "wofi/config", dest: ".config/wofi/config" }
+  - { src: "wofi/style.css", dest: ".config/wofi/style.css" }
+  - { src: "dunst/dunstrc", dest: ".config/dunst/dunstrc" }
+  - { src: "dunst/mocha.conf", dest: ".config/dunst/mocha.conf" }
+  - { src: "fonts/fonts.conf", dest: ".config/fontconfig/fonts.conf" }
+  - { src: "mcp/docker-compose.mcp.yml", dest: ".config/mcp/docker-compose.mcp.yml" }
+  - { src: "mcp/mcphub.json", dest: ".config/mcp/mcphub.json" }
+  - { src: "mcp/hub.json", dest: ".config/mcp/hub.json" }
+  - { src: "claude/claude-logo.png", dest: "Pictures/icons/claude-logo.png" }
+  - { src: "claude/claude-logo2.png", dest: "Pictures/icons/claude-logo2.png" }
+  - { src: "cool-retro-term/cool-retro-term-my-futuristic.json", dest: ".config/cool-retro-term/cool-retro-term-my-futuristic.json"}
+
+regular_links:
+  - { src: "/usr/share/zsh-theme-powerlevel10k", dest: "/usr/share/oh-my-zsh/custom/themes/powerlevel10k" }
+  - { src: "{{ dotfiles_home }}/src/dotfiles/sddm/sddm.conf", dest: "/etc/sddm.conf" }
+  #- { src: "{{ dotfiles_home }}/src/dotfiles/wallpapers/neonrain.png", dest: "{{ dotfiles_home }}/Pictures/wallpapers/neonrain.png" }
+  #- { src: "{{ dotfiles_home }}/src/dotfiles/claude/claude-logo.png", dest: "{{ dotfiles_home }}/Pictures/icons/claude-logo.png" }
+  #- { src: "{{ dotfiles_home }}/src/dotfiles/claude/claude-logo2.png", dest: "{{ dotfiles_home }}/Pictures/icons/claude-logo2.png" }
+  #- { src: "{{ dotfiles_home }}/src/dotfiles/claude/claude_desktop_config.json", dest: "{{ dotfiles_home }}/.config/Claude/claude_desktop_config.json" }
+
+copy:
+  - { src: "{{ dotfiles_home }}/src/dotfiles/sddm/catppuccin-mocha/", dest: "/usr/share/sddm/themes/catppuccin-mocha/" }
+  - { src: "/usr/share/zsh/plugins/zsh-autosuggestions/", dest: "/usr/share/oh-my-zsh/custom/plugins/zsh-autosuggestions/" }
+  - { src: "{{ dotfiles_home }}/src/dotfiles/nvim/lua/", dest: "{{ dotfiles_home }}/.config/nvim/lua/" }
+
+# --- Git Repositories ---
+git_repositories_external:
+  - https://aur.archlinux.org/paru-git.git
+  - https://github.com/FrozenVoid/C-techniques.git
+  - https://github.com/andreasfertig/programming-with-cpp20.git
+  - https://github.com/paultuckey/example-todo-app-rust-htmx.git
+  - https://github.com/pi-hole/pi-hole.git
+  - https://github.com/golang/example.git
+  - https://github.com/ProgrammingRust/examples.git
+
+# --- Scripts to make executable ---
+dotfiles_files_binaries:
+  - "wofi/powermenu.sh"
+  - "wofi/wifimenu.sh"
+  - "waybar/meetings.py"
+  - "waybar/email_unread.sh"
+  - "tmux-sessionizer/tmux-sessionizer.sh"
+  - "tmux-sessionizer/tmux-status-color.sh"
+```
+
+### FILE: host_vars/macos-config.yml ===
+```yaml
+# Variables for playbooks
+# --- Dotfiles Configuration ---
+configure_dotfiles: true
+
+# These directories will be created if they don't exist.
+dotfiles_directories:
+  - "{{ dotfiles_home }}/.config/tmux"
+
+# Defines symlinks from the dotfiles repo to the home directory.
+dotfiles_links:
+  - { src: "tmux/tmux.conf", dest: ".config/tmux/tmux.conf" }
+  
+homebrew_installed_casks:
+  - homebrew/cask/tmux
+```
+
+### FILE: group_vars/all.yml ===
+```yaml
+# Variables for playbooks
+
+# Whether to set up certain software, configurations
+configure_dotfiles: true
+configure_extras: true
+configure_repos: true
+
+downloads: "{{ dotfiles_home }}/.ansible-downloads"
+
+# Location of this repository
+dotfiles_repo: "https://github.com/henningmyhrvold/dotfiles.git"
+dotfiles_repo_version: "main"
+dotfiles_repo_accept_hostkey: true
+dotfiles_repo_local_destination: "{{ dotfiles_home }}/src/dotfiles"
+
+# Define the home directory for the target user explicitly.
+dotfiles_home: "/home/{{ target_user }}"
+
+# User for which set up is being done for
+target_user: henning
+
+# Personal Repositories to be cloned, synchronized
+git_repositories:
+  # Value of dotfiles_repo variable
+  - "{{ dotfiles_repo }}"
+```
+
+### FILE: roles/thunderbird_headless/defaults/main.yml ===
+```yaml
+thunderbird_user: "{{ target_user | default(ansible_user_id) }}"
+
+thunderbird_manage_packages: true
+thunderbird_packages:
+  - thunderbird
+
+# Headless handling
+thunderbird_use_xvfb: false
+thunderbird_xvfb_package: "xorg-server-xvfb"
+thunderbird_xvfb_run: "/usr/bin/xvfb-run -a -n 99 -s '-screen 0 1280x1024x24'"
+
+thunderbird_exec: "/usr/bin/thunderbird"
+thunderbird_extra_args: ""
+
+thunderbird_service_name: "thunderbird-headless.service"
+thunderbird_unit_dir: "~/.config/systemd/user"
+
+thunderbird_autostart: true
+thunderbird_enable_lingering: true
+
+thunderbird_desktop_id: "org.mozilla.Thunderbird.desktop"
+
+# choices: "timer", "runtime_max", "none"
+thunderbird_refresh_method: "timer"
+# systemd time span (supports "1min", "5min", "30s", etc.)
+thunderbird_refresh_interval: "2min"
+
+# Where to put the GUI wrapper
+thunderbird_gui_wrapper_path: "{{ lookup('env','HOME') ~ '/.local/bin/thunderbird-gui' }}"
+# Command used in the desktop file
+thunderbird_gui_exec: "{{ thunderbird_gui_wrapper_path }}"
+# Install the desktop override?
+thunderbird_install_desktop_override: true
+```
+
+### FILE: roles/thunderbird_headless/meta/main.yml ===
+```yaml
+galaxy_info:
+  author: you
+  description: Run Thunderbird headless as a user systemd service for background mail & calendar sync
+  license: MIT
+  min_ansible_version: "2.10"
+  platforms:
+    - name: ArchLinux
+    - name: Debian
+    - name: Ubuntu
+    - name: Fedora
+dependencies: []
+```
+
+### FILE: roles/thunderbird_headless/templates/thunderbird-gui-wrapper.sh.j2 ===
+```text
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Stop headless instance if it is active (frees the profile lock)
+if systemctl --user is-active --quiet {{ thunderbird_service_name }}; then
+  systemctl --user stop {{ thunderbird_service_name }}
+fi
+
+# Ensure GUI mode
+unset MOZ_HEADLESS
+
+LOCK="$HOME/.local/state/thunderbird_gui.lock"
+mkdir -p "$(dirname "$LOCK")"; trap 'rm -f "$LOCK"' EXIT; touch "$LOCK"
+
+# Run Thunderbird GUI in the foreground, passing through args
+/usr/bin/thunderbird "$@"
+ret=$?
+systemctl --user start {{ thunderbird_service_name }} || true
+exit "$ret"
+```
+
+### FILE: roles/thunderbird_headless/templates/thunderbird-headless.service.j2 ===
+```text
+[Unit]
+Description=Thunderbird (headless) - background mail & calendar sync
+After=network-online.target dbus.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+Environment=MOZ_HEADLESS=1
+Environment=HOME=%h
+Environment=XDG_RUNTIME_DIR=%t
+WorkingDirectory=%h
+{% if thunderbird_use_xvfb -%}
+ExecStart={{ thunderbird_xvfb_run }} {{ thunderbird_exec }} --headless{% if thunderbird_extra_args|length %} {{ thunderbird_extra_args }}{% endif %}
+{% else -%}
+ExecStart={{ thunderbird_exec }} --headless{% if thunderbird_extra_args|length %} {{ thunderbird_extra_args }}{% endif %}
+{% endif -%}
+{% if thunderbird_refresh_method == 'runtime_max' -%}
+Restart=always
+{% else -%}
+Restart=on-failure
+{% endif -%}
+RestartSec=5s
+# Give Thunderbird longer to exit cleanly; then SIGKILL remaining children.
+TimeoutStopSec=30s
+KillMode=mixed
+SendSIGKILL=yes
+{% if thunderbird_refresh_method == 'runtime_max' -%}
+RuntimeMaxSec={{ thunderbird_refresh_interval }}
+{% endif -%}
+
+
+[Install]
+WantedBy=default.target
+```
+
+### FILE: roles/thunderbird_headless/templates/thunderbird.desktop.j2 ===
+```text
+[Desktop Entry]
+Name=Thunderbird
+Comment=Send and receive mail with Thunderbird
+Comment[ast]=Lleer y escribir corréu electrónicu
+Comment[ca]=Llegiu i escriviu correu
+Comment[cs]=Čtení a psaní pošty
+Comment[da]=Skriv/læs e-post/nyhedsgruppe med Mozilla Thunderbird
+Comment[de]=E-Mails und Nachrichten mit Thunderbird lesen und schreiben
+Comment[el]=Διαβάστε και γράψτε γράμματα με το Mozilla Thunderbird
+Comment[es]=Lea y escriba correos y noticias con Thunderbird
+Comment[fi]=Lue ja kirjoita sähköposteja
+Comment[fr]=Lire et écrire des courriels
+Comment[gl]=Lea e escriba correo electrónico
+Comment[he]=קריאה/כתיבה של דוא״ל/חדשות באמצעות Mozilla Thunderbird
+Comment[hr]=Čitajte/šaljite e-poštu s Thunderbird
+Comment[hu]=Levelek írása és olvasása a Thunderbirddel
+Comment[it]=Per leggere e scrivere email
+Comment[ja]=メールの読み書き
+Comment[ko]=Mozilla Thunderbird 메일/뉴스 읽기 및 쓰기 클라이언트
+Comment[nl]=E-mail/nieuws lezen en schrijven met Mozilla Thunderbird
+Comment[pl]=Czytanie i wysyłanie e-maili
+Comment[pt_BR]=Leia e escreva suas mensagens
+Comment[ru]=Читайте и пишите письма
+Comment[sk]=Čítajte a píšte poštu pomocou programu Thunderbird
+Comment[sv]=Läs och skriv e-post
+Comment[uk]=Читання та написання листів
+Comment[vi]=Đọc và soạn thư điện tử
+Comment[zh_CN]=阅读邮件或新闻
+Comment[zh_TW]=以 Mozilla Thunderbird 讀寫郵件或新聞
+GenericName=Mail Client
+GenericName[ast]=Client de correu
+GenericName[ca]=Client de correu
+GenericName[cs]=Poštovní klient
+GenericName[da]=E-postklient
+GenericName[de]=E-Mail-Anwendung
+GenericName[el]=Λογισμικό αλληλογραφίας
+GenericName[es]=Cliente de correo
+GenericName[fi]=Sähköpostiohjelma
+GenericName[fr]=Client de messagerie
+GenericName[gl]=Cliente de correo electrónico
+GenericName[he]=לקוח דוא״ל
+GenericName[hr]=Klijent e-pošte
+GenericName[hu]=Levelezőkliens
+GenericName[it]=Client email
+GenericName[ja]=電子メールクライアント
+GenericName[ko]=메일 클라이언트
+GenericName[nl]=E-mailprogramma
+GenericName[pl]=Klient poczty
+GenericName[pt_BR]=Cliente de E-mail
+GenericName[ru]=Почтовый клиент
+GenericName[sk]=Poštový klient
+GenericName[uk]=Поштова програма
+GenericName[vi]=Phần mềm khách quản lý thư điện tử
+GenericName[zh_CN]=邮件新闻客户端
+GenericName[zh_TW]=郵件用戶端
+Exec={{ thunderbird_gui_exec }} %u
+Terminal=false
+Type=Application
+Icon=org.mozilla.Thunderbird
+Categories=Network;Email;
+MimeType=message/rfc822;x-scheme-handler/mailto;text/calendar;text/vcard;text/x-vcard;x-scheme-handler/webcal;x-scheme-handler/webcals;x-scheme-handler/mid;
+StartupNotify=true
+StartupWMClass=thunderbird
+Actions=ComposeMessage;OpenAddressBook;
+
+[Desktop Action ComposeMessage]
+Name=Write new message
+Name[ar]=اكتب رسالة جديدة
+Name[ast]=Redactar mensaxe nuevu
+Name[be]=Напісаць новы ліст
+Name[bg]=Съставяне на ново съобщение
+Name[br]=Skrivañ ur gemennadenn nevez
+Name[ca]=Escriu un missatge nou
+Name[cs]=Napsat novou zprávu
+Name[da]=Skriv en ny meddelelse
+Name[de]=Neue Nachricht verfassen
+Name[el]=Σύνταξη νέου μηνύματος
+Name[es_AR]=Escribir un nuevo mensaje
+Name[es_ES]=Redactar nuevo mensaje
+Name[et]=Kirjuta uus kiri
+Name[eu]=Idatzi mezu berria
+Name[fi]=Kirjoita uusi viesti
+Name[fr]=Rédiger un nouveau message
+Name[fy_NL]=Skriuw in nij berjocht
+Name[ga_IE]=Scríobh teachtaireacht nua
+Name[gd]=Sgrìobh teachdaireachd ùr
+Name[gl]=Escribir unha nova mensaxe
+Name[he]=כתיבת הודעה חדשה
+Name[hr]=Piši novu poruku
+Name[hu]=Új üzenet írása
+Name[hy_AM]=Գրել նոր նամակ
+Name[is]=SKrifa nýjan póst
+Name[it]=Scrivi nuovo messaggio
+Name[ja]=新しいメッセージを作成する
+Name[ko]=새 메시지 작성
+Name[lt]=Rašyti naują laišką
+Name[nb_NO]=Skriv ny melding
+Name[nl]=Nieuw bericht aanmaken
+Name[nn_NO]=Skriv ny melding
+Name[pl]=Nowa wiadomość
+Name[pt_BR]=Nova mensagem
+Name[pt_PT]=Escrever nova mensagem
+Name[rm]=Scriver in nov messadi
+Name[ro]=Scrie un mesaj nou
+Name[ru]=Создать новое сообщение
+Name[sk]=Nová e-mailová správa
+Name[sl]=Sestavi novo sporočilo
+Name[sq]=Shkruani mesazh të ri
+Name[sr]=Писање нове поруке
+Name[sv_SE]=Skriv ett nytt meddelande
+Name[tr]=Yeni ileti yaz
+Name[uk]=Написати нового листа
+Name[vi]=Viết thư mới
+Name[zh_CN]=编写新消息
+Name[zh_TW]=寫一封新訊息
+Exec=thunderbird -compose
+
+[Desktop Action OpenAddressBook]
+Name=Open address book
+Name[ar]=افتح دفتر العناوين
+Name[ast]=Abrir llibreta de direiciones
+Name[be]=Адкрыць адрасную кнігу
+Name[bg]=Отваряне на адресник
+Name[br]=Digeriñ ur c'harned chomlec'hioù
+Name[ca]=Obre la llibreta d'adreces
+Name[cs]=Otevřít Adresář
+Name[da]=Åbn adressebog
+Name[de]=Adressbuch öffnen
+Name[el]=Άνοιγμα ευρετηρίου διευθύνσεων
+Name[es_AR]=Abrir libreta de direcciones
+Name[es_ES]=Abrir libreta de direcciones
+Name[et]=Ava aadressiraamat
+Name[eu]=Ireki helbide-liburua
+Name[fi]=Avaa osoitekirja
+Name[fr]=Ouvrir un carnet d'adresses
+Name[fy_NL]=Iepenje adresboek
+Name[ga_IE]=Oscail leabhar seoltaí
+Name[gd]=Fosgail leabhar-sheòlaidhean
+Name[gl]=Abrir a axenda de enderezos
+Name[he]=פתיחת ספר כתובות
+Name[hr]=Otvori adresar
+Name[hu]=Címjegyzék megnyitása
+Name[hy_AM]=Բացել Հասցեագիրքը
+Name[is]=Opna nafnaskrá
+Name[it]=Apri rubrica
+Name[ja]=アドレス帳を開く
+Name[ko]=주소록 열기
+Name[lt]=Atverti adresų knygą
+Name[nb_NO]=Åpne adressebok
+Name[nl]=Adresboek openen
+Name[nn_NO]=Opne adressebok
+Name[pl]=Książka adresowa
+Name[pt_BR]=Catálogo de endereços
+Name[pt_PT]=Abrir livro de endereços
+Name[rm]=Avrir il cudeschet d'adressas
+Name[ro]=Deschide agenda de contacte
+Name[ru]=Открыть адресную книгу
+Name[sk]=Otvoriť adresár
+Name[sl]=Odpri adressar
+Name[sq]=Hapni libër adresash
+Name[sr]=Отвори адресар
+Name[sv_SE]=Öppna adressboken
+Name[tr]=Adres defterini aç
+Name[uk]=Відкрити адресну книгу
+Name[vi]=Mở sổ địa chỉ
+Name[zh_CN]=打开通讯录
+Name[zh_TW]=開啟通訊錄
+Exec=thunderbird -addressbook
+```
+
+### FILE: roles/thunderbird_headless/templates/thunderbird-headless-refresh.service.j2 ===
+```text
+[Unit]
+Description=Restart Thunderbird headless to force sync (only if active)
+
+[Service]
+Type=oneshot
+Environment=HOME=%h
+Environment=XDG_RUNTIME_DIR=%t
+StandardOutput=journal
+StandardError=journal
+# Skip if GUI is open; else stop → reset-failed → start
+ExecStart=/usr/bin/bash -lc '\
+  [ -f "$HOME/.local/state/thunderbird_gui.lock" ] && exit 0; \
+  if systemctl --user is-active --quiet {{ thunderbird_service_name }}; then \
+    systemctl --user stop {{ thunderbird_service_name }}; \
+    # wait up to ~15s for it to fully stop
+    for i in {1..15}; do systemctl --user is-active --quiet {{ thunderbird_service_name }} || break; sleep 1; done; \
+  fi; \
+  systemctl --user reset-failed {{ thunderbird_service_name }} || true; \
+  systemctl --user start {{ thunderbird_service_name }} || true'
+```
+
+### FILE: roles/thunderbird_headless/templates/thunderbird-headless-refresh.timer.j2 ===
+```text
+[Unit]
+Description=Periodic restart of Thunderbird headless
+
+[Timer]
+OnBootSec=2min
+OnUnitActiveSec={{ thunderbird_refresh_interval }}
+AccuracySec=1s
+Persistent=true
+Unit=thunderbird-headless-refresh.service
+
+[Install]
+WantedBy=timers.target
+```
+
+### FILE: roles/thunderbird_headless/tasks/main.yml ===
+```yaml
+- name: Ensure systemd is the service manager
+  ansible.builtin.assert:
+    that: ansible_service_mgr == "systemd"
+    fail_msg: "This role requires systemd."
+
+- name: Install Thunderbird (if requested)
+  ansible.builtin.package:
+    name: "{{ thunderbird_packages }}"
+    state: present
+  when: thunderbird_manage_packages
+
+- name: Install Xvfb (if using virtual display)
+  ansible.builtin.package:
+    name: "{{ thunderbird_xvfb_package }}"
+    state: present
+  when: thunderbird_use_xvfb
+
+# Enable lingering so user services can run from boot
+- name: Check lingering status for {{ thunderbird_user }}
+  ansible.builtin.command: "loginctl show-user {{ thunderbird_user }} --property=Linger"
+  register: _linger_status
+  changed_when: false
+  failed_when: false
+  become: true
+  when: thunderbird_enable_lingering
+
+- name: Enable lingering for {{ thunderbird_user }}
+  ansible.builtin.command: "loginctl enable-linger {{ thunderbird_user }}"
+  become: true
+  when:
+    - thunderbird_enable_lingering
+    - _linger_status.stdout is not defined or ('Linger=yes' not in _linger_status.stdout)
+
+# Create user unit
+- name: Ensure user systemd dir exists
+  ansible.builtin.file:
+    path: "{{ thunderbird_unit_dir }}"
+    state: directory
+    mode: "0755"
+  become: true
+  become_user: "{{ thunderbird_user }}"
+
+- name: Install Thunderbird headless user unit
+  ansible.builtin.template:
+    src: thunderbird-headless.service.j2
+    dest: "{{ thunderbird_unit_dir }}/{{ thunderbird_service_name }}"
+    mode: "0644"
+  become: true
+  become_user: "{{ thunderbird_user }}"
+  notify: restart thunderbird headless (user)
+
+- name: Install refresh service unit (timer method)
+  ansible.builtin.template:
+    src: thunderbird-headless-refresh.service.j2
+    dest: "{{ thunderbird_unit_dir }}/thunderbird-headless-refresh.service"
+    mode: "0644"
+  become: true
+  become_user: "{{ thunderbird_user }}"
+  when: thunderbird_refresh_method == "timer"
+  notify:
+    - restart thunderbird headless refresh timer (user)
+
+- name: Install refresh timer unit (timer method)
+  ansible.builtin.template:
+    src: thunderbird-headless-refresh.timer.j2
+    dest: "{{ thunderbird_unit_dir }}/thunderbird-headless-refresh.timer"
+    mode: "0644"
+  become: true
+  become_user: "{{ thunderbird_user }}"
+  when: thunderbird_refresh_method == "timer"
+  notify:
+    - restart thunderbird headless refresh timer (user)
+
+- name: Reload user systemd daemon
+  ansible.builtin.command: "systemctl --user daemon-reload"
+  become: true
+  become_user: "{{ thunderbird_user }}"
+  changed_when: false
+  failed_when: false
+
+- name: Enable and start the headless service
+  ansible.builtin.command: "systemctl --user enable --now {{ thunderbird_service_name }}"
+  become: true
+  become_user: "{{ thunderbird_user }}"
+  register: _enable_start
+  failed_when: false
+  changed_when: "'Created symlink' in _enable_start.stdout or 'Started' in _enable_start.stdout"
+
+- name: Enable and start the refresh timer (timer method)
+  ansible.builtin.command: "systemctl --user enable --now thunderbird-headless-refresh.timer"
+  become: true
+  become_user: "{{ thunderbird_user }}"
+  when: thunderbird_refresh_method == "timer"
+  register: _enable_timer
+  failed_when: false
+  changed_when: "'Created symlink' in _enable_timer.stdout or 'Started' in _enable_timer.stdout"
+
+# Fallback enable if enable --user fails without a session
+- name: Ensure default.target wants symlink exists (idempotent enable)
+  ansible.builtin.file:
+    state: link
+    src: "{{ thunderbird_unit_dir }}/{{ thunderbird_service_name }}"
+    dest: "{{ thunderbird_unit_dir }}/default.target.wants/{{ thunderbird_service_name }}"
+  become: true
+  become_user: "{{ thunderbird_user }}"
+  when: thunderbird_autostart
+
+# Ensure ~/.local/bin exists
+- name: Ensure per-user bin dir exists
+  ansible.builtin.file:
+    path: "{{ thunderbird_gui_wrapper_path | dirname }}"
+    state: directory
+    mode: "0755"
+  become: true
+  become_user: "{{ thunderbird_user }}"
+
+# Install the GUI wrapper
+- name: Install Thunderbird GUI wrapper
+  ansible.builtin.template:
+    src: thunderbird-gui-wrapper.sh.j2
+    dest: "{{ thunderbird_gui_wrapper_path }}"
+    mode: "0755"
+  become: true
+  become_user: "{{ thunderbird_user }}"
+
+# Ensure desktop overrides dir exists
+- name: Ensure ~/.local/share/applications exists
+  ansible.builtin.file:
+    path: "{{ lookup('env','HOME') ~ '/.local/share/applications' }}"
+    state: directory
+    mode: "0755"
+  become: true
+  become_user: "{{ thunderbird_user }}"
+  when: thunderbird_install_desktop_override
+
+# Install a desktop override *with the same ID* as the system file
+- name: Install Thunderbird desktop override (uses wrapper, shadows system entry)
+  ansible.builtin.template:
+    src: thunderbird.desktop.j2
+    dest: "{{ lookup('env','HOME') ~ '/.local/share/applications/' ~ thunderbird_desktop_id }}"
+    mode: "0644"
+  become: true
+  become_user: "{{ thunderbird_user }}"
+  when: thunderbird_install_desktop_override
+
+# Remove the old local desktop to avoid duplicates
+- name: Remove previous local thunderbird.desktop (cleanup)
+  ansible.builtin.file:
+    path: "{{ lookup('env','HOME') ~ '/.local/share/applications/thunderbird.desktop' }}"
+    state: absent
+  become: true
+  become_user: "{{ thunderbird_user }}"
+
+- name: Update desktop database (optional)
+  ansible.builtin.command: "update-desktop-database {{ lookup('env','HOME') ~ '/.local/share/applications' }}"
+  changed_when: false
+  failed_when: false
+  become: true
+  become_user: "{{ thunderbird_user }}"
+```
+
+### FILE: roles/thunderbird_headless/handlers/main.yml ===
+```yaml
+- name: restart thunderbird headless (user)
+  ansible.builtin.command: "systemctl --user restart {{ thunderbird_service_name }}"
+  become: true
+  become_user: "{{ thunderbird_user }}"
+  changed_when: true
+  failed_when: false
+
+- name: restart thunderbird headless refresh timer (user)
+  ansible.builtin.command: "systemctl --user restart thunderbird-headless-refresh.timer"
+  become: true
+  become_user: "{{ thunderbird_user }}"
+  changed_when: true
+  failed_when: false
+```
+
+### FILE: roles/mcp_github/defaults/main.yml ===
+```yaml
+---
+# defaults/main.yml for mcp_github role
+
+# Owner and directories
+mcp_owner: "{{ target_user | default(ansible_user_id) }}"
+mcp_base_dir: "/home/{{ mcp_owner }}/.config"
+mcp_github_dir: "{{ mcp_base_dir }}/mcp-github"
+
+# GitHub token (from environment)
+github_token: "{{ lookup('env', 'GITHUB_TOKEN') }}"
+
+# Docker configuration
+mcp_github_container_name: "mcp-github"
+mcp_github_image: "node:20-alpine"
+mcp_network_mode: "bridge"
+mcp_docker_network: "mcp-network"
+
+# NPM package
+mcp_github_npm_package: "@modelcontextprotocol/server-github"
+
+# Systemd configuration
+mcp_github_service_name: "mcp-github.service"
+mcp_enable_lingering: true
+mcp_compose_pull_policy: "missing"
+```
+
+### FILE: roles/mcp_github/templates/docker-compose.mcp-github.yml.j2 ===
+```text
+# docker-compose.mcp-github.yml.j2
+# Managed by Ansible
+
+services:
+  {{ mcp_github_container_name }}:
+    image: {{ mcp_github_image }}
+    container_name: {{ mcp_github_container_name }}
+    restart: unless-stopped
+    working_dir: /app
+    command: sh -c "npm install -g {{ mcp_github_npm_package }} && exec npx {{ mcp_github_npm_package }}"
+    environment:
+      - GITHUB_PERSONAL_ACCESS_TOKEN={{ github_token }}
+    stdin_open: true
+    tty: true
+{% if mcp_network_mode == 'host' %}
+    network_mode: host
+{% else %}
+    networks:
+      - {{ mcp_docker_network }}
+{% endif %}
+
+{% if mcp_network_mode != 'host' %}
+networks:
+  {{ mcp_docker_network }}:
+    external: true
+{% endif %}
+```
+
+### FILE: roles/mcp_github/templates/mcp-github.service.j2 ===
+```text
+[Unit]
+Description=MCP GitHub Server
+After=network-online.target docker.service
+Wants=network-online.target
+
+[Service]
+Type=exec
+RemainAfterExit=yes
+WorkingDirectory={{ mcp_github_dir }}
+ExecStart=/usr/bin/docker compose --ansi never --progress plain \
+  --project-directory {{ mcp_github_dir }} \
+  --file docker-compose.mcp-github.yml up -d
+ExecStop=/usr/bin/docker compose --ansi never --progress plain \
+  --project-directory {{ mcp_github_dir }} \
+  --file docker-compose.mcp-github.yml down
+Restart=on-failure
+RestartSec=3
+
+[Install]
+WantedBy=default.target
+```
+
+### FILE: roles/mcp_github/tasks/main.yml ===
+```yaml
+---
+# tasks/main.yml for mcp_github role
+
+- name: Check if GitHub token is available
+  ansible.builtin.set_fact:
+    _github_token_available: "{{ github_token is defined and github_token | length > 0 }}"
+
+- name: Display warning if GitHub token is missing
+  ansible.builtin.debug:
+    msg: |
+      ⚠️  WARNING: GITHUB_TOKEN not set.
+      GitHub MCP server will be deployed WITHOUT authentication.
+      The container will start but may not function properly.
+
+      To fix:
+      1. Get token from https://github.com/settings/tokens
+      2. Add to ~/.zshrc: export GITHUB_TOKEN="ghp_..."
+      3. Run: source ~/.zshrc
+      4. Re-run playbook with: ansible-playbook arch.yml --tags mcp_github
+  when: not _github_token_available
+
+- name: Ensure MCP github directory exists
+  ansible.builtin.file:
+    path: "{{ mcp_github_dir }}"
+    state: directory
+    mode: "0755"
+  become: true
+  become_user: "{{ mcp_owner }}"
+
+- name: Create Docker network for MCP servers
+  community.docker.docker_network:
+    name: "{{ mcp_docker_network }}"
+    state: present
+  become: true
+
+- name: Deploy Docker Compose file for github MCP
+  ansible.builtin.template:
+    src: docker-compose.mcp-github.yml.j2
+    dest: "{{ mcp_github_dir }}/docker-compose.mcp-github.yml"
+    mode: "0644"
+  become: true
+  become_user: "{{ mcp_owner }}"
+  notify: restart mcp github
+
+- name: Ensure github MCP service is running
+  community.docker.docker_compose_v2:
+    project_src: "{{ mcp_github_dir }}"
+    files:
+      - docker-compose.mcp-github.yml
+    state: present
+    pull: "{{ mcp_compose_pull_policy }}"
+  become: true
+  become_user: "{{ mcp_owner }}"
+  when: _github_token_available  # Only start if token exists
+
+- name: Enable lingering for {{ mcp_owner }}
+  ansible.builtin.command: "loginctl enable-linger {{ mcp_owner }}"
+  when: mcp_enable_lingering | bool
+  changed_when: false
+  failed_when: false
+  become: true
+
+- name: Ensure systemd user directory exists
+  ansible.builtin.file:
+    path: "~/.config/systemd/user"
+    state: directory
+    mode: "0755"
+  become: true
+  become_user: "{{ mcp_owner }}"
+
+- name: Install systemd user service for github MCP
+  ansible.builtin.template:
+    src: mcp-github.service.j2
+    dest: "~/.config/systemd/user/{{ mcp_github_service_name }}"
+    mode: "0644"
+  become: true
+  become_user: "{{ mcp_owner }}"
+  notify: reload systemd user
+
+- name: Enable github MCP service (but don't start without token)
+  ansible.builtin.systemd:
+    name: "{{ mcp_github_service_name }}"
+    scope: user
+    enabled: yes
+    daemon_reload: yes
+    state: "{{ 'started' if _github_token_available else 'stopped' }}"
+  become: true
+  become_user: "{{ mcp_owner }}"
+
+- name: Register github MCP server for claude_code
+  ansible.builtin.set_fact:
+    mcp_servers_registered: "{{ mcp_servers_registered | default([]) + [mcp_github_info] }}"
+  vars:
+    mcp_github_info:
+      name: "github"
+      type: "stdio"
+      command: "docker"
+      args:
+        - "exec"
+        - "-i"
+        - "{{ mcp_github_container_name }}"
+        - "npx"
+        - "{{ mcp_github_npm_package }}"
+      env: "{{ {'GITHUB_PERSONAL_ACCESS_TOKEN': github_token} if _github_token_available else {} }}"
+  delegate_to: localhost
+  delegate_facts: true
+  when: _github_token_available  # Only register if token exists
+
+- name: Display GitHub MCP status
+  ansible.builtin.debug:
+    msg: "{{ 'GitHub MCP configured and started' if _github_token_available else 'GitHub MCP files created but NOT started (missing token)' }}"
+```
+
+### FILE: roles/mcp_github/handlers/main.yml ===
+```yaml
+---
+# handlers/main.yml for mcp_github role
+
+- name: restart mcp github
+  community.docker.docker_compose_v2:
+    project_src: "{{ mcp_github_dir }}"
+    files:
+      - docker-compose.mcp-github.yml
+    state: restarted
+  become: true
+  become_user: "{{ mcp_owner }}"
+  listen: "restart mcp github"
+
+- name: reload systemd user
+  ansible.builtin.systemd:
+    daemon_reload: yes
+    scope: user
+  become: true
+  become_user: "{{ mcp_owner }}"
+  listen: "reload systemd user"
+```
+
+### FILE: roles/mcp_hub_ui/defaults/main.yml ===
+```yaml
+# roles/mcp_hub_ui/defaults/main.yml
+mcp_hub_ui_enabled: true
+
+# Port where the web UI will listen
+mcp_hub_ui_port: 7801
+
+# Path to the mcp-hub binary (global npm on Arch installs to /usr/bin)
+mcp_hub_ui_bin: /usr/bin/mcp-hub
+
+# User that will own & run the user service (defaults to your mcp_owner if set)
+mcp_hub_ui_user: "{{ mcp_owner | default(ansible_user_id) }}"
+
+# Enable lingering so user services can run without an active login session
+mcp_hub_ui_enable_lingering: true
+
+# Extra env for the service (safe default PATH)
+mcp_hub_ui_environment:
+  PATH: "%h/.local/bin:/usr/local/bin:/usr/bin"
+
+# Optional extra CLI args for the UI process
+# (Example: ["--verbose"] or ["--host","127.0.0.1"])
+mcp_hub_ui_extra_args:
+  - --host
+  - 127.0.0.1
+  - --no-open
+
+# How long to wait for the port to come up after (re)starting (seconds)
+mcp_hub_ui_wait_timeout: 90
+
+mcp_hub_ui_config: "{{ lookup('env','HOME') ~ '/.config/mcp/hub.json' }}"
+```
+
+### FILE: roles/mcp_hub_ui/templates/mcp-hub-ui.service.j2 ===
+```text
+# roles/mcp_hub_ui/templates/mcp-hub-ui.service.j2
+[Unit]
+Description=MCP Hub UI
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/mcp-hub ui --config /home/henning/.config/mcp/hub.json --port 7801 --host 127.0.0.1 --no-open
+Restart=on-failure
+RestartSec=2
+Environment=PATH=%h/.local/bin:/usr/local/bin:/usr/bin
+WorkingDirectory=%h
+
+[Install]
+WantedBy=default.target
+```
+
+### FILE: roles/mcp_hub_ui/tasks/main.yml ===
+```yaml
+# roles/mcp_hub_ui/tasks/main.yml
+- name: "Skip mcp_hub_ui role (disabled)"
+  when: not mcp_hub_ui_enabled | bool
+  ansible.builtin.debug:
+    msg: "mcp_hub_ui_enabled=false, skipping."
+  tags: [mcp_hub_ui]
+  changed_when: false
+
+- name: "Assert mcp-hub is installed and executable"
+  when: mcp_hub_ui_enabled | bool
+  become: true
+  become_user: "{{ mcp_hub_ui_user }}"
+  ansible.builtin.command:
+    cmd: "{{ mcp_hub_ui_bin }} --version"
+  register: _hub_ver
+  changed_when: false
+  tags: [mcp_hub_ui]
+
+- name: "Show mcp-hub version"
+  when: mcp_hub_ui_enabled | bool
+  ansible.builtin.debug:
+    msg: "mcp-hub version: {{ _hub_ver.stdout | default('unknown') }}"
+  tags: [mcp_hub_ui]
+
+- name: "Enable lingering for {{ mcp_hub_ui_user }} (so user services run in background)"
+  when: mcp_hub_ui_enabled | bool and mcp_hub_ui_enable_lingering | bool
+  become: true
+  ansible.builtin.command: "loginctl enable-linger {{ mcp_hub_ui_user }}"
+  changed_when: false
+  failed_when: false
+  tags: [mcp_hub_ui]
+
+- name: "Ensure user systemd dir exists"
+  when: mcp_hub_ui_enabled | bool
+  become: true
+  become_user: "{{ mcp_hub_ui_user }}"
+  ansible.builtin.file:
+    path: "~/.config/systemd/user"
+    state: directory
+    mode: "0755"
+  tags: [mcp_hub_ui]
+
+- name: "Install user unit: mcp-hub-ui.service"
+  when: mcp_hub_ui_enabled | bool
+  become: true
+  become_user: "{{ mcp_hub_ui_user }}"
+  ansible.builtin.template:
+    src: "mcp-hub-ui.service.j2"
+    dest: "~/.config/systemd/user/mcp-hub-ui.service"
+    mode: "0644"
+  tags: [mcp_hub_ui]
+
+- name: "User systemd daemon-reload"
+  when: mcp_hub_ui_enabled | bool
+  become: true
+  become_user: "{{ mcp_hub_ui_user }}"
+  ansible.builtin.command: "systemctl --user daemon-reload"
+  changed_when: false
+  failed_when: false
+  tags: [mcp_hub_ui]
+
+- name: "Assert MCP Hub config exists"
+  when: mcp_hub_ui_enabled | bool
+  become: true
+  become_user: "{{ mcp_hub_ui_user }}"
+  ansible.builtin.stat:
+    path: "{{ mcp_hub_ui_config }}"
+  register: _hub_cfg
+  tags: [mcp_hub_ui]
+
+- name: "Fail early if config is missing"
+  when: mcp_hub_ui_enabled | bool and (not _hub_cfg.stat.exists)
+  ansible.builtin.fail:
+    msg: "MCP Hub config not found at {{ mcp_hub_ui_config }}. Create/link it from your dotfiles, then re-run."
+  tags: [mcp_hub_ui]
+
+- name: "Enable/Start mcp-hub-ui.service"
+  when: mcp_hub_ui_enabled | bool
+  become: true
+  become_user: "{{ mcp_hub_ui_user }}"
+  ansible.builtin.systemd:
+    name: mcp-hub-ui.service
+    scope: user
+    enabled: true
+    state: started
+    daemon_reload: false
+  tags: [mcp_hub_ui]
+
+# Try, then diagnose on failure
+- block:
+    - name: "Wait for MCP Hub UI to listen on {{ mcp_hub_ui_port }}"
+      when: mcp_hub_ui_enabled | bool
+      ansible.builtin.wait_for:
+        host: "127.0.0.1"
+        port: "{{ mcp_hub_ui_port }}"
+        timeout: "{{ mcp_hub_ui_wait_timeout }}"
+      register: _ui_wait
+      tags: [mcp_hub_ui]
+
+  rescue:
+    - name: "DIAG: systemctl --user status mcp-hub-ui.service"
+      become: true
+      become_user: "{{ mcp_hub_ui_user }}"
+      ansible.builtin.command:
+        cmd: "systemctl --user status mcp-hub-ui.service --no-pager"
+      register: _ui_status
+      changed_when: false
+      failed_when: false
+      tags: [mcp_hub_ui]
+
+    - name: "DIAG: journalctl (last 200 lines)"
+      become: true
+      become_user: "{{ mcp_hub_ui_user }}"
+      ansible.builtin.command:
+        cmd: "journalctl --user -u mcp-hub-ui.service -n 200 --no-pager"
+      register: _ui_journal
+      changed_when: false
+      failed_when: false
+      tags: [mcp_hub_ui]
+
+    - name: "DIAG: show status/journal"
+      ansible.builtin.debug:
+        msg:
+          - "Wait for port {{ mcp_hub_ui_port }} failed; here are diagnostics:"
+          - "{{ _ui_status.stdout | default('') }}"
+          - "{{ _ui_journal.stdout | default('') }}"
+      tags: [mcp_hub_ui]
+
+    - name: "Fail: MCP Hub UI did not bind to port {{ mcp_hub_ui_port }}"
+      ansible.builtin.fail:
+        msg: "MCP Hub UI did not listen on 127.0.0.1:{{ mcp_hub_ui_port }} within {{ mcp_hub_ui_wait_timeout }}s. See diagnostics above."
+      tags: [mcp_hub_ui]
+
+- name: "Debug: UI URL"
+  when: mcp_hub_ui_enabled | bool
+  ansible.builtin.debug:
+    msg: "MCP Hub UI is up: http://localhost:{{ mcp_hub_ui_port }}"
+  tags: [mcp_hub_ui]
+```
+
+### FILE: roles/repos/tasks/main.yml ===
+```yaml
+- name: Git - Sychronize target user's personal repositories
+  ansible.builtin.git:
+    repo: "{{ item }}"
+    dest: "/home/{{ target_user }}/src/{{ item.split('/')[-1].split('.')[0] }}"
+    force: yes
+  with_items: "{{ git_repositories }}"
+  become: true
+  become_user: "{{ target_user }}"
+  tags: ["workstation-debian", "repos", "repos-personal", "workstation-arch"]
+  ignore_errors: true
+
+- name: Git - Create directory ~/src/external
+  file:
+    path: "/home/{{ target_user }}/src/external"
+    state: directory
+    owner: "{{ target_user }}"
+    group: "{{ target_user }}"
+    mode: 0755
+  become: true
+  become_user: "{{ target_user }}"
+  tags: ["workstation-debian", "repos", "repos-external", "workstation-arch"]
+
+- name: Git - Create additional user directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    # User can rwx
+    owner: "{{ target_user }}"
+    # group: "{{ target_user }}"
+    mode: "744"
+  with_items:
+    - "/home/{{ target_user }}/usr/bin"
+  tags: ["workstation-debian", "repos", "repos-external", "workstation-arch"]
+
+- name: Git - Sychronize other external repositories
+  ansible.builtin.git:
+    repo: "{{ item }}"
+    dest: "/home/{{ target_user }}/src/external/{{ item.split('/')[-1].split('.git')[0] }}"
+    force: no
+  with_items: "{{ git_repositories_external }}"
+  become: true
+  become_user: "{{ target_user }}"
+  tags: ["workstation-debian", "repos", "repos-external", "workstation-arch"]
+  ignore_errors: true
+```
+
+### FILE: roles/links/tasks/main.yml ===
+```yaml
+# Task for user-owned paths
+- name: Link files with full paths in user directories
+  ansible.builtin.file:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    state: link
+    force: true
+    owner: "{{ target_user }}"
+    mode: "0644"
+  loop: "{{ regular_links | selectattr('dest', 'match', '^/home/') | list }}"
+  become: true
+  become_user: "{{ target_user }}"
+  tags: ["links", "symlink"]
+
+# Task for system paths
+- name: Link files with full paths in system directories
+  ansible.builtin.file:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    state: link
+    force: true
+    owner: root
+    mode: "0644"
+  loop: "{{ regular_links | selectattr('dest', 'match', '^/usr/|^/etc/') | list }}"
+  become: true
+  tags: ["links", "symlink"]
+```
+
+### FILE: roles/dotfiles/tasks/main.yml ===
+```yaml
+---
+- name: Link dotfiles into home folder
+  ansible.builtin.file:
+    src: "{{ dotfiles_repo_local_destination }}/{{ item.src }}"
+    dest: "{{ dotfiles_home }}/{{ item.dest }}"
+    state: link
+    force: true 
+    owner: "{{ target_user }}"
+    mode: "0644"
+  loop: "{{ dotfiles_links }}"
+  become: true
+  become_user: "{{ target_user }}"
+  tags: ["dotfiles", "dotfiles-symlink"]
+
+- name: Ensure specified scripts are executable
+  ansible.builtin.file:
+    path: "{{ dotfiles_repo_local_destination }}/{{ item }}"
+    mode: "0755"
+  with_items: "{{ dotfiles_files_binaries }}"
+  when: dotfiles_files_binaries is defined
+  become: true
+  become_user: "{{ target_user }}"
+  tags: ["dotfiles", "dotfiles-symlink-binaries"]
+```
+
+### FILE: roles/claude_desktop_mcp_filesystem/defaults/main.yml ===
+```yaml
+---
+# User who owns Claude Desktop
+claude_user: "{{ target_user | default(ansible_user_id) }}"
+
+# Claude Desktop configuration directory
+claude_config_dir: "/home/{{ claude_user }}/.config/Claude"
+claude_config_file: "{{ claude_config_dir }}/claude_desktop_config.json"
+
+# Backup existing config before modifying
+claude_backup_config: true
+
+# Directories that the filesystem MCP server can access
+# Claude will be able to read/write files in these directories only
+filesystem_allowed_directories:
+  - "/home/{{ claude_user }}/src/dotfiles"
+  - "/home/{{ claude_user }}/src/dotfiles-playbook"
+
+# NPM registry for the MCP server package
+# Using npx will automatically download and run the server when needed
+filesystem_server_package: "@modelcontextprotocol/server-filesystem"
+
+# Whether to handle invalid JSON gracefully (recommended: true)
+# If true, invalid JSON will be backed up and replaced with valid config
+# If false, the role will fail on invalid JSON
+claude_handle_invalid_json: true
+```
+
+### FILE: roles/claude_desktop_mcp_filesystem/templates/claude_desktop_config.json.j2 ===
+```text
+{{ target_config | to_nice_json }}
+```
+
+### FILE: roles/claude_desktop_mcp_filesystem/tasks/main.yml ===
+```yaml
+---
+- name: Ensure npm/npx is available
+  become: true
+  community.general.pacman:
+    name: npm
+    state: present
+  tags: [claude_mcp_filesystem]
+
+- name: Verify npx is in PATH
+  ansible.builtin.command: which npx
+  register: npx_check
+  changed_when: false
+  failed_when: npx_check.rc != 0
+  tags: [claude_mcp_filesystem]
+
+- name: Ensure Claude Desktop config directory exists
+  become: true
+  become_user: "{{ claude_user }}"
+  ansible.builtin.file:
+    path: "{{ claude_config_dir }}"
+    state: directory
+    mode: "0755"
+  tags: [claude_mcp_filesystem]
+
+- name: Check if Claude Desktop config already exists
+  become: true
+  become_user: "{{ claude_user }}"
+  ansible.builtin.stat:
+    path: "{{ claude_config_file }}"
+  register: claude_config_stat
+  tags: [claude_mcp_filesystem]
+
+- name: Read existing Claude Desktop config
+  become: true
+  become_user: "{{ claude_user }}"
+  ansible.builtin.slurp:
+    path: "{{ claude_config_file }}"
+  register: claude_config_slurp
+  when: claude_config_stat.stat.exists
+  tags: [claude_mcp_filesystem]
+
+- name: Try to parse existing config as JSON
+  ansible.builtin.set_fact:
+    existing_config: "{{ claude_config_slurp.content | b64decode | from_json }}"
+  when: claude_config_stat.stat.exists
+  register: parse_result
+  ignore_errors: true
+  tags: [claude_mcp_filesystem]
+
+- name: Display warning for invalid JSON
+  ansible.builtin.debug:
+    msg:
+      - "⚠️  WARNING: Existing Claude Desktop config contains invalid JSON"
+      - "File: {{ claude_config_file }}"
+      - "The file will be backed up and replaced with valid configuration"
+      - "Backup location: {{ claude_config_file }}.backup-invalid-{{ ansible_date_time.epoch }}"
+  when:
+    - claude_config_stat.stat.exists
+    - parse_result is failed
+  tags: [claude_mcp_filesystem]
+
+- name: Backup invalid config file
+  become: true
+  become_user: "{{ claude_user }}"
+  ansible.builtin.copy:
+    src: "{{ claude_config_file }}"
+    dest: "{{ claude_config_file }}.backup-invalid-{{ ansible_date_time.epoch }}"
+    mode: "0644"
+    remote_src: true
+  when:
+    - claude_config_stat.stat.exists
+    - parse_result is failed
+  tags: [claude_mcp_filesystem]
+
+- name: Set empty config if parsing failed or file doesn't exist
+  ansible.builtin.set_fact:
+    existing_config: {}
+  when: >
+    (not claude_config_stat.stat.exists) or
+    (parse_result is failed)
+  tags: [claude_mcp_filesystem]
+
+- name: Backup existing valid config (if it exists and is valid)
+  become: true
+  become_user: "{{ claude_user }}"
+  ansible.builtin.copy:
+    src: "{{ claude_config_file }}"
+    dest: "{{ claude_config_file }}.backup-{{ ansible_date_time.epoch }}"
+    mode: "0644"
+    remote_src: true
+  when:
+    - claude_backup_config | bool
+    - claude_config_stat.stat.exists
+    - parse_result is succeeded
+  tags: [claude_mcp_filesystem]
+
+- name: Build filesystem MCP server configuration
+  ansible.builtin.set_fact:
+    filesystem_server_config:
+      command: "npx"
+      args: "{{ ['-y', filesystem_server_package] + filesystem_allowed_directories }}"
+      env: {}
+  tags: [claude_mcp_filesystem]
+
+- name: Build target configuration (merge with existing)
+  ansible.builtin.set_fact:
+    target_config: >-
+      {{
+        (existing_config | default({}))
+        | combine(
+            {
+              'mcpServers': (existing_config.mcpServers | default({}))
+              | combine({'filesystem': filesystem_server_config})
+            },
+            recursive=True
+          )
+      }}
+  tags: [claude_mcp_filesystem]
+
+- name: Write Claude Desktop configuration using template
+  become: true
+  become_user: "{{ claude_user }}"
+  ansible.builtin.template:
+    src: claude_desktop_config.json.j2
+    dest: "{{ claude_config_file }}"
+    mode: "0644"
+    backup: false
+  register: config_written
+  tags: [claude_mcp_filesystem]
+
+- name: Validate JSON syntax
+  ansible.builtin.command:
+    cmd: "jq empty {{ claude_config_file }}"
+  become: true
+  become_user: "{{ claude_user }}"
+  changed_when: false
+  tags: [claude_mcp_filesystem]
+
+- name: Display configuration summary
+  ansible.builtin.debug:
+    msg:
+      - "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+      - "✓ Claude Desktop filesystem MCP server configured"
+      - ""
+      - "Configuration: {{ claude_config_file }}"
+      - "Accessible directories:"
+      - "{{ filesystem_allowed_directories | to_nice_yaml }}"
+      - ""
+      - "Total MCP servers in config: {{ target_config.mcpServers.keys() | list | length }}"
+      - "Active servers: {{ target_config.mcpServers.keys() | list | join(', ') }}"
+      - ""
+      - "NEXT STEPS:"
+      - "1. Restart Claude Desktop completely (quit, don't just close)"
+      - "2. Look for MCP icon (🔌) in bottom-right of Claude Desktop"
+      - "3. Click it to verify 'filesystem' server shows green"
+      - "4. Test: Ask Claude 'Can you list files in my ~/src directory?'"
+      - "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+  when: config_written.changed
+  tags: [claude_mcp_filesystem]
+```
+
+### FILE: roles/mcp_filesystem/defaults/main.yml ===
+```yaml
+---
+# defaults/main.yml for mcp_filesystem role
+
+# Owner and directories
+mcp_owner: "{{ target_user | default(ansible_user_id) }}"
+mcp_base_dir: "/home/{{ mcp_owner }}/.config"
+mcp_filesystem_dir: "{{ mcp_base_dir }}/mcp-filesystem"
+
+# Allowed directories (read-only access)
+mcp_filesystem_allowed_dirs:
+  - "/home/{{ mcp_owner }}/src"
+  - "/home/{{ mcp_owner }}/projects"
+  - "/home/{{ mcp_owner }}/code"
+  - "/home/{{ mcp_owner }}/Documents"
+
+# Docker configuration
+mcp_filesystem_container_name: "mcp-filesystem"
+mcp_filesystem_image: "node:20-alpine"
+mcp_network_mode: "bridge"
+mcp_docker_network: "mcp-network"
+
+# NPM package
+mcp_filesystem_npm_package: "@modelcontextprotocol/server-filesystem"
+
+# Systemd configuration
+mcp_filesystem_service_name: "mcp-filesystem.service"
+mcp_enable_lingering: true
+mcp_compose_pull_policy: "missing"
+```
+
+### FILE: roles/mcp_filesystem/templates/docker-compose.mcp-filesystem.yml.j2 ===
+```text
+# docker-compose.mcp-filesystem.yml.j2
+# Managed by Ansible
+
+services:
+  {{ mcp_filesystem_container_name }}:
+    image: {{ mcp_filesystem_image }}
+    container_name: {{ mcp_filesystem_container_name }}
+    restart: unless-stopped
+    working_dir: /app
+    command: sh -c "npm install -g {{ mcp_filesystem_npm_package }} && exec npx {{ mcp_filesystem_npm_package }} {{ mcp_filesystem_allowed_dirs | join(' ') }}"
+    stdin_open: true
+    tty: true
+    volumes:
+{% for dir in mcp_filesystem_allowed_dirs %}
+      - {{ dir }}:{{ dir }}:ro
+{% endfor %}
+{% if mcp_network_mode == 'host' %}
+    network_mode: host
+{% else %}
+    networks:
+      - {{ mcp_docker_network }}
+{% endif %}
+
+{% if mcp_network_mode != 'host' %}
+networks:
+  {{ mcp_docker_network }}:
+    external: true
+{% endif %}
+```
+
+### FILE: roles/mcp_filesystem/templates/mcp-filesystem.service.j2 ===
+```text
+[Unit]
+Description=MCP Filesystem Server
+After=network-online.target docker.service
+Wants=network-online.target
+
+[Service]
+Type=exec
+RemainAfterExit=yes
+WorkingDirectory={{ mcp_filesystem_dir }}
+ExecStart=/usr/bin/docker compose --ansi never --progress plain \
+  --project-directory {{ mcp_filesystem_dir }} \
+  --file docker-compose.mcp-filesystem.yml up -d
+ExecStop=/usr/bin/docker compose --ansi never --progress plain \
+  --project-directory {{ mcp_filesystem_dir }} \
+  --file docker-compose.mcp-filesystem.yml down
+Restart=on-failure
+RestartSec=3
+
+[Install]
+WantedBy=default.target
+```
+
+### FILE: roles/mcp_filesystem/tasks/main.yml ===
+```yaml
+---
+# tasks/main.yml for mcp_filesystem role
+
+- name: Ensure MCP filesystem directory exists
+  ansible.builtin.file:
+    path: "{{ mcp_filesystem_dir }}"
+    state: directory
+    mode: "0755"
+  become: true
+  become_user: "{{ mcp_owner }}"
+
+- name: Create Docker network for MCP servers
+  community.docker.docker_network:
+    name: "{{ mcp_docker_network }}"
+    state: present
+  become: true
+
+- name: Deploy Docker Compose file for filesystem MCP
+  ansible.builtin.template:
+    src: docker-compose.mcp-filesystem.yml.j2
+    dest: "{{ mcp_filesystem_dir }}/docker-compose.mcp-filesystem.yml"
+    mode: "0644"
+  become: true
+  become_user: "{{ mcp_owner }}"
+  notify: restart mcp filesystem
+
+- name: Ensure filesystem MCP service is running
+  community.docker.docker_compose_v2:
+    project_src: "{{ mcp_filesystem_dir }}"
+    files:
+      - docker-compose.mcp-filesystem.yml
+    state: present
+    pull: "{{ mcp_compose_pull_policy }}"
+  become: true
+  become_user: "{{ mcp_owner }}"
+
+- name: Enable lingering for {{ mcp_owner }}
+  ansible.builtin.command: "loginctl enable-linger {{ mcp_owner }}"
+  when: mcp_enable_lingering | bool
+  changed_when: false
+  failed_when: false
+  become: true
+
+- name: Ensure systemd user directory exists
+  ansible.builtin.file:
+    path: "~/.config/systemd/user"
+    state: directory
+    mode: "0755"
+  become: true
+  become_user: "{{ mcp_owner }}"
+
+- name: Install systemd user service for filesystem MCP
+  ansible.builtin.template:
+    src: mcp-filesystem.service.j2
+    dest: "~/.config/systemd/user/{{ mcp_filesystem_service_name }}"
+    mode: "0644"
+  become: true
+  become_user: "{{ mcp_owner }}"
+  notify: reload systemd user
+
+- name: Enable and start filesystem MCP service
+  ansible.builtin.systemd:
+    name: "{{ mcp_filesystem_service_name }}"
+    scope: user
+    enabled: yes
+    daemon_reload: yes
+    state: started
+  become: true
+  become_user: "{{ mcp_owner }}"
+
+- name: Register filesystem MCP server for claude_code
+  ansible.builtin.set_fact:
+    mcp_servers_registered: "{{ mcp_servers_registered | default([]) + [mcp_filesystem_info] }}"
+  vars:
+    mcp_filesystem_info:
+      name: "filesystem"
+      type: "stdio"
+      command: "docker"
+      args: >-
+        {{
+          ["exec", "-i", mcp_filesystem_container_name, "npx", mcp_filesystem_npm_package]
+          + mcp_filesystem_allowed_dirs
+        }}
+      env: {}
+  delegate_to: localhost
+  delegate_facts: true
+```
+
+### FILE: roles/mcp_filesystem/handlers/main.yml ===
+```yaml
+---
+# handlers/main.yml for mcp_filesystem role
+
+- name: restart mcp filesystem
+  community.docker.docker_compose_v2:
+    project_src: "{{ mcp_filesystem_dir }}"
+    files:
+      - docker-compose.mcp-filesystem.yml
+    state: restarted
+  become: true
+  become_user: "{{ mcp_owner }}"
+  listen: "restart mcp filesystem"
+
+- name: reload systemd user
+  ansible.builtin.systemd:
+    daemon_reload: yes
+    scope: user
+  become: true
+  become_user: "{{ mcp_owner }}"
+  listen: "reload systemd user"
+```
+
+### FILE: roles/npm_global/defaults/main.yml ===
+```yaml
+---
+# List can be strings ("pkg@version" or "pkg") or dicts:
+#   - mcp-hub@latest
+#   - { name: mcp-hub, version: latest, state: present }
+#   - { name: typescript, state: latest }
+npm_global_packages: []
+
+# Default state for items that omit it (present|absent|latest)
+npm_global_default_state: present
+
+# Path to npm executable (override if you use corepack/pnpm/yarn)
+npm_global_executable: npm
+
+# For rootful installs, lifecycle scripts sometimes need this
+npm_global_unsafe_perm: true
+
+# If you ever want to install per-user instead of global system:
+# Set to a username like "henning" to install under that user’s $HOME.
+npm_global_as_user: ""
+```
+
+### FILE: roles/npm_global/tasks/main.yml ===
+```yaml
+---
+# Keep this role dependency-free and robust against odd inputs.
+
+- name: Check npm executable
+  ansible.builtin.command: "{{ npm_global_executable }} --version"
+  changed_when: false
+
+# Guard in case the list is undefined somewhere upstream
+- name: Ensure npm_global_packages is a list
+  ansible.builtin.assert:
+    that: npm_global_packages is iterable
+    fail_msg: "npm_global_packages must be a list (strings or dict items)."
+
+# Install / remove packages directly from the list, computing spec per item.
+# Supports:
+#   - "mcp-hub@latest"
+#   - "typescript # with comment"
+#   - { name: mcp-hub, version: latest, state: present }
+#   - { name: yarn, state: latest }
+- name: Ensure global npm packages are in desired state
+  vars:
+    _is_mapping: "{{ item is mapping }}"
+    # If item is a string, strip any inline shell-style comment ` # ...`
+    _name_raw: "{{ (item.name if _is_mapping else item) }}"
+    _name: "{{ _name_raw | regex_replace('\\s+#.*$', '') | trim }}"
+    _version: "{{ (item.version if (_is_mapping and (item.version is defined)) else '') | trim }}"
+    _state: >-
+      {{
+        (item.state | default(npm_global_default_state))
+        if _is_mapping else
+        npm_global_default_state
+      }}
+    _spec: "{{ _name ~ '@' ~ _version if _version|length > 0 else _name }}"
+  become: true
+  become_user: "{{ (npm_global_as_user if npm_global_as_user|length > 0 else omit) }}"
+  community.general.npm:
+    name: "{{ _spec }}"
+    global: true
+    state: "{{ _state }}"
+    executable: "{{ npm_global_executable }}"
+    production: true
+    unsafe_perm: "{{ npm_global_unsafe_perm }}"
+  loop: "{{ npm_global_packages }}"
+  loop_control:
+    label: "{{ _spec }}"
+  tags: [npm, mcp]
+```
+
+### FILE: roles/zsh/tasks/main.yml ===
+```yaml
+---
+- name: Check if Zsh is installed
+  command: which zsh
+  register: zsh_check
+  changed_when: false
+  failed_when: false
+
+- name: Install Zsh if not present
+  pacman:
+    name: zsh
+    state: present
+  become: true
+  when: zsh_check.rc != 0
+
+- name: Set Zsh as the default shell for the user
+  user:
+    name: "{{ target_user }}"
+    shell: /bin/zsh
+  become: true
+
+- name: Ensure .zshrc is symlinked from dotfiles
+  file:
+    src: "/home/{{ target_user }}/src/dotfiles/zsh/.zshrc"
+    dest: "/home/{{ target_user }}/.zshrc"
+    state: link
+  become: true
+  become_user: "{{ target_user }}"
+  
+- name: Check current permissions before
+  command: ls -ld /usr/share/zsh-theme-powerlevel10k
+  register: before_permissions
+  become: yes
+  ignore_errors: yes 
+```
+
+### FILE: roles/luarocks311/tasks/main.yml ===
+```yaml
+---
+- name: Install prerequisites using pacman
+  become: true
+  community.general.pacman:
+    name:
+      - lua51
+      - base-devel
+      - unzip
+      - curl
+      - openssl
+    state: present
+
+- name: Download LuaRocks source archive
+  ansible.builtin.get_url:
+    url: https://luarocks.org/releases/luarocks-3.11.1.tar.gz
+    dest: /tmp/luarocks-3.11.1.tar.gz
+    mode: '0644'
+
+- name: Extract LuaRocks archive
+  ansible.builtin.unarchive:
+    src: /tmp/luarocks-3.11.1.tar.gz
+    dest: /tmp
+    remote_src: true
+
+- name: Configure LuaRocks build for Lua 5.1
+  ansible.builtin.command:
+    cmd: ./configure --prefix=/usr --with-lua=/usr --lua-version=5.1 --lua-suffix=5.1 --with-lua-interpreter=lua5.1
+    chdir: /tmp/luarocks-3.11.1
+  changed_when: false
+
+- name: Build LuaRocks
+  ansible.builtin.command:
+    cmd: make
+    chdir: /tmp/luarocks-3.11.1
+
+- name: Install LuaRocks
+  become: true
+  ansible.builtin.command:
+    cmd: make install
+    chdir: /tmp/luarocks-3.11.1
+```
+
+### FILE: roles/rust/tasks/main.yml ===
+```yaml
+# Install rust
+
+- name: Add rustup, accept defaults
+  ansible.builtin.shell: "curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y"
+  tags: ["workstation-debian", "rust", "package", "workstation-fedora"]
+  become: true
+  become_user: "{{ target_user }}"
+
+- name: Add rust-analyzer, clippy, rustfmt
+  ansible.builtin.shell: "$HOME/.cargo/bin/rustup component add rustfmt clippy rust-analyzer"
+  tags: ["workstation-debian", "rust", "package", "workstation-fedora"]
+  become: true
+  become_user: "{{ target_user }}"
+```
+
+### FILE: roles/nftables/defaults/main.yml ===
+```yaml
+---
+nftables_allowed_tcp_ports: [22]  # SSH by default
+nftables_allowed_udp_ports: []    # Add UDP ports if needed
+nftables_ipv4_lan_sets: ["10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16", "169.254.0.0/16"]
+nftables_ipv6_lan_sets: ["fd00::/8", "fe80::/10"]
+```
+
+### FILE: roles/nftables/templates/nftables.conf.j2 ===
+```text
+flush ruleset
+
+table inet filter {
+  set LANv4 {
+    type ipv4_addr
+    flags interval
+    elements = { {{ nftables_ipv4_lan_sets | join(', ') }} }
+  }
+  set LANv6 {
+    type ipv6_addr
+    flags interval
+    elements = { {{ nftables_ipv6_lan_sets | join(', ') }} }
+  }
+
+  chain input {
+    type filter hook input priority filter; policy drop;
+    iif "lo" accept comment "Accept loopback traffic i.e. local inter-process communications"
+    ct state invalid drop comment "Drop invalid connections"
+    ct state { established, related } accept comment "Accept established and related traffic"
+    meta l4proto { icmp, ipv6-icmp } accept comment "Accept ICMP"
+    ip protocol igmp accept comment "Accept IGMP"
+    udp dport mdns ip6 daddr ff02::fb accept comment "Accept mDNS (IPv6)"
+    udp dport mdns ip daddr 224.0.0.251 accept comment "Accept mDNS (IPv4)"
+    ip6 saddr @LANv6 accept comment "Accept local IPv6 traffic"
+    ip saddr @LANv4 accept comment "Accept local IPv4 traffic"
+    {% if nftables_allowed_tcp_ports %}
+    tcp dport { {{ nftables_allowed_tcp_ports | join(', ') }} } accept comment "Accept specified TCP ports"
+    {% endif %}
+    {% if nftables_allowed_udp_ports %}
+    udp dport { {{ nftables_allowed_udp_ports | join(', ') }} } accept comment "Accept specified UDP ports"
+    {% endif %}
+  }
+
+  chain forward {
+    type filter hook forward priority filter; policy drop;
+    # No forwarding by default; enable if needed for router setups
+  }
+
+  chain output {
+    type filter hook output priority filter; policy accept;
+    # Accept all outbound traffic
+  }
+}
+```
+
+### FILE: roles/nftables/tasks/main.yml ===
+```yaml
+---
+- name: Install nftables package
+  community.general.pacman:
+    name: nftables
+    state: present
+
+- name: Deploy nftables configuration
+  ansible.builtin.template:
+    src: nftables.conf.j2
+    dest: /etc/nftables.conf
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Reload nftables
+
+- name: Enable and start nftables service
+  ansible.builtin.systemd:
+    name: nftables.service
+    enabled: true
+    state: started
+```
+
+### FILE: roles/nftables/handlers/main.yml ===
+```yaml
+---
+- name: Reload nftables
+  ansible.builtin.systemd:
+    name: nftables.service
+    state: reloaded
+```
+
+### FILE: roles/hwdev_serial/defaults/main.yml ===
+```yaml
+---
+# Target user to grant serial access (your repo already defines target_user for dotfiles)
+target_user: "{{ target_user | default('henning') }}"
+
+# Core serial/UI tools to install from pacman (minimal)
+hwdev_core_packages:
+  - minicom         # classic serial terminal
+  - picocom         # tiny serial terminal
+  - screen          # fallback terminal multiplexer/serial
+  - python-pyserial # pyserial for quick scripts
+  - usbutils        # lsusb
+  - avrdude         # AVR flashing
+  - dfu-util        # DFU bootloaders (STM32, etc.)
+  - openocd         # JTAG/SWD debug
+  - stlink          # ST-Link utility
+  - esptool         # ESP8266/ESP32 flashing
+  - subversion
+  - bc
+  - ccache
+  - tftp-hpa
+  - swig
+
+# Enable this to install a lean OpenWrt/RUT field & build toolkit
+hwdev_openwrt_tooling: true
+
+# OpenWrt build deps & useful field tools (Arch package names)
+# Note: 'base-devel' is a group; skip if you already have it.
+hwdev_openwrt_packages:
+  - base-devel      # make, gcc, etc. (group)
+  - gawk
+  - gettext
+  - ncurses
+  - zlib
+  - rsync
+  - file
+  - time            # measure build steps
+  - inetutils       # provides 'telnet' client
+  # - sshpass       # optionally, for scripted auth (prefer keys)
+
+# Whether to deploy udev rules that (a) give group=uucp, mode=0660, and
+# (b) set ID_MM_DEVICE_IGNORE=1 so ModemManager doesn't grab dev boards.
+hwdev_install_udev_rules: true
+
+# Whether to try to restart services that tend to hold ttys (safer to leave false)
+hwdev_restart_networkmanager: false
+hwdev_restart_modemmanager: false
+```
+
+### FILE: roles/hwdev_serial/files/99-serial-dev.rules ===
+```text
+# Common serial adapters / dev boards
+# - group=uucp, mode=0660 so users in 'uucp' can access without sudo
+# - ID_MM_DEVICE_IGNORE=1 prevents ModemManager from grabbing and blocking ports
+
+# Generic ACM devices (Arduino, STM32 CDC ACM, RP Pico, etc.)
+SUBSYSTEM=="tty", KERNEL=="ttyACM[0-9]*", GROUP="uucp", MODE="0660", ENV{ID_MM_DEVICE_IGNORE}="1"
+
+# FTDI (0403:*), covers many dev boards & USB-UARTs
+SUBSYSTEM=="tty", ATTRS{idVendor}=="0403", GROUP="uucp", MODE="0660", ENV{ID_MM_DEVICE_IGNORE}="1"
+
+# Silicon Labs CP210x (10c4:ea60 and variants)
+SUBSYSTEM=="tty", ATTRS{idVendor}=="10c4", GROUP="uucp", MODE="0660", ENV{ID_MM_DEVICE_IGNORE}="1"
+
+# WCH CH340/CH341 (1a86:7523 etc.)
+SUBSYSTEM=="tty", ATTRS{idVendor}=="1a86", GROUP="uucp", MODE="0660", ENV{ID_MM_DEVICE_IGNORE}="1"
+
+# Prolific PL2303 (067b:*) widely used in USB-UART dongles
+SUBSYSTEM=="tty", ATTRS{idVendor}=="067b", GROUP="uucp", MODE="0660", ENV{ID_MM_DEVICE_IGNORE}="1"
+
+# Arduino SA (2341:*) incl. genuine boards
+SUBSYSTEM=="tty", ATTRS{idVendor}=="2341", GROUP="uucp", MODE="0660", ENV{ID_MM_DEVICE_IGNORE}="1"
+
+# Raspberry Pi Pico (2e8a:*) in CDC mode
+SUBSYSTEM=="tty", ATTRS{idVendor}=="2e8a", GROUP="uucp", MODE="0660", ENV{ID_MM_DEVICE_IGNORE}="1"
+```
+
+### FILE: roles/hwdev_serial/tasks/main.yml ===
+```yaml
+---
+- name: Ensure serial dev groups exist (Arch default, but keep idempotent)
+  become: true
+  ansible.builtin.group:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - uucp
+    - lock
+
+- name: Add {{ target_user }} to serial groups (uucp, lock)
+  become: true
+  ansible.builtin.user:
+    name: "{{ target_user }}"
+    groups: [uucp, lock]
+    append: true
+
+- name: Install core HW dev/serial packages
+  become: true
+  ansible.builtin.pacman:
+    name: "{{ hwdev_core_packages }}"
+    state: present
+    update_cache: true
+
+- name: Install OpenWrt build + field tools (if enabled)
+  become: true
+  when: hwdev_openwrt_tooling | bool
+  ansible.builtin.pacman:
+    name: "{{ hwdev_openwrt_packages }}"
+    state: present
+
+- name: Deploy udev rules for common dev boards and serial adapters
+  become: true
+  when: hwdev_install_udev_rules | bool
+  ansible.builtin.copy:
+    src: 99-serial-dev.rules
+    dest: /etc/udev/rules.d/99-serial-dev.rules
+    owner: root
+    group: root
+    mode: "0644"
+  notify:
+    - reload udev
+    - retrigger tty uevents
+
+# Optional: restart services that may have grabbed ttys before rules applied
+- name: Maybe restart NetworkManager
+  when: hwdev_restart_networkmanager | bool
+  ansible.builtin.meta: flush_handlers
+
+- name: Maybe restart ModemManager
+  when: hwdev_restart_modemmanager | bool
+  ansible.builtin.meta: flush_handlers
+
+- name: Post-run note about login session
+  ansible.builtin.debug:
+    msg: >
+      '{{ target_user }}' was added to groups [uucp, lock]. Log out and back in
+      (or reboot) for group membership to take effect.
+```
+
+### FILE: roles/hwdev_serial/handlers/main.yml ===
+```yaml
+---
+# These names MUST match the 'notify' entries in tasks/main.yml
+
+- name: reload udev
+  become: true
+  ansible.builtin.command: udevadm control --reload
+  changed_when: false
+
+- name: retrigger tty uevents
+  become: true
+  ansible.builtin.command: udevadm trigger --subsystem-match=tty
+  changed_when: false
+
+- name: restart NetworkManager
+  become: true
+  ansible.builtin.systemd:
+    name: NetworkManager
+    state: restarted
+
+- name: restart ModemManager
+  become: true
+  ansible.builtin.systemd:
+    name: ModemManager
+    state: restarted
+  failed_when: false
+```
+
+### FILE: roles/dns/defaults/main.yml ===
+```yaml
+---
+# Choose ONE provider:
+#   - systemd-resolved   (recommended)
+#   - openresolv
+dns_provider: "systemd-resolved"
+
+# If true, uninstall the non-selected provider to avoid conflicts/signature mismatches
+dns_remove_conflicts: true
+
+# Configure NetworkManager to cooperate with the chosen provider (only if NM is installed)
+#   - for systemd-resolved: sets [main] dns=systemd-resolved
+#   - for openresolv:       sets [main] dns=default
+dns_configure_networkmanager: true
+
+# Path to the systemd-resolved stub resolv.conf
+dns_resolved_stub: "/run/systemd/resolve/stub-resolv.conf"
+
+# Temporary resolvers to seed /etc/resolv.conf if needed (openresolv path)
+dns_fallback_nameservers:
+  - "1.1.1.1"
+  - "9.9.9.9"
+
+# Optional sanity check with your WireGuard role:
+# If you keep DNS= lines in /etc/wireguard/wg0.conf, you MUST have a resolvconf provider.
+# Set this to the same location/name as in your WireGuard role to enable the check.
+wg_conf_dir: "/etc/wireguard"
+wg_interface: "wg0"
+dns_fail_if_wg_dns_without_provider: true
+```
+
+### FILE: roles/dns/tasks/main.yml ===
+```yaml
+---
+- name: Assert Arch Linux (to avoid surprises)
+  ansible.builtin.assert:
+    that:
+      - ansible_distribution | lower == "archlinux"
+    fail_msg: "This dns role currently targets Arch Linux."
+    success_msg: "Arch Linux detected."
+
+# Optional WireGuard sanity: if DNS= present in wg conf, we must provide resolvconf
+- name: Stat WireGuard config
+  become: true
+  ansible.builtin.stat:
+    path: "{{ wg_conf_dir }}/{{ wg_interface }}.conf"
+  register: _wgconf
+
+- name: Read WireGuard config (if present)
+  become: true
+  ansible.builtin.slurp:
+    path: "{{ wg_conf_dir }}/{{ wg_interface }}.conf"
+  register: _wgconf_content
+  when: _wgconf.stat.exists
+
+- name: Detect DNS= lines in WireGuard config
+  ansible.builtin.set_fact:
+    _wg_has_dns: >-
+      {{
+        (_wgconf_content.content | default('') | b64decode).splitlines()
+        | select('search', '^\\s*DNS\\s*=')
+        | list | length > 0
+      }}
+  when: _wgconf.stat.exists
+
+- name: Fail fast if DNS= is present but no known provider chosen
+  ansible.builtin.fail:
+    msg: >-
+      Your WireGuard config includes DNS= but dns_provider is not one of
+      ['systemd-resolved','openresolv']. Set dns_provider accordingly.
+  when:
+    - dns_fail_if_wg_dns_without_provider | bool
+    - _wgconf.stat.exists
+    - _wg_has_dns | default(false)
+    - dns_provider not in ['systemd-resolved', 'openresolv']
+
+# ------------------------------
+# Detect whether NetworkManager is installed
+# ------------------------------
+- name: Detect if NetworkManager is installed (Arch package 'networkmanager')
+  ansible.builtin.command: pacman -Q networkmanager
+  register: _nm_q
+  changed_when: false
+  failed_when: false
+
+- name: Set fact nm_installed
+  ansible.builtin.set_fact:
+    nm_installed: "{{ _nm_q.rc == 0 }}"
+
+- name: Debug NM state
+  ansible.builtin.debug:
+    msg: >-
+      NetworkManager detected: {{ nm_installed }}.
+      DNS provider: {{ dns_provider }}.
+  when: (ansible_verbosity | default(0) | int) > 0
+
+# ------------------------------
+# Provider: systemd-resolved
+# ------------------------------
+- name: Install systemd-resolvconf (provides /usr/bin/resolvconf)
+  become: true
+  ansible.builtin.pacman:
+    name: systemd-resolvconf
+    state: present
+    update_cache: true
+  when: dns_provider == "systemd-resolved"
+
+- name: Enable and start systemd-resolved
+  become: true
+  ansible.builtin.systemd:
+    name: systemd-resolved
+    enabled: true
+    state: started
+  when: dns_provider == "systemd-resolved"
+
+- name: Point /etc/resolv.conf to the systemd-resolved stub
+  become: true
+  ansible.builtin.file:
+    src: "{{ dns_resolved_stub }}"
+    dest: /etc/resolv.conf
+    state: link
+    force: true
+  notify: reload systemd-resolved
+  when: dns_provider == "systemd-resolved"
+
+- name: Configure NetworkManager for systemd-resolved (only if installed)
+  become: true
+  ansible.builtin.copy:
+    dest: /etc/NetworkManager/conf.d/99-dns.conf
+    owner: root
+    group: root
+    mode: "0644"
+    content: |
+      [main]
+      dns=systemd-resolved
+  notify: restart NetworkManager
+  when:
+    - dns_provider == "systemd-resolved"
+    - dns_configure_networkmanager | bool
+    - nm_installed | bool
+
+- name: Remove openresolv if present (avoid conflicts)
+  become: true
+  ansible.builtin.pacman:
+    name: openresolv
+    state: absent
+  when: dns_provider == "systemd-resolved" and dns_remove_conflicts | bool
+
+# ------------------------------
+# Provider: openresolv
+# ------------------------------
+- name: Install openresolv (provides /usr/bin/resolvconf)
+  become: true
+  ansible.builtin.pacman:
+    name: openresolv
+    state: present
+    update_cache: true
+  when: dns_provider == "openresolv"
+
+- name: Ensure /etc/resolv.conf is a regular file (not a symlink)
+  become: true
+  ansible.builtin.file:
+    path: /etc/resolv.conf
+    state: absent
+  when: dns_provider == "openresolv"
+
+- name: Seed a minimal /etc/resolv.conf (temporary baseline)
+  become: true
+  ansible.builtin.copy:
+    dest: /etc/resolv.conf
+    owner: root
+    group: root
+    mode: "0644"
+    content: |
+      {% for ns in dns_fallback_nameservers %}
+      nameserver {{ ns }}
+      {% endfor %}
+  when: dns_provider == "openresolv"
+
+- name: Attempt to populate resolv.conf from resolvconf (ignore errors if no sources yet)
+  become: true
+  ansible.builtin.command: resolvconf -u
+  register: _resolvconf_u
+  changed_when: "'not found' not in (_resolvconf_u.stderr | default(''))"
+  failed_when: false
+  when: dns_provider == "openresolv"
+
+- name: Configure NetworkManager for openresolv/default handling (only if installed)
+  become: true
+  ansible.builtin.copy:
+    dest: /etc/NetworkManager/conf.d/99-dns.conf
+    owner: root
+    group: root
+    mode: "0644"
+    content: |
+      [main]
+      dns=default
+  notify: restart NetworkManager
+  when:
+    - dns_provider == "openresolv"
+    - dns_configure_networkmanager | bool
+    - nm_installed | bool
+
+- name: Remove systemd-resolvconf if present (avoid conflicts)
+  become: true
+  ansible.builtin.pacman:
+    name: systemd-resolvconf
+    state: absent
+  when: dns_provider == "openresolv" and dns_remove_conflicts | bool
+```
+
+### FILE: roles/dns/handlers/main.yml ===
+```yaml
+---
+- name: restart systemd-resolved
+  become: true
+  ansible.builtin.systemd:
+    name: systemd-resolved
+    state: restarted
+
+- name: reload systemd-resolved
+  become: true
+  ansible.builtin.systemd:
+    name: systemd-resolved
+    state: reloaded
+
+- name: restart NetworkManager
+  become: true
+  ansible.builtin.systemd:
+    name: NetworkManager
+    state: restarted
+```
+
+### FILE: roles/homebrew/tasks/main.yml ===
+```yaml
+# Update homebrew and upgrade all packages
+- name: Update and upgrade all installed packages
+  community.general.homebrew:
+    update_homebrew: true
+    upgrade_all: true
+  tags: ["homebrew", "workstation-macos", "package"]
+  become_user: "{{ target_user }}"
+```
+
+### FILE: roles/aur/tasks/main.yml ===
+```yaml
+---
+- name: Ensure target user is in wheel group
+  user:
+    name: "{{ target_user }}"
+    groups: wheel
+    append: yes
+  become: true
+  tags: ['aur']
+  
+- name: Backup original sudoers file
+  ansible.builtin.copy:
+    src: /etc/sudoers
+    dest: /etc/sudoers.ansible_backup
+    owner: "{{ 'root' }}"
+    mode: "0644"
+    remote_src: yes
+  become: true
+  tags: ['aur']
+
+- name: Allow wheel group to sudo without password
+  lineinfile:
+    path: /etc/sudoers
+    regexp: '^# %wheel ALL=\(ALL:ALL\) ALL'
+    line: '%wheel ALL=(ALL:ALL) NOPASSWD: ALL'
+    validate: /usr/sbin/visudo -cf %s
+  become: true
+  tags: ['aur']
+
+- name: Install paru build dependencies
+  community.general.pacman:
+    name: rust
+    state: present
+  become: true
+  tags: ['aur']
+
+- name: Build paru package (no install or dep sync)
+  ansible.builtin.shell:
+    cmd: "makepkg --noconfirm"
+    chdir: "/home/{{ target_user }}/src/external/paru-git"
+  become: true
+  become_user: "{{ target_user }}"
+  args:
+    creates: "/home/{{ target_user }}/src/external/paru-git/paru-git*.pkg.tar.zst"
+  tags: ['aur']
+
+- name: Find built paru package
+  find:
+    paths: "/home/{{ target_user }}/src/external/paru-git"
+    patterns: "*.pkg.tar.zst"
+  register: paru_package
+  become: true
+  tags: ['aur']
+
+- name: Select main (non-debug) paru package
+  set_fact:
+    main_paru_package: "{{ paru_package.files | rejectattr('path', 'contains', '-debug-') | first }}"
+  tags: ['aur']
+
+- name: Install paru package as root
+  command: "pacman -U --noconfirm {{ main_paru_package.path }}"
+  args:
+    creates: /usr/bin/paru
+  become: true
+  tags: ['aur']
+  
+- name: Revert sudoers to original
+  ansible.builtin.copy:
+    src: /etc/sudoers.ansible_backup
+    dest: /etc/sudoers
+    owner: "{{ 'root' }}"
+    mode: "0644"
+    remote_src: yes
+    validate: /usr/sbin/visudo -cf %s
+  become: true
+  tags: ['aur']
+```
+
+### FILE: roles/claude_code/defaults/main.yml ===
+```yaml
+---
+# defaults/main.yml for claude_code role
+# Installs Claude Code CLI and manages central configuration
+
+# Claude Code CLI installation
+claude_code_npm_package: "@anthropic-ai/claude-code"
+
+# Owner (should match MCP servers)
+claude_code_owner: "{{ mcp_owner | default(target_user | default(ansible_user_id)) }}"
+
+# Use the owner's home directory explicitly
+claude_code_home: "/home/{{ claude_code_owner }}"
+npm_global_prefix: "{{ claude_code_home }}/.npm-global"
+
+# Directory configuration
+claude_code_config_dir: "{{ claude_code_home }}/.claude"
+
+# This will be populated by MCP server roles registering themselves
+mcp_servers_registered: []
+```
+
+### FILE: roles/claude_code/templates/claude-config.json.j2 ===
+```text
+{
+  "projects": {},
+  "mcpServers": {
+{% set containers = _mcp_containers.stdout_lines %}
+{% set comma_needed = namespace(value=false) %}
+{% for container in containers %}
+{% if container == 'mcp-filesystem' %}
+{% if comma_needed.value %},
+{% endif %}
+    "filesystem": {
+      "type": "stdio",
+      "command": "docker",
+      "args": ["exec", "-i", "{{ container }}", "npx", "@modelcontextprotocol/server-filesystem"{{ ', "' + mcp_filesystem_allowed_dirs | join('", "') + '"' }}],
+      "env": {}
+    }
+{% set comma_needed.value = true %}
+{% endif %}
+{% if container == 'mcp-github' %}
+{% if comma_needed.value %},
+{% endif %}
+    "github": {
+      "type": "stdio",
+      "command": "docker",
+      "args": ["exec", "-i", "{{ container }}", "npx", "@modelcontextprotocol/server-github"],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "{{ github_token }}"
+      }
+    }
+{% set comma_needed.value = true %}
+{% endif %}
+{% if container == 'mcp-obsidian' %}
+{% if comma_needed.value %},
+{% endif %}
+    "obsidian": {
+      "type": "stdio",
+      "command": "docker",
+      "args": ["exec", "-i", "{{ container }}", "npx", "mcp-obsidian", "/vault"],
+      "env": {}
+    }
+{% set comma_needed.value = true %}
+{% endif %}
+{% if container == 'mcp-ref' %}
+{% if comma_needed.value %},
+{% endif %}
+    "ref": {
+      "type": "stdio",
+      "command": "docker",
+      "args": ["exec", "-i", "{{ container }}", "npx", "@upstash/context7-mcp"],
+      "env": {}
+    }
+{% set comma_needed.value = true %}
+{% endif %}
+{% if container == 'mcp-semgrep' %}
+{% if comma_needed.value %},
+{% endif %}
+    "semgrep": {
+      "type": "stdio",
+      "command": "docker",
+      "args": ["exec", "-i", "{{ container }}", "npx", "@modelcontextprotocol/server-semgrep"],
+      "env": {}
+    }
+{% set comma_needed.value = true %}
+{% endif %}
+{% if container == 'mcp-exa' %}
+{% if comma_needed.value %},
+{% endif %}
+    "exa": {
+      "type": "stdio",
+      "command": "docker",
+      "args": ["exec", "-i", "{{ container }}", "npx", "@modelcontextprotocol/server-exa"],
+      "env": {
+        "EXA_API_KEY": "{{ exa_api_key }}"
+      }
+    }
+{% set comma_needed.value = true %}
+{% endif %}
+{% endfor %}
+  }
+}
+```
+
+### FILE: roles/claude_code/templates/register-mcp-servers.sh.j2 ===
+```text
+#!/bin/bash
+set -e
+
+# Remove existing servers first (ignore errors if they don't exist)
+claude mcp remove filesystem 2>/dev/null || true
+claude mcp remove ref 2>/dev/null || true
+claude mcp remove github 2>/dev/null || true
+
+# Add filesystem server
+claude mcp add --transport stdio filesystem -- \
+  docker exec -i mcp-filesystem npx @modelcontextprotocol/server-filesystem \
+  {{ mcp_filesystem_allowed_dirs | join(' ') }}
+
+# Add ref server
+claude mcp add --transport stdio ref -- \
+  docker exec -i mcp-ref npx @upstash/context7-mcp
+
+# Add github server (only if token is set)
+{% if github_token %}
+claude mcp add --transport stdio github \
+  --env GITHUB_PERSONAL_ACCESS_TOKEN="{{ github_token }}" -- \
+  docker exec -i mcp-github npx @modelcontextprotocol/server-github
+{% endif %}
+
+echo "MCP servers registered. Run 'claude mcp list' to verify."
+```
+
+### FILE: roles/claude_code/tasks/main.yml ===
+```yaml
+---
+# tasks/main.yml for claude_code role
+
+- name: Ensure Node.js and npm are installed
+  community.general.pacman:
+    name:
+      - nodejs
+      - npm
+    state: present
+  become: yes
+  tags: [install]
+
+- name: Check if Claude Code CLI is installed
+  ansible.builtin.command: which claude
+  register: _claude_check
+  changed_when: false
+  failed_when: false
+  become: true
+  become_user: "{{ claude_code_owner }}"
+  tags: [install]
+
+- name: Display message if Claude Code not found
+  ansible.builtin.debug:
+    msg: |
+      ⚠️  Claude Code CLI not found in PATH
+      It should be installed by the npm_global role
+      Make sure npm_global role ran before this role
+  when: _claude_check.rc != 0
+  tags: [install]
+
+- name: Ensure npm global bin is in PATH (zshrc)
+  ansible.builtin.lineinfile:
+    path: "{{ claude_code_home }}/.zshrc"
+    line: 'export PATH="{{ npm_global_prefix }}/bin:$PATH"'
+    create: yes
+    state: present
+  become: true
+  become_user: "{{ claude_code_owner }}"
+  tags: [install, config]
+
+- name: Ensure npm global bin is in PATH (bashrc)
+  ansible.builtin.lineinfile:
+    path: "{{ claude_code_home }}/.bashrc"
+    line: 'export PATH="{{ npm_global_prefix }}/bin:$PATH"'
+    create: yes
+    state: present
+  become: true
+  become_user: "{{ claude_code_owner }}"
+  tags: [install, config]
+
+- name: Create Claude Code configuration directory
+  ansible.builtin.file:
+    path: "{{ claude_code_config_dir }}"
+    state: directory
+    mode: '0755'
+  become: true
+  become_user: "{{ claude_code_owner }}"
+  tags: [config]
+
+- name: Discover running MCP containers
+  ansible.builtin.shell: |
+    docker ps --format '{{ '{{' }}.Names{{ '}}' }}' | grep '^mcp-' | grep -v 'mcp-mcp-docker' || true
+  register: _mcp_containers
+  changed_when: false
+  tags: [config]
+
+- name: Generate Claude Code configuration from running containers
+  ansible.builtin.template:
+    src: claude-config.json.j2
+    dest: "{{ claude_code_config_dir }}/claude.json"
+    mode: '0600'
+  become: true
+  become_user: "{{ claude_code_owner }}"
+  tags: [config]
+
+- name: Create MCP server registration script
+  ansible.builtin.template:
+    src: register-mcp-servers.sh.j2
+    dest: "{{ claude_code_home }}/.local/bin/register-claude-mcp-servers.sh"
+    mode: '0755'
+  become: true
+  become_user: "{{ claude_code_owner }}"
+  tags: [config]
+
+- name: Register MCP servers with Claude Code
+  ansible.builtin.shell: "{{ claude_code_home }}/.local/bin/register-claude-mcp-servers.sh"
+  become: true
+  become_user: "{{ claude_code_owner }}"
+  tags: [config]
+
+- name: Display Claude Code setup summary
+  ansible.builtin.debug:
+    msg: |
+      Configuration:
+      • Config file: {{ claude_code_config_dir }}/.claude.json
+      • Registered MCP servers: {{ mcp_servers_registered | length }}
+      Usage:
+      1. Ensure MCP servers are running:
+         systemctl --user status 'mcp-*'
+      2. Start Claude Code:
+         cd ~/src/your-project
+         claude
+      3. Check MCP status inside Claude:
+         /mcp
+
+      Registered MCP Servers:
+      {% for server in mcp_servers_registered %}
+         • {{ server.name }}
+      {% endfor %}
+
+      Manage MCP servers:
+      systemctl --user status 'mcp-*'
+      systemctl --user restart mcp-github
+      journalctl --user -u mcp-filesystem -f
+  tags: [always]
+```
+
+### FILE: roles/claude_code/handlers/main.yml ===
+```yaml
+---
+# handlers/main.yml for claude_code role
+
+- name: reload claude config
+  ansible.builtin.debug:
+    msg: "Claude Code configuration updated. Restart Claude Code if running."
+  listen: "reload claude config"
+```
+
+### FILE: roles/docker_mcp/defaults/main.yml ===
+```yaml
+---
+# Who should own and run the compose stack (must have access to Docker)
+mcp_owner: "{{ target_user | default(ansible_user_id) }}"
+
+# Where to put things
+mcp_project_dir: "/home/{{ mcp_owner }}/.config/mcp"
+mcp_compose_file: "docker-compose.mcp.yml"
+mcp_repo_url: "https://github.com/ckreiling/mcp-server-docker.git"
+mcp_repo_dir: "/home/{{ mcp_owner }}/.local/src/mcp-server-docker"
+
+# Build/run behavior
+# Use host networking to avoid veth/bridge issues on your kernel
+mcp_network_mode: "host"          # "host" or "bridge"
+
+# Compose bring-up behavior
+mcp_compose_pull_policy: "never"  # "never" | "missing" | "always" | "policy"
+
+# Optional Neovim glue for the owner
+mcp_install_nvim_glue: true
+
+# Optional user systemd service (auto-start after login)
+mcp_install_user_service: true
+mcp_user_service_name: "mcp-docker.service"
+mcp_enable_lingering: true    # keep user services running after logout
+```
+
+### FILE: roles/docker_mcp/templates/mcp-docker.service.j2 ===
+```text
+[Unit]
+Description=MCP server via Docker Compose (user)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=exec
+RemainAfterExit=yes
+WorkingDirectory=%h/.config/mcp
+ExecStart=/usr/bin/docker compose --ansi never --progress plain \
+  --project-directory %h/.config/mcp \
+  --file docker-compose.mcp.yml up -d
+ExecStop=/usr/bin/docker compose --ansi never --progress plain \
+  --project-directory %h/.config/mcp \
+  --file docker-compose.mcp.yml down
+Restart=on-failure
+RestartSec=3
+Environment=PATH=%h/.local/bin:/usr/local/bin:/usr/bin
+
+[Install]
+WantedBy=default.target
+```
+
+### FILE: roles/docker_mcp/templates/docker-compose.mcp.yml.j2 ===
+```text
+services:
+  mcp-docker:
+    image: mcp-server-docker:latest
+    restart: unless-stopped
+    stdin_open: true
+    tty: true
+{% if mcp_network_mode == 'host' %}
+    network_mode: host
+{% endif %}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+```
+
+### FILE: roles/docker_mcp/tasks/main.yml ===
+```yaml
+---
+# Ensure directories exist for the chosen owner
+- name: Ensure project directories exist (user-owned)
+  become: true
+  become_user: "{{ mcp_owner }}"
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: "0755"
+  loop:
+    - "{{ mcp_repo_dir | dirname }}"
+    - "{{ mcp_project_dir }}"
+    - "/home/{{ mcp_owner }}/.config/nvim/lua/plugins"
+
+# Fetch upstream sources (user-owned)
+- name: Clone mcp-server-docker (upstream)
+  become: true
+  become_user: "{{ mcp_owner }}"
+  ansible.builtin.git:
+    repo: "{{ mcp_repo_url }}"
+    dest: "{{ mcp_repo_dir }}"
+    version: "main"
+    update: yes
+
+# --- BuildKit sanity (helpful error if daemon misconfigured) --------------------
+- name: Stat /etc/docker/daemon.json
+  become: true
+  ansible.builtin.stat:
+    path: /etc/docker/daemon.json
+  register: _daemon_json_stat
+
+- name: Read /etc/docker/daemon.json (if present)
+  become: true
+  ansible.builtin.slurp:
+    path: /etc/docker/daemon.json
+  register: _daemon_json_slurp
+  when: _daemon_json_stat.stat.exists
+
+- name: Parse daemon.json to a dict (if present)
+  ansible.builtin.set_fact:
+    _daemon_json: "{{ _daemon_json_slurp.content | b64decode | from_json }}"
+  when: _daemon_json_stat.stat.exists
+
+- name: Extract features.buildkit (fallback signal)
+  ansible.builtin.set_fact:
+    _daemon_buildkit: "{{ (_daemon_json.features.buildkit | default(false)) | bool }}"
+  when: _daemon_json_stat.stat.exists
+
+- name: Detect BuildKit via `docker info` (best-effort)
+  become: true
+  become_user: "{{ mcp_owner }}"
+  ansible.builtin.shell: |
+    docker info 2>/dev/null \
+      | awk -F': *' 'tolower($1) ~ /^buildkit$/ {print tolower($2)}' \
+      | tail -n1
+  register: _buildkit_detect
+  changed_when: false
+  failed_when: false
+
+- name: Assert BuildKit is enabled on the Docker daemon
+  ansible.builtin.assert:
+    that:
+      - (_buildkit_detect.stdout | default('') | lower) is search('true') or (_daemon_buildkit | default(false) | bool)
+    fail_msg: >-
+      Docker BuildKit appears to be disabled. The Dockerfile uses 'RUN --mount=type=cache',
+      which requires BuildKit. Ensure /etc/docker/daemon.json contains:
+      {"features": {"buildkit": true}} and Docker has been restarted.
+    success_msg: "BuildKit detected."
+
+# --- Build image using Buildx as the user --------------------------------------
+- name: Check that the Buildx plugin is available
+  become: true
+  become_user: "{{ mcp_owner }}"
+  ansible.builtin.command: docker buildx version
+  register: _bx_version
+  changed_when: false
+  failed_when: false
+
+- name: Fail clearly if Buildx is missing
+  ansible.builtin.fail:
+    msg: >-
+      Docker Buildx plugin is not installed for {{ mcp_owner }}.
+      On Arch, install 'docker-buildx'. Then log out/in (group refresh) and re-run.
+  when: _bx_version.rc != 0
+
+- name: Ensure a usable buildx builder (create if missing)
+  become: true
+  become_user: "{{ mcp_owner }}"
+  ansible.builtin.command: docker buildx inspect
+  register: _bx_inspect
+  changed_when: false
+  failed_when: false
+
+- name: Create and select a buildx builder (if missing)
+  become: true
+  become_user: "{{ mcp_owner }}"
+  ansible.builtin.command: docker buildx create --driver docker-container --use
+  when: _bx_inspect.rc != 0
+
+- name: "Build local image: mcp-server-docker:latest (via buildx + BuildKit)"
+  become: true
+  become_user: "{{ mcp_owner }}"
+  ansible.builtin.shell: >
+    docker buildx build
+    {% if mcp_network_mode == 'host' %} --network=host {% endif %}
+    --load -t mcp-server-docker:latest .
+  args:
+    chdir: "{{ mcp_repo_dir }}"
+  environment:
+    DOCKER_BUILDKIT: "1"
+
+# --- Runtime (compose) ----------------------------------------------------------
+- name: Drop Compose file for MCP Docker service (user-owned)
+  become: true
+  become_user: "{{ mcp_owner }}"
+  ansible.builtin.template:
+    src: docker-compose.mcp.yml.j2
+    dest: "{{ mcp_project_dir }}/{{ mcp_compose_file }}"
+    mode: "0644"
+
+- name: Ensure MCP Docker service is up via Compose (user-owned)
+  become: true
+  become_user: "{{ mcp_owner }}"
+  community.docker.docker_compose_v2:
+    project_src: "{{ mcp_project_dir }}"
+    files:
+      - "{{ mcp_compose_file }}"
+    state: present
+    pull: "{{ mcp_compose_pull_policy }}"
+
+# --- Optional user-level systemd service ---------------------------------------
+- name: Enable lingering for {{ mcp_owner }} (optional)
+  become: true
+  when: mcp_install_user_service | bool and mcp_enable_lingering | bool
+  ansible.builtin.command: "loginctl enable-linger {{ mcp_owner }}"
+  changed_when: false
+  failed_when: false
+
+- name: Ensure user systemd dir exists
+  become: true
+  become_user: "{{ mcp_owner }}"
+  when: mcp_install_user_service | bool
+  ansible.builtin.file:
+    path: "~/.config/systemd/user"
+    state: directory
+    mode: "0755"
+
+- name: Install user systemd unit for MCP
+  become: true
+  become_user: "{{ mcp_owner }}"
+  when: mcp_install_user_service | bool
+  ansible.builtin.template:
+    src: mcp-docker.service.j2
+    dest: "~/.config/systemd/user/{{ mcp_user_service_name }}"
+    mode: "0644"
+
+- name: Reload user systemd and enable service
+  become: true
+  become_user: "{{ mcp_owner }}"
+  when: mcp_install_user_service | bool
+  ansible.builtin.command: "systemctl --user daemon-reload"
+  changed_when: false
+  failed_when: false
+
+- name: Enable and start MCP user service
+  become: true
+  become_user: "{{ mcp_owner }}"
+  when: mcp_install_user_service | bool
+  ansible.builtin.command: "systemctl --user enable --now {{ mcp_user_service_name }}"
+  register: _mcp_user_service_enable
+  changed_when: "'Created symlink' in (_mcp_user_service_enable.stdout | default('')) or 'Started' in (_mcp_user_service_enable.stdout | default(''))"
+  failed_when: false
+```
+
+### FILE: roles/copy/tasks/main.yml ===
+```yaml
+---
+- name: Stat source paths to determine files vs folders
+  ansible.builtin.stat:
+    path: "{{ item.src }}"
+  loop: "{{ copy }}"
+  register: src_stat
+  tags: ["copy"]
+
+- name: Ensure destination directories exist for files
+  ansible.builtin.file:
+    path: "{{ item.0.dest | dirname }}"
+    state: directory
+    owner: "{{ 'root' if item.0.dest.startswith('/usr/') or item.0.dest.startswith('/etc/') else target_user }}"
+    mode: "0755"
+  loop: "{{ copy | zip(src_stat.results) | selectattr('1.stat.isreg', 'equalto', true) }}"
+  become: true
+  tags: ["copy", "files"]
+  
+- name: Copy individual files
+  ansible.builtin.copy:
+    src: "{{ item.0.src }}"
+    dest: "{{ item.0.dest }}"
+    owner: "{{ 'root' if item.0.dest.startswith('/usr/') or item.0.dest.startswith('/etc/') else target_user }}"
+    mode: "0644"
+    remote_src: false
+  loop: "{{ copy | zip(src_stat.results) | selectattr('1.stat.isreg', 'equalto', true) }}"
+  become: true
+  tags: ["copy", "files"]
+
+- name: Copy full folders
+  ansible.posix.synchronize:
+    src: "{{ item.0.src }}"
+    dest: "{{ item.0.dest }}"
+    archive: true
+    recursive: true
+    owner: true
+    group: true
+    perms: true
+    mode: push
+    rsync_opts:
+      - "--no-motd"
+      - "--chown={{ 'root:root' if item.0.dest.startswith('/usr/') or item.0.dest.startswith('/etc/') else target_user + ':' + target_user }}"
+      - "--chmod=D0755,F0644"
+  loop: "{{ copy | zip(src_stat.results) | selectattr('1.stat.isdir', 'equalto', true) }}"
+  become: true
+  tags: ["copy", "folders"]
+```
+
+### FILE: roles/acpi/tasks/main.yml ===
+```yaml
+---
+- name: Ensure acpid is enabled and running
+  ansible.builtin.systemd:
+    name: acpid.service
+    state: started
+    enabled: true
+
+- name: Deploy custom ACPI handler script
+  ansible.builtin.copy:
+    dest: /etc/acpi/handler.sh
+    content: |
+      #!/bin/bash
+      # Default acpi script that takes an entry for all actions
+      case "$1" in
+          button/power)
+              case "$2" in
+                  PBTN|PWRF)
+                      logger 'PowerButton pressed'
+                      ;;
+                  *)
+                      logger "ACPI action undefined: $2"
+                      ;;
+              esac
+              ;;
+          button/sleep)
+              case "$2" in
+                  SLPB|SBTN)
+                      logger 'SleepButton pressed'
+                      ;;
+                  *)
+                      logger "ACPI action undefined: $2"
+                      ;;
+              esac
+              ;;
+          ac_adapter)
+              case "$2" in
+                  AC|ACAD|ADP0)
+                      case "$4" in
+                          00000000)
+                              logger 'AC unpluged'
+                              ;;
+                          00000001)
+                              logger 'AC pluged'
+                              ;;
+                      esac
+                      ;;
+                  *)
+                      logger "ACPI action undefined: $2"
+                      ;;
+              esac
+              ;;
+          battery)
+              case "$2" in
+                  BAT0)
+                      case "$4" in
+                          00000000)
+                              logger 'Battery online'
+                              ;;
+                          00000001)
+                              logger 'Battery offline'
+                              ;;
+                      esac
+                      ;;
+                  CPU0)
+                      ;;
+                  *)  logger "ACPI action undefined: $2" ;;
+              esac
+              ;;
+          button/lid)
+              case "$3" in
+                  close)
+                      logger 'LID closed'
+                      ;;
+                  open)
+                      logger 'LID opened'
+                      ;;
+                  *)
+                      logger "ACPI action undefined: $3"
+                      ;;
+              esac
+              ;;
+          button/mute)
+              # Handle mute (F1)
+              for user in $(who | awk '{print $1}' | sort -u); do
+                  uid=$(id -u $user)
+                  su - $user -c "XDG_RUNTIME_DIR=/run/user/$uid DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$uid/bus wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
+              done
+              ;;
+          button/volumedown)
+              # Handle volume down (F2)
+              for user in $(who | awk '{print $1}' | sort -u); do
+                  uid=$(id -u $user)
+                  su - $user -c "XDG_RUNTIME_DIR=/run/user/$uid DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$uid/bus wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"
+              done
+              ;;
+          button/volumeup)
+              # Handle volume up (F3)
+              for user in $(who | awk '{print $1}' | sort -u); do
+                  uid=$(id -u $user)
+                  su - $user -c "XDG_RUNTIME_DIR=/run/user/$uid DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$uid/bus wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+"
+              done
+              ;;
+          button/micmute)
+              # Handle mic mute (F4)
+              for user in $(who | awk '{print $1}' | sort -u); do
+                  uid=$(id -u $user)
+                  su - $user -c "XDG_RUNTIME_DIR=/run/user/$uid DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$uid/bus wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"
+              done
+              ;;
+          video/brightnessdown)
+              # Handle brightness down (F5)
+              /usr/bin/brightnessctl s 10%-
+              ;;
+          video/brightnessup)
+              # Handle brightness up (F6)
+              /usr/bin/brightnessctl s 10%+
+              ;;
+          video/switchmode)
+              # Handle display switch (F7) - Optional: Cycle monitors or adjust as needed
+              logger "Display switch event triggered: $2"
+              ;;
+          *)
+              logger "ACPI group/action undefined: $1 / $2"
+              ;;
+      esac
+      # vim:set ts=4 sw=4 ft=sh et:
+    mode: '0755'
+    backup: yes
+
+- name: Restart acpid service after handler modification
+  ansible.builtin.systemd:
+    name: acpid.service
+    state: restarted
+```
+
+### FILE: roles/dnf/tasks/main.yml ===
+```yaml
+- name: Add RPM Fusion, Microsoft VS Code repositories
+  ansible.builtin.rpm_key:
+    state: present
+    key: "{{ item }}"
+  loop: "{{ rpm_repo_keys }}"
+  tags: ['dnf', 'workstation-fedora', 'package']
+  
+- name: Check VS Code repository exists
+  ansible.builtin.stat:
+    path: "/etc/yum.repos.d/vscode.repo"
+  register: vscoderepo
+  tags: ['dnf', 'workstation-fedora', 'package']  
+
+- name: Add VS Code Repository to Yum Repos
+  ansible.builtin.command: sh -c 'echo -e "[code]\nname=Visual Studio Code\nbaseurl=https://packages.microsoft.com/yumrepos/vscode\nenabled=1\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc" > /etc/yum.repos.d/vscode.repo'
+  when: not vscoderepo.stat.exists
+  tags: ['dnf', 'workstation-fedora', 'package']  
+
+- name: Check VS Code repository exists
+  ansible.builtin.stat:
+    path: "/etc/yum.repos.d/google-kubernetes.repo"
+  register: gk8srepo
+  tags: ['dnf', 'workstation-fedora', 'package']  
+
+- name: Update listing and install packages
+  ansible.builtin.dnf:
+    name:
+      - "{{ item }}"
+    state: latest
+  loop: "{{ dnf_installed_packages }}"
+  tags: ['dnf', 'workstation-fedora', 'package']  
+
+- name: Remove unneeded packages
+  ansible.builtin.dnf:
+    name:
+    - "{{ item }}"
+    state: absent
+  loop: "{{ dnf_removed_packages }}"
+  tags: ['dnf', 'workstation-fedora', 'package']  
+
+- name: Upgrade all packages
+  ansible.builtin.dnf:
+    name: "*"
+    state: latest
+  tags: ['dnf', 'workstation-fedora', 'package']    
+
+- name: Autoremove unneeded packages installed as dependencies
+  ansible.builtin.dnf:
+    autoremove: yes
+  tags: ['dnf', 'workstation-fedora', 'package']    
+```
+
+### FILE: roles/fonts/tasks/main.yml ===
+```yaml
+# Create ~/.fonts directory if it does not exist of target user
+- name: Create ~/.fonts directory if it does not exist of target user
+  ansible.builtin.file:
+    path: /home/{{ target_user }}/.fonts
+    state: directory
+    mode: "0755"
+    owner: "{{ target_user }}"
+    group: "{{ target_user }}"    
+  tags: ['fonts']
+
+# Update font cache assuming package manager fonts were updated
+- name: Update font cache
+  ansible.builtin.command: fc-cache -fv
+  tags: ['fonts']
+```
+
+### FILE: roles/mcp_semgrep/defaults/main.yml ===
+```yaml
+---
+# defaults/main.yml for mcp_semgrep role
+
+# Owner and directories
+mcp_owner: "{{ target_user | default(ansible_user_id) }}"
+mcp_base_dir: "/home/{{ mcp_owner }}/.config"
+mcp_semgrep_dir: "{{ mcp_base_dir }}/mcp-semgrep"
+
+# Directories to scan
+mcp_semgrep_scan_dirs:
+  - "/home/{{ mcp_owner }}/src"
+  - "/home/{{ mcp_owner }}/projects"
+
+# Semgrep API token (optional, for pro features)
+semgrep_api_token: "{{ lookup('env', 'SEMGREP_API_TOKEN') | default('', true) }}"
+
+# Docker configuration
+mcp_semgrep_container_name: "mcp-semgrep"
+mcp_semgrep_image: "node:20-alpine"
+mcp_network_mode: "bridge"
+mcp_docker_network: "mcp-network"
+
+# NPM package - CORRECTED to use the actual package
+mcp_semgrep_npm_package: "mcp-server-semgrep"
+
+# Systemd configuration
+mcp_semgrep_service_name: "mcp-semgrep.service"
+mcp_enable_lingering: true
+mcp_compose_pull_policy: "missing"
+
+# Semgrep rules (if supported by the package)
+mcp_semgrep_rules: "auto"  # or "p/security-audit", "p/owasp-top-ten", etc.
+```
+
+### FILE: roles/mcp_semgrep/templates/mcp-semgrep.service.j2 ===
+```text
+[Unit]
+Description=MCP Semgrep Security Scanner
+After=network-online.target docker.service
+Wants=network-online.target
+
+[Service]
+Type=exec
+RemainAfterExit=yes
+WorkingDirectory={{ mcp_semgrep_dir }}
+ExecStart=/usr/bin/docker compose --ansi never --progress plain \
+  --project-directory {{ mcp_semgrep_dir }} \
+  --file docker-compose.mcp-semgrep.yml up -d
+ExecStop=/usr/bin/docker compose --ansi never --progress plain \
+  --project-directory {{ mcp_semgrep_dir }} \
+  --file docker-compose.mcp-semgrep.yml down
+Restart=on-failure
+RestartSec=3
+
+[Install]
+WantedBy=default.target
+```
+
+### FILE: roles/mcp_semgrep/templates/docker-compose.mcp-semgrep.yml.j2 ===
+```text
+# docker-compose.mcp-semgrep.yml.j2
+# Managed by Ansible
+
+services:
+  {{ mcp_semgrep_container_name }}:
+    image: {{ mcp_semgrep_image }}
+    container_name: {{ mcp_semgrep_container_name }}
+    restart: unless-stopped
+    working_dir: /app
+    command: sh -c "npm install -g {{ mcp_semgrep_npm_package }} && exec npx {{ mcp_semgrep_npm_package }}"
+    stdin_open: true
+    tty: true
+    volumes:
+{% for dir in mcp_semgrep_scan_dirs %}
+      - {{ dir }}:/scan{{ loop.index }}:ro
+{% endfor %}
+{% if semgrep_api_token %}
+    environment:
+      - SEMGREP_API_TOKEN={{ semgrep_api_token }}
+      - SEMGREP_RULES={{ mcp_semgrep_rules }}
+{% endif %}
+{% if mcp_network_mode == 'host' %}
+    network_mode: host
+{% else %}
+    networks:
+      - {{ mcp_docker_network }}
+{% endif %}
+
+{% if mcp_network_mode != 'host' %}
+networks:
+  {{ mcp_docker_network }}:
+    external: true
+{% endif %}
+```
+
+### FILE: roles/mcp_semgrep/tasks/main.yml ===
+```yaml
+---
+# tasks/main.yml for mcp_semgrep role
+
+- name: Ensure MCP semgrep directory exists
+  ansible.builtin.file:
+    path: "{{ mcp_semgrep_dir }}"
+    state: directory
+    mode: "0755"
+  become: true
+  become_user: "{{ mcp_owner }}"
+
+- name: Create Docker network for MCP servers
+  community.docker.docker_network:
+    name: "{{ mcp_docker_network }}"
+    state: present
+  become: true
+
+- name: Deploy Docker Compose file for semgrep MCP
+  ansible.builtin.template:
+    src: docker-compose.mcp-semgrep.yml.j2
+    dest: "{{ mcp_semgrep_dir }}/docker-compose.mcp-semgrep.yml"
+    mode: "0644"
+  become: true
+  become_user: "{{ mcp_owner }}"
+  notify: restart mcp semgrep
+
+- name: Ensure semgrep MCP service is running
+  community.docker.docker_compose_v2:
+    project_src: "{{ mcp_semgrep_dir }}"
+    files:
+      - docker-compose.mcp-semgrep.yml
+    state: present
+    pull: "{{ mcp_compose_pull_policy }}"
+  become: true
+  become_user: "{{ mcp_owner }}"
+
+- name: Enable lingering for {{ mcp_owner }}
+  ansible.builtin.command: "loginctl enable-linger {{ mcp_owner }}"
+  when: mcp_enable_lingering | bool
+  changed_when: false
+  failed_when: false
+  become: true
+
+- name: Ensure systemd user directory exists
+  ansible.builtin.file:
+    path: "~/.config/systemd/user"
+    state: directory
+    mode: "0755"
+  become: true
+  become_user: "{{ mcp_owner }}"
+
+- name: Install systemd user service for semgrep MCP
+  ansible.builtin.template:
+    src: mcp-semgrep.service.j2
+    dest: "~/.config/systemd/user/{{ mcp_semgrep_service_name }}"
+    mode: "0644"
+  become: true
+  become_user: "{{ mcp_owner }}"
+  notify: reload systemd user
+
+- name: Enable and start semgrep MCP service
+  ansible.builtin.systemd:
+    name: "{{ mcp_semgrep_service_name }}"
+    scope: user
+    enabled: yes
+    daemon_reload: yes
+    state: started
+  become: true
+  become_user: "{{ mcp_owner }}"
+
+- name: Register semgrep MCP server for claude_code
+  ansible.builtin.set_fact:
+    mcp_servers_registered: "{{ mcp_servers_registered | default([]) + [mcp_semgrep_info] }}"
+  vars:
+    mcp_semgrep_info:
+      name: "semgrep"
+      type: "stdio"
+      command: "docker"
+      args:
+        - "exec"
+        - "-i"
+        - "{{ mcp_semgrep_container_name }}"
+        - "npx"
+        - "{{ mcp_semgrep_npm_package }}"
+      env: "{{ {'SEMGREP_API_TOKEN': semgrep_api_token} if semgrep_api_token else {} }}"
+  delegate_to: localhost
+  delegate_facts: true
+```
+
+### FILE: roles/mcp_semgrep/handlers/main.yml ===
+```yaml
+---
+# handlers/main.yml for mcp_semgrep role
+
+- name: restart mcp semgrep
+  community.docker.docker_compose_v2:
+    project_src: "{{ mcp_semgrep_dir }}"
+    files:
+      - docker-compose.mcp-semgrep.yml
+    state: restarted
+  become: true
+  become_user: "{{ mcp_owner }}"
+  listen: "restart mcp semgrep"
+
+- name: reload systemd user
+  ansible.builtin.systemd:
+    daemon_reload: yes
+    scope: user
+  become: true
+  become_user: "{{ mcp_owner }}"
+  listen: "reload systemd user"
+```
+
+### FILE: roles/apparmor/defaults/main.yml ===
+```yaml
+---
+apparmor_user: "{{ lookup('env', 'USER') }}"
+esp_mount: /boot
+apparmor_params:
+  - "lsm=landlock,lockdown,yama,integrity,apparmor,bpf"
+  - "apparmor=1"
+  - "security=apparmor"
+```
+
+### FILE: roles/apparmor/templates/apparmor-notify.desktop.j2 ===
+```text
+[Desktop Entry]
+Type=Application
+Name=AppArmor Notify
+Comment=Receive on screen notifications of AppArmor denials
+TryExec=aa-notify
+Exec=aa-notify -p -s 1 -w 60 -f /var/log/audit/audit.log
+NoDisplay=true
+```
+
+### FILE: roles/apparmor/tasks/main.yml ===
+```yaml
+---
+- name: Install required packages for AppArmor and related tools
+  community.general.pacman:
+    name:
+      - apparmor
+      - audit
+      - python-notify2
+      - python-psutil
+    state: present
+
+- name: Create audit group if it does not exist
+  ansible.builtin.group:
+    name: audit
+    system: true
+
+- name: Add user to audit group
+  ansible.builtin.user:
+    name: "{{ apparmor_user }}"
+    groups: audit
+    append: true
+
+- name: Configure auditd to use audit group for log access
+  ansible.builtin.lineinfile:
+    path: /etc/audit/auditd.conf
+    regexp: '^log_group\s*='
+    line: 'log_group = audit'
+    state: present
+
+- name: Enable and start auditd service
+  ansible.builtin.systemd:
+    name: auditd.service
+    enabled: true
+    state: started
+
+- name: Enable and start apparmor service
+  ansible.builtin.systemd:
+    name: apparmor.service
+    enabled: true
+    state: started
+
+- name: Enable profile caching in AppArmor parser configuration
+  ansible.builtin.replace:
+    path: /etc/apparmor/parser.conf
+    regexp: '^#write-cache$'
+    replace: 'write-cache'
+
+- name: Detect if using UKI
+  ansible.builtin.command: bootctl status
+  register: boot_status
+  changed_when: false
+
+- name: Set fact for UKI usage
+  ansible.builtin.set_fact:
+    is_uki: "{{ 'systemd-stub' in boot_status.stdout }}"
+
+- name: Set dummy current_options_list for traditional skip
+  ansible.builtin.set_fact:
+    current_options_list: {'results': []}
+  when: is_uki
+
+- name: Handle traditional boot entries if not UKI
+  block:
+    - name: Set entry directory
+      ansible.builtin.set_fact:
+        entry_dir: "{{ esp_mount }}/loader/entries"
+
+    - name: Find all boot entry files
+      ansible.builtin.find:
+        paths: "{{ entry_dir }}"
+        patterns: '*.conf'
+        file_type: file
+      register: boot_entries
+
+    - name: Fail if no boot entry files found
+      ansible.builtin.fail:
+        msg: "No boot entry files found in {{ entry_dir }}. Verify systemd-boot configuration and esp_mount variable."
+      when: boot_entries.matched == 0
+
+    - name: Get current kernel options from each systemd-boot entry
+      ansible.builtin.command: grep '^options' {{ item.path }}
+      loop: "{{ boot_entries.files }}"
+      register: current_options_list
+      changed_when: false
+      ignore_errors: true
+
+    - name: Append LSM kernel parameter to each entry if not present
+      ansible.builtin.lineinfile:
+        path: "{{ item.item.path }}"
+        regexp: '^options'
+        line: "options {{ (item.stdout | regex_replace('^options\\s*', '')) + ' lsm=landlock,lockdown,yama,integrity,apparmor,bpf' if item.stdout else 'lsm=landlock,lockdown,yama,integrity,apparmor,bpf' }}"
+        state: present
+        create: false
+      loop: "{{ current_options_list.results }}"
+      loop_control:
+        label: "{{ item.item.path }} - LSM"
+      when: '"lsm=landlock,lockdown,yama,integrity,apparmor,bpf" not in item.stdout'
+      notify: Reboot system
+
+    - name: Append apparmor=1 kernel parameter to each entry if not present
+      ansible.builtin.lineinfile:
+        path: "{{ item.item.path }}"
+        regexp: '^options'
+        line: "options {{ (item.stdout | regex_replace('^options\\s*', '')) + ' apparmor=1' if item.stdout else 'apparmor=1' }}"
+        state: present
+        create: false
+      loop: "{{ current_options_list.results }}"
+      loop_control:
+        label: "{{ item.item.path }} - apparmor=1"
+      when: '"apparmor=1" not in item.stdout'
+      notify: Reboot system
+
+    - name: Append security=apparmor kernel parameter to each entry if not present
+      ansible.builtin.lineinfile:
+        path: "{{ item.item.path }}"
+        regexp: '^options'
+        line: "options {{ (item.stdout | regex_replace('^options\\s*', '')) + ' security=apparmor' if item.stdout else 'security=apparmor' }}"
+        state: present
+        create: false
+      loop: "{{ current_options_list.results }}"
+      loop_control:
+        label: "{{ item.item.path }} - security=apparmor"
+      when: '"security=apparmor" not in item.stdout'
+      notify: Reboot system
+  when: not is_uki
+
+- name: Handle UKI kernel parameters if using UKI
+  block:
+    - name: Read current kernel cmdline
+      ansible.builtin.slurp:
+        src: /etc/kernel/cmdline
+      register: current_cmdline_slurp
+      ignore_errors: true
+
+    - name: Set current cmdline fact
+      ansible.builtin.set_fact:
+        current_cmdline: "{{ current_cmdline_slurp.content | b64decode | default('') | trim }}"
+
+    - name: Set new cmdline with missing AppArmor parameters
+      ansible.builtin.set_fact:
+        new_cmdline: "{{ current_cmdline + ' ' + (apparmor_params | reject('in', current_cmdline.split()) | join(' ')) | trim }}"
+
+    - name: Write updated kernel cmdline if changed
+      ansible.builtin.copy:
+        content: "{{ new_cmdline }}\n"
+        dest: /etc/kernel/cmdline
+        mode: '0644'
+      when: new_cmdline != current_cmdline
+      notify: Reboot system
+
+    - name: Regenerate UKI if cmdline changed
+      ansible.builtin.command: mkinitcpio -P
+      when: new_cmdline != current_cmdline
+      notify: Reboot system
+  when: is_uki
+
+- name: Set user home directory
+  ansible.builtin.set_fact:
+    user_home: "{{ '/root' if apparmor_user == 'root' else '/home/' + apparmor_user }}"
+
+- name: Ensure autostart directory exists
+  ansible.builtin.file:
+    path: "{{ user_home }}/.config/autostart"
+    state: directory
+    owner: "{{ apparmor_user }}"
+    group: "{{ apparmor_user }}"
+    mode: '0755'
+
+- name: Deploy AppArmor notify desktop file for notifications
+  ansible.builtin.template:
+    src: apparmor-notify.desktop.j2
+    dest: "{{ user_home }}/.config/autostart/apparmor-notify.desktop"
+    owner: "{{ apparmor_user }}"
+    group: "{{ apparmor_user }}"
+    mode: '0644'
+```
+
+### FILE: roles/apparmor/handlers/main.yml ===
+```yaml
+---
+- name: Reboot system
+  ansible.builtin.debug:
+    msg: "Kernel parameters have been updated. Please reboot the system manually to apply the changes and activate AppArmor fully."
+```
+
+### FILE: roles/mcp_ref/defaults/main.yml ===
+```yaml
+---
+# defaults/main.yml for mcp_ref role
+
+# Owner and directories
+mcp_owner: "{{ target_user | default(ansible_user_id) }}"
+mcp_base_dir: "/home/{{ mcp_owner }}/.config"
+mcp_ref_dir: "{{ mcp_base_dir }}/mcp-ref"
+
+# Docker configuration
+mcp_ref_container_name: "mcp-ref"
+mcp_ref_image: "node:20-alpine"
+mcp_network_mode: "bridge"
+mcp_docker_network: "mcp-network"
+
+# NPM package (using Context7 for documentation)
+mcp_ref_npm_package: "@upstash/context7-mcp"
+
+# Systemd configuration
+mcp_ref_service_name: "mcp-ref.service"
+mcp_enable_lingering: true
+mcp_compose_pull_policy: "missing"
+```
+
+### FILE: roles/mcp_ref/templates/docker-compose.mcp-ref.yml.j2 ===
+```text
+# docker-compose.mcp-ref.yml.j2
+# Managed by Ansible
+
+services:
+  {{ mcp_ref_container_name }}:
+    image: {{ mcp_ref_image }}
+    container_name: {{ mcp_ref_container_name }}
+    restart: unless-stopped
+    working_dir: /app
+    command: sh -c "npm install -g {{ mcp_ref_npm_package }} && exec npx {{ mcp_ref_npm_package }}"
+    stdin_open: true
+    tty: true
+{% if mcp_network_mode == 'host' %}
+    network_mode: host
+{% else %}
+    networks:
+      - {{ mcp_docker_network }}
+{% endif %}
+
+{% if mcp_network_mode != 'host' %}
+networks:
+  {{ mcp_docker_network }}:
+    external: true
+{% endif %}
+```
+
+### FILE: roles/mcp_ref/templates/mcp-ref.service.j2 ===
+```text
+[Unit]
+Description=MCP Ref Documentation Server
+After=network-online.target docker.service
+Wants=network-online.target
+
+[Service]
+Type=exec
+RemainAfterExit=yes
+WorkingDirectory={{ mcp_ref_dir }}
+ExecStart=/usr/bin/docker compose --ansi never --progress plain \
+  --project-directory {{ mcp_ref_dir }} \
+  --file docker-compose.mcp-ref.yml up -d
+ExecStop=/usr/bin/docker compose --ansi never --progress plain \
+  --project-directory {{ mcp_ref_dir }} \
+  --file docker-compose.mcp-ref.yml down
+Restart=on-failure
+RestartSec=3
+
+[Install]
+WantedBy=default.target
+```
+
+### FILE: roles/mcp_ref/tasks/main.yml ===
+```yaml
+---
+# tasks/main.yml for mcp_ref role
+
+- name: Ensure MCP ref directory exists
+  ansible.builtin.file:
+    path: "{{ mcp_ref_dir }}"
+    state: directory
+    mode: "0755"
+  become: true
+  become_user: "{{ mcp_owner }}"
+
+- name: Create Docker network for MCP servers
+  community.docker.docker_network:
+    name: "{{ mcp_docker_network }}"
+    state: present
+  become: true
+
+- name: Deploy Docker Compose file for ref MCP
+  ansible.builtin.template:
+    src: docker-compose.mcp-ref.yml.j2
+    dest: "{{ mcp_ref_dir }}/docker-compose.mcp-ref.yml"
+    mode: "0644"
+  become: true
+  become_user: "{{ mcp_owner }}"
+  notify: restart mcp ref
+
+- name: Ensure ref MCP service is running
+  community.docker.docker_compose_v2:
+    project_src: "{{ mcp_ref_dir }}"
+    files:
+      - docker-compose.mcp-ref.yml
+    state: present
+    pull: "{{ mcp_compose_pull_policy }}"
+  become: true
+  become_user: "{{ mcp_owner }}"
+
+- name: Enable lingering for {{ mcp_owner }}
+  ansible.builtin.command: "loginctl enable-linger {{ mcp_owner }}"
+  when: mcp_enable_lingering | bool
+  changed_when: false
+  failed_when: false
+  become: true
+
+- name: Ensure systemd user directory exists
+  ansible.builtin.file:
+    path: "~/.config/systemd/user"
+    state: directory
+    mode: "0755"
+  become: true
+  become_user: "{{ mcp_owner }}"
+
+- name: Install systemd user service for ref MCP
+  ansible.builtin.template:
+    src: mcp-ref.service.j2
+    dest: "~/.config/systemd/user/{{ mcp_ref_service_name }}"
+    mode: "0644"
+  become: true
+  become_user: "{{ mcp_owner }}"
+  notify: reload systemd user
+
+- name: Enable and start ref MCP service
+  ansible.builtin.systemd:
+    name: "{{ mcp_ref_service_name }}"
+    scope: user
+    enabled: yes
+    daemon_reload: yes
+    state: started
+  become: true
+  become_user: "{{ mcp_owner }}"
+
+- name: Register ref MCP server for claude_code
+  ansible.builtin.set_fact:
+    mcp_servers_registered: "{{ mcp_servers_registered | default([]) + [mcp_ref_info] }}"
+  vars:
+    mcp_ref_info:
+      name: "ref"
+      type: "stdio"
+      command: "docker"
+      args:
+        - "exec"
+        - "-i"
+        - "{{ mcp_ref_container_name }}"
+        - "npx"
+        - "{{ mcp_ref_npm_package }}"
+      env: {}
+  delegate_to: localhost
+  delegate_facts: true
+```
+
+### FILE: roles/mcp_ref/handlers/main.yml ===
+```yaml
+---
+# handlers/main.yml for mcp_ref role
+
+- name: restart mcp ref
+  community.docker.docker_compose_v2:
+    project_src: "{{ mcp_ref_dir }}"
+    files:
+      - docker-compose.mcp-ref.yml
+    state: restarted
+  become: true
+  become_user: "{{ mcp_owner }}"
+  listen: "restart mcp ref"
+
+- name: reload systemd user
+  ansible.builtin.systemd:
+    daemon_reload: yes
+    scope: user
+  become: true
+  become_user: "{{ mcp_owner }}"
+  listen: "reload systemd user"
+```
+
+### FILE: roles/folders/tasks/main.yml ===
+```yaml
+# Task for user-owned directories
+- name: Create user-owned directories
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    state: directory
+    mode: "0755"
+  loop: "{{ create_folders | selectattr('path', 'match', '^/home/') | list }}"
+  become: true
+  become_user: "{{ target_user }}"
+  tags: ["folders"]
+
+# Task for system directories
+- name: Create system directories
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    state: directory
+    owner: root
+    mode: "0755"
+  loop: "{{ create_folders | selectattr('path', 'match', '^/usr/|^/etc/') | list }}"
+  become: true
+  tags: ["folders"]
+```
+
+### FILE: roles/tmux/tasks/main.yml ===
+```yaml
+- name: Set up tmux package manager
+  ansible.builtin.git:
+    repo: "https://github.com/tmux-plugins/tpm.git"
+    dest: "/home/{{ target_user }}/.tmux/plugins/tpm"
+    force: no
+  become: true
+  become_user: "{{ target_user }}"
+  tags: ['workstation-arch','workstation-debian', 'tmux', 'workstation-fedora']
+```
+
+### FILE: roles/audio/tasks/main.yml ===
+```yaml
+---
+- name: Enable and start PipeWire service for the user
+  ansible.builtin.systemd:
+    name: pipewire.service
+    state: started
+    enabled: true
+    scope: user
+  become: false
+
+- name: Enable and start PipeWire Pulse service for the user
+  ansible.builtin.systemd:
+    name: pipewire-pulse.service
+    state: started
+    enabled: true
+    scope: user
+  become: false
+
+- name: Enable and start WirePlumber service for the user
+  ansible.builtin.systemd:
+    name: wireplumber.service
+    state: started
+    enabled: true
+    scope: user
+  become: false
+```
+
+### FILE: roles/docker_engine/defaults/main.yml ===
+```yaml
+---
+# Users to add to the docker group (append, non-destructive)
+docker_users:
+  - "{{ ansible_user_id }}"
+
+# Manage /etc/docker/daemon.json (merge-safe)
+docker_manage_daemon_json: true
+
+# Enable BuildKit (required by Dockerfiles using RUN --mount)
+docker_enable_buildkit: true
+
+# Extra daemon.json content you want to merge in (optional)
+# Example:
+# docker_daemon_json_extra:
+#   log-driver: "json-file"
+#   log-opts:
+#     max-size: "10m"
+#     max-file: "3"
+docker_daemon_json_extra: {}
+```
+
+### FILE: roles/docker_engine/tasks/main.yml ===
+```yaml
+---
+# 1) Packages for Docker + the Ansible docker modules on Arch
+- name: Install Docker and dependencies (Arch)
+  become: yes
+  pacman:
+    name:
+      - docker
+      - docker-compose        # compose v2; fine on Arch
+      - docker-buildx         # <-- Buildx plugin (required for BuildKit builds)
+      - python
+      - python-pip
+      - python-requests       # required by community.docker
+      - python-docker         # Docker SDK for Python
+    state: present
+    update_cache: yes
+
+# 2) Ensure docker service enabled/started
+- name: Enable & start docker
+  become: yes
+  service:
+    name: docker
+    enabled: true
+    state: started
+
+# 3) Ensure /etc/docker exists
+- name: Ensure /etc/docker exists
+  become: yes
+  file:
+    path: /etc/docker
+    state: directory
+    mode: "0755"
+
+# 4) Optionally manage daemon.json (merge-safe)
+- name: Stat existing /etc/docker/daemon.json
+  become: yes
+  stat:
+    path: /etc/docker/daemon.json
+  register: docker_daemon_json_stat
+  when: docker_manage_daemon_json
+
+- name: Read existing /etc/docker/daemon.json (if present)
+  become: yes
+  slurp:
+    path: /etc/docker/daemon.json
+  register: docker_daemon_json_slurp
+  when:
+    - docker_manage_daemon_json
+    - docker_daemon_json_stat.stat.exists
+
+- name: Build target daemon.json dict
+  become: yes
+  set_fact:
+    docker_daemon_json_target: >-
+      {{
+        (
+          (docker_daemon_json_slurp.content | b64decode | from_json)
+          if docker_daemon_json_stat.stat.exists
+          else {}
+        )
+        | combine(
+            {"features": {"buildkit": docker_enable_buildkit|bool}},
+            recursive=True
+          )
+        | combine(docker_daemon_json_extra, recursive=True)
+      }}
+  when: docker_manage_daemon_json
+
+- name: Write /etc/docker/daemon.json (merge-safe)
+  become: yes
+  copy:
+    dest: /etc/docker/daemon.json
+    mode: "0644"
+    content: "{{ docker_daemon_json_target | to_nice_json }}"
+  notify: restart docker
+  when: docker_manage_daemon_json
+
+# Ensure handlers run right now so other roles see the new daemon settings
+- name: Restart docker immediately if daemon.json changed
+  meta: flush_handlers
+
+# 5) Ensure users are in the docker group (append, idempotent)
+- name: Ensure docker group exists
+  become: yes
+  group:
+    name: docker
+    state: present
+
+- name: Add users to docker group
+  become: yes
+  user:
+    name: "{{ item }}"
+    groups: docker
+    append: true
+  loop: "{{ docker_users | default([]) }}"
+```
+
+### FILE: roles/docker_engine/handlers/main.yml ===
+```yaml
+---
+- name: restart docker
+  become: yes
+  service:
+    name: docker
+    state: restarted
+```
+
+### FILE: roles/permissions/tasks/main.yml ===
+```yaml
+- name: Debug before permissions
+  debug:
+    msg: "{{ before_permissions.stdout | default('Directory not found') }}"
+
+- name: Ensure powerlevel10k theme directory has execute permissions
+  file:
+    path: /usr/share/zsh-theme-powerlevel10k
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+  become: yes
+  tags: ["permissions"]
+
+- name: Check current permissions after
+  command: ls -ld /usr/share/zsh-theme-powerlevel10k
+  register: after_permissions
+  become: yes
+
+- name: Debug after permissions
+  debug:
+    msg: "{{ after_permissions.stdout }}"
+
+- name: Grant reboot permission without sudo password
+  lineinfile:
+    path: /etc/sudoers.d/reboot-permissions
+    create: yes
+    owner: root
+    group: root
+    mode: "0440"
+    line: '{{ ansible_user_id }} ALL=(ALL) NOPASSWD: /sbin/reboot'
+    validate: 'visudo -cf %s'
+  become: yes
+  tags: ["permissions"]
+```
+
+### FILE: roles/hyprland/tasks/main.yml ===
+```yaml
+---
+- name: Display instructions to start Hyprland
+  debug:
+    msg: |
+      Hyprland setup is complete. To start it:
+      1. Source your shell config: 'source ~/.zshrc' (or restart your shell).
+      2. Switch to a TTY with Ctrl+Alt+F2.
+      3. Run 'Hyprland'.
+      If it doesn’t start, check logs in '~/.config/hypr/hyprland.log' or the console output.
+```
+
+### FILE: roles/aur-packages/tasks/main.yml ===
+```yaml
+---
+- name: Backup original sudoers file for pacman configuration
+  ansible.builtin.copy:
+    src: /etc/sudoers
+    dest: /etc/sudoers.pacman_backup
+    owner: root
+    mode: "0644"
+    remote_src: yes
+  become: true
+  tags: ['aur']
+
+- name: Allow target user to run pacman without password
+  lineinfile:
+    path: /etc/sudoers
+    line: '{{ target_user }} ALL=(ALL) NOPASSWD: /usr/bin/pacman *'
+    validate: /usr/sbin/visudo -cf %s
+  become: true
+  tags: ['aur']
+
+- name: Install packages from aur_installed_packages list
+  kewlfft.aur.aur:
+    name: "{{ item }}"
+    use: paru
+    state: present
+  with_items: "{{ aur_installed_packages }}"
+  become: true
+  become_user: "{{ target_user }}"
+  when: aur_installed_packages is defined
+  tags: ['aur']
+
+- name: Update repo packages first (faster and reduces AUR work)
+  community.general.pacman:
+    update_cache: true
+    upgrade: true
+  become: true
+
+- name: Update AUR packages (retry on transient AUR RPC errors)
+  ansible.builtin.command:
+    cmd: "paru -Sua --noconfirm --skipreview"
+  become: true
+  become_user: "{{ target_user }}"
+  register: paru_upgrade
+  retries: 5
+  delay: 10
+  until: paru_upgrade.rc == 0 or
+         ('there is nothing to do' in (paru_upgrade.stdout | default('')))
+  failed_when: >
+    (paru_upgrade.rc != 0)
+    and ('there is nothing to do' not in (paru_upgrade.stdout | default('')))
+    and ('Connection reset by peer' not in (paru_upgrade.stderr | default('')))
+    and ('timed out' not in (paru_upgrade.stderr | default('')))
+    and ('Temporary failure' not in (paru_upgrade.stderr | default('')))
+  changed_when: "'there is nothing to do' not in (paru_upgrade.stdout | default(''))"
+
+- name: Revert sudoers after pacman configuration
+  ansible.builtin.copy:
+    src: /etc/sudoers.pacman_backup
+    dest: /etc/sudoers
+    owner: root
+    mode: "0644"
+    remote_src: yes
+    validate: /usr/sbin/visudo -cf %s
+  become: true
+  tags: ['aur']
+```
+
+### FILE: roles/nvim/tasks/main.yml ===
+```yaml
+- name: Check if ~/.config/nvim exists
+  ansible.builtin.stat:
+    path: "~/.config/nvim"
+  register: nvim_dir
+  tags: ['dotfiles', 'nvim']
+  become: true
+  become_user: "{{ target_user }}"
+
+- name: Install LazyVim Neovim Setup
+  ansible.builtin.git:
+    repo: https://github.com/LazyVim/starter
+    dest: ~/.config/nvim
+    version: main
+    force: yes
+  tags: ['dotfiles', 'nvim']
+  become: true
+  become_user: "{{ target_user }}"
+  when: nvim_dir.stat.exists == False
+  
+# --- Python provider venv for Neovim -----------------------------------------
+
+- name: Ensure ~/.venvs exists
+  ansible.builtin.file:
+    path: "/home/{{ target_user }}/.venvs"
+    state: directory
+    owner: "{{ target_user }}"
+    group: "{{ target_user }}"
+    mode: "0755"
+  tags: ['dotfiles', 'nvim']
+
+- name: Create Neovim Python venv if missing
+  ansible.builtin.command: "python -m venv /home/{{ target_user }}/.venvs/nvim"
+  args:
+    creates: "/home/{{ target_user }}/.venvs/nvim/bin/python"
+  become: true
+  become_user: "{{ target_user }}"
+  tags: ['dotfiles', 'nvim']
+
+- name: Ensure pip is present in the venv (bootstrap with ensurepip)
+  ansible.builtin.command: "/home/{{ target_user }}/.venvs/nvim/bin/python -m ensurepip --upgrade"
+  args:
+    creates: "/home/{{ target_user }}/.venvs/nvim/bin/pip"
+  become: true
+  become_user: "{{ target_user }}"
+  tags: ['dotfiles', 'nvim']
+
+- name: Upgrade pip and install pynvim + debugpy in the venv
+  ansible.builtin.pip:
+    name:
+      - pip
+      - pynvim
+      - debugpy
+    state: latest
+    virtualenv: "/home/{{ target_user }}/.venvs/nvim"
+    virtualenv_command: "python -m venv"
+  become: true
+  become_user: "{{ target_user }}"
+  tags: ['dotfiles', 'nvim']
+```
+
+### FILE: roles/sddm/tasks/main.yml ===
+```yaml
+- name: Enable SDDM service
+  ansible.builtin.service:
+    name: sddm
+    enabled: true
+  become: true
+  tags: ["sddm"]
+```
+
+### FILE: roles/pacman/tasks/main.yml ===
+```yaml
+- name: Install reflector for mirrorlist management
+  ansible.builtin.pacman:
+    name: reflector
+    state: present
+  tags: ['pacman', 'workstation-arch', 'package']
+
+- name: Ensure mirrorlist is not empty
+  ansible.builtin.stat:
+    path: /etc/pacman.d/mirrorlist
+  register: mirrorlist_stat
+  tags: ['pacman', 'workstation-arch', 'package']
+
+- name: Populate mirrorlist if empty or missing
+  ansible.builtin.command:
+    cmd: reflector --latest 10 --sort rate --save /etc/pacman.d/mirrorlist
+  when: ansible_distribution == 'Archlinux' and (not mirrorlist_stat.stat.exists or mirrorlist_stat.stat.size == 0)
+  tags: ['pacman', 'workstation-arch', 'package']
+
+- name: Ensure multilib repository is enabled
+  ansible.builtin.blockinfile:
+    path: /etc/pacman.conf
+    block: |
+      [multilib]
+      Include = /etc/pacman.d/mirrorlist
+    marker: "# {mark} ANSIBLE MANAGED BLOCK - multilib"
+    state: present
+  tags: ['pacman', 'workstation-arch', 'package']
+
+- name: Initialize keyring
+  ansible.builtin.command:
+    cmd: pacman-key --init
+    creates: /etc/pacman.d/gnupg/gpg.conf
+  tags: ['pacman', 'workstation-arch', 'package']
+
+- name: Populate Arch Linux keyring
+  ansible.builtin.command:
+    cmd: pacman-key --populate archlinux
+    creates: /etc/pacman.d/gnupg/archlinux.gpg
+  tags: ['pacman', 'workstation-arch', 'package']
+
+- name: Update package database
+  ansible.builtin.pacman:
+    update_cache: true
+  tags: ['pacman', 'workstation-arch', 'package']
+
+- name: Install base-devel and git for AUR support
+  ansible.builtin.pacman:
+    name:
+      - base-devel
+      - git
+    state: present
+  tags: ['pacman', 'workstation-arch', 'package']
+
+- name: Install specified packages
+  ansible.builtin.pacman:
+    name: "{{ pacman_installed_packages }}"
+    state: present
+  when: pacman_installed_packages is defined and pacman_installed_packages | length > 0
+  tags: ['pacman', 'workstation-arch', 'package']
+
+- name: Enable color
+  ansible.builtin.lineinfile:
+    path: /etc/pacman.conf
+    regexp: '^#Color$'
+    line: 'Color'
+  tags: ['pacman', 'workstation-arch', 'package']
+
+- name: Enable ParallelDownloads
+  ansible.builtin.lineinfile:
+    path: /etc/pacman.conf
+    regexp: '^#ParallelDownloads'
+    line: 'ParallelDownloads = 5'
+  tags: ['pacman', 'workstation-arch', 'package']
+```
+
+### FILE: roles/apt/tasks/main.yml ===
+```yaml
+# Update and upgrade all apt installed packages
+- name: Update and upgrade all installed packages
+  ansible.builtin.apt:
+    upgrade: yes
+    update_cache: yes
+  tags: ['apt', 'workstation-debian', 'package']
+
+# Remove unneed packages
+- name: Remove packages
+  ansible.builtin.apt:
+    name:  "{{ apt_removed_packages | join(', ') }}"
+    state: absent
+  tags: ['apt', 'workstation-debian', 'package']
+
+# Install / Check packages with apt
+# Using list of items variable: apt_installed_packages
+- name: anstall packages
+  ansible.builtin.apt:
+    pkg: "{{ apt_installed_packages }}"
+  tags: ['apt', 'workstation-debian', 'package']
+
+- name: Remove useless packages from the cache
+  ansible.builtin.apt:
+    autoclean: yes
+  tags: ['apt', 'workstation-debian', 'package']
+
+- name: Auto remove packages no longer required and delete their configuration files
+  ansible.builtin.apt:
+    autoremove: yes
+    purge: true    
+  tags: ['apt', 'workstation-debian', 'package']
+```
+
+### FILE: roles/claude_desktop_wayland/defaults/main.yml ===
+```yaml
+---
+# Who should get the override .desktop launcher?
+# We build this dynamically in tasks if you don't override it.
+# You can still override claude_desktop_users in host_vars if you ever want multiple users.
+claude_desktop_users: []
+
+# Directory where system desktop files live.
+claude_desktop_system_dir: "/usr/share/applications"
+
+# Patterns to match Claude's .desktop files.
+claude_desktop_patterns:
+  - "claude*.desktop"
+  - "Claude*.desktop"
+  - "claude-*.desktop"
+
+# The Exec= line we want: enforce Wayland rendering so text is sharp.
+claude_desktop_exec: >-
+  env ELECTRON_OZONE_PLATFORM_HINT=wayland OZONE_PLATFORM=wayland
+  XDG_CURRENT_DESKTOP=Hyprland GTK_USE_PORTAL=1
+  claude-desktop-native --ozone-platform=wayland
+  --enable-features=UseOzonePlatform,WaylandWindowDecorations,WaylandFractionalScaleV1
+  --enable-wayland-ime --force-device-scale-factor=1 %u
+
+
+# Optional map of per-file overrides:
+#   { "claude-desktop-native.desktop": "<custom Exec...>" }
+claude_desktop_per_file_exec: {}
+
+# Cosmetic rename in launchers
+claude_desktop_rename_entry: true
+claude_desktop_name_suffix: " (Wayland)"
+
+claude_desktop_icon_relative: "Pictures/icons/claude-logo2.png"
+```
+
+### FILE: roles/claude_desktop_wayland/tasks/main.yml ===
+```yaml
+---
+# 0. Work out which user we care about (henning) and their home (/home/henning).
+#    We derive from:
+#    - claude_desktop_users (if provided explicitly), else
+#    - target_user / dotfiles_home (from all.yml), else
+#    - ansible_user_id
+- name: Derive target user/home for Claude desktop override
+  ansible.builtin.set_fact:
+    _effective_user: >-
+      {{ (claude_desktop_users | length > 0)
+         | ternary(claude_desktop_users[0].name,
+                   (target_user | default(ansible_user_id))) }}
+    _effective_home: >-
+      {{ (claude_desktop_users | length > 0)
+         | ternary(claude_desktop_users[0].home,
+                   (dotfiles_home
+                    | default('/home/' + (target_user | default(ansible_user_id)))) ) }}
+
+# Also derive the full icon path we want to enforce in the .desktop file.
+- name: Derive icon path
+  ansible.builtin.set_fact:
+    _effective_icon_path: "{{ _effective_home }}/{{ claude_desktop_icon_relative }}"
+
+- name: Normalize claude_desktop_users list
+  ansible.builtin.set_fact:
+    _claude_users_normalized:
+      - name: "{{ _effective_user }}"
+        home: "{{ _effective_home }}"
+
+# 1. Find Claude desktop files shipped in /usr/share/applications
+- name: Gather Claude desktop entries in system directory
+  ansible.builtin.find:
+    paths: "{{ claude_desktop_system_dir }}"
+    patterns: "{{ claude_desktop_patterns }}"
+    file_type: file
+  register: _claude_desktop_found
+
+# 2. Flatten to just a list of absolute paths
+- name: Flatten found files
+  ansible.builtin.set_fact:
+    _claude_desktop_system_files: "{{ _claude_desktop_found.files | map(attribute='path') | list }}"
+
+# 3. Debug if none found
+- name: No Claude desktop files found (debug hint)
+  ansible.builtin.debug:
+    msg: >-
+      No system desktop entries found under {{ claude_desktop_system_dir }}
+      matching {{ claude_desktop_patterns }}. Nothing to override.
+  when: _claude_desktop_system_files | length == 0
+
+# 4. Ensure ~/.local/share/applications exists for the target user
+- name: Ensure per-user application dir exists
+  ansible.builtin.file:
+    path: "{{ item.home }}/.local/share/applications"
+    state: directory
+    mode: "0755"
+    owner: "{{ item.name }}"
+    group: "{{ item.name }}"
+  loop: "{{ _claude_users_normalized }}"
+
+# 5. Copy each system desktop file into the per-user override location
+- name: Copy each system desktop file to user override location
+  ansible.builtin.copy:
+    src: "{{ item.0 }}"
+    dest: "{{ item.1.home }}/.local/share/applications/{{ item.0 | basename }}"
+    mode: "0644"
+    owner: "{{ item.1.name }}"
+    group: "{{ item.1.name }}"
+    remote_src: true
+  loop: "{{ _claude_desktop_system_files | product(_claude_users_normalized) | list }}"
+  when: _claude_desktop_system_files | length > 0
+
+# 6. Rewrite Exec= line with Wayland flags
+- name: Patch Exec= in per-user desktop overrides (regex)
+  vars:
+    _src_base: "{{ item.0 | basename }}"
+    _dst_file: "{{ item.1.home }}/.local/share/applications/{{ _src_base }}"
+    _wanted_exec: "{{ claude_desktop_per_file_exec.get(_src_base, claude_desktop_exec) }}"
+  ansible.builtin.replace:
+    path: "{{ _dst_file }}"
+    regexp: '^Exec=.*$'
+    replace: "Exec={{ _wanted_exec }}"
+  loop: "{{ _claude_desktop_system_files | product(_claude_users_normalized) | list }}"
+  when: _claude_desktop_system_files | length > 0
+
+# 7. Set Icon= line to point at the user's custom icon
+#    (~/Pictures/icons/calude-icon2.png, resolved to an absolute path)
+- name: Patch Icon= in per-user desktop overrides
+  vars:
+    _src_base: "{{ item.0 | basename }}"
+    _dst_file: "{{ item.1.home }}/.local/share/applications/{{ _src_base }}"
+  ansible.builtin.replace:
+    path: "{{ _dst_file }}"
+    regexp: '^Icon=.*$'
+    replace: "Icon={{ _effective_icon_path }}"
+  loop: "{{ _claude_desktop_system_files | product(_claude_users_normalized) | list }}"
+  when: _claude_desktop_system_files | length > 0
+
+# 8. Ensure Name= exists (if missing)
+- name: Ensure Name= exists (if missing)
+  vars:
+    _src_base: "{{ item.0 | basename }}"
+    _dst_file: "{{ item.1.home }}/.local/share/applications/{{ _src_base }}"
+  ansible.builtin.lineinfile:
+    path: "{{ _dst_file }}"
+    regexp: '^Name='
+    line: "Name=Claude"
+    insertafter: '^\[Desktop Entry\]'
+    owner: "{{ item.1.name }}"
+    group: "{{ item.1.name }}"
+  loop: "{{ _claude_desktop_system_files | product(_claude_users_normalized) | list }}"
+  when:
+    - claude_desktop_rename_entry
+    - _claude_desktop_system_files | length > 0
+
+# 9. Add " (Wayland)" suffix to Name=
+- name: Add Wayland suffix to Name=
+  vars:
+    _src_base: "{{ item.0 | basename }}"
+    _dst_file: "{{ item.1.home }}/.local/share/applications/{{ _src_base }}"
+  ansible.builtin.replace:
+    path: "{{ _dst_file }}"
+    regexp: '^Name=(.*?)(\s*\(Wayland\))?$'
+    replace: "Name=\\1{{ claude_desktop_name_suffix }}"
+    owner: "{{ item.1.name }}"
+    group: "{{ item.1.name }}"
+  loop: "{{ _claude_desktop_system_files | product(_claude_users_normalized) | list }}"
+  when:
+    - claude_desktop_rename_entry
+    - _claude_desktop_system_files | length > 0
+```
+
+### FILE: roles/wireguard/defaults/main.yml ===
+```yaml
+---
+# Directory where WireGuard configs live
+wg_conf_dir: /etc/wireguard
+
+# Name of the interface (your config should be /etc/wireguard/{{ wg_interface }}.conf)
+wg_interface: wg0
+
+# Whether to try to enable/start the systemd unit (only if the config file exists)
+wg_enable_service: false
+
+# Create a placeholder config file (false by default so we don't commit secrets or mislead)
+wg_create_placeholder: false
+
+# File mode for actual config files you place later
+wg_config_mode: "0600"
+
+# Try to load the kernel module (safe on Arch; module is often built-in)
+wg_load_module: true
+
+# Install and use a dynamic nftables-based killswitch
+wg_killswitch_enable: true
+
+# Install convenience commands wg-on / wg-off
+wg_install_helpers: true
+
+# Optional: if you want to allow LAN egress even when the killswitch is active,
+# set a CIDR (like "192.168.0.0/16" or "10.0.0.0/8"). Leave empty to block LAN egress too.
+wg_killswitch_allow_lan_cidr: ""
+
+# DNS handling for wg-quick when your wg.conf includes DNS=
+#   - "auto"   : detect DNS= in the config; if present, install openresolv
+#   - "openresolv" : force-install openresolv
+#   - "systemd-resolved" : install systemd-resolvconf (you should also enable systemd-resolved)
+#   - "none"   : do nothing (only safe if your config has no DNS= lines)
+wg_dns_provider: "auto"
+```
+
+### FILE: roles/wireguard/tasks/main.yml ===
+```yaml
+---
+- name: Install WireGuard userspace tools
+  become: true
+  ansible.builtin.pacman:
+    name:
+      - wireguard-tools
+    state: present
+    update_cache: true
+
+- name: Ensure WireGuard config directory exists with strict permissions
+  become: true
+  ansible.builtin.file:
+    path: "{{ wg_conf_dir }}"
+    state: directory
+    owner: root
+    group: root
+    mode: "0700"
+
+- name: (Optional) create a placeholder config file (kept empty)
+  become: true
+  ansible.builtin.copy:
+    dest: "{{ wg_conf_dir }}/{{ wg_interface }}.conf"
+    content: |
+      # Placeholder created by Ansible. Put your real config here.
+      # NOTE: Do NOT commit your actual WireGuard config to version control.
+      # TIP: Add the following lines to enable the killswitch automatically:
+      # PostUp=/usr/local/lib/wireguard-killswitch-up.sh %i
+      # PostDown=/usr/local/lib/wireguard-killswitch-down.sh %i
+    owner: root
+    group: root
+    mode: "{{ wg_config_mode }}"
+    force: no
+  when: wg_create_placeholder | bool
+
+- name: Attempt to load the 'wireguard' kernel module (safe/no-fail if built-in)
+  become: true
+  ansible.builtin.command: modprobe wireguard
+  changed_when: false
+  failed_when: false
+  when: wg_load_module | bool
+
+# --- DNS provider handling for wg-quick (resolvconf requirement) ---
+
+- name: Stat interface config to check for DNS handling
+  become: true
+  ansible.builtin.stat:
+    path: "{{ wg_conf_dir }}/{{ wg_interface }}.conf"
+  register: wg_conf
+
+- name: Read interface config to detect DNS= lines
+  become: true
+  ansible.builtin.slurp:
+    path: "{{ wg_conf_dir }}/{{ wg_interface }}.conf"
+  register: wg_conf_content
+  when: wg_conf.stat.exists
+
+- name: Set fact whether DNS lines exist
+  ansible.builtin.set_fact:
+    wg_conf_has_dns: "{{ (wg_conf_content['content'] | b64decode).splitlines() | select('match', '^[[:space:]]*DNS[[:space:]]*=') | list | length > 0 }}"
+  when: wg_conf.stat.exists
+
+- name: Install DNS provider for wg-quick (auto/openresolv/systemd-resolved)
+  become: true
+  when: >
+    (wg_dns_provider == 'openresolv')
+    or (wg_dns_provider == 'systemd-resolved')
+    or (wg_dns_provider == 'auto' and wg_conf.stat.exists and wg_conf_has_dns)
+  block:
+    - name: Ensure openresolv is installed (chosen or auto)
+      ansible.builtin.pacman:
+        name: openresolv
+        state: present
+      when: wg_dns_provider in ['openresolv', 'auto']
+
+    - name: Ensure systemd-resolvconf is installed (explicitly chosen)
+      ansible.builtin.pacman:
+        name: systemd-resolvconf
+        state: present
+      when: wg_dns_provider == 'systemd-resolved'
+
+# --- Killswitch scripts and helpers ---
+
+- name: Install killswitch "up" script
+  become: true
+  ansible.builtin.copy:
+    dest: /usr/local/lib/wireguard-killswitch-up.sh
+    mode: "0755"
+    owner: root
+    group: root
+    content: |
+      #!/usr/bin/env bash
+      # Enable nftables killswitch for a WireGuard interface.
+      # Usage: wireguard-killswitch-up.sh <iface>   (iface defaults to wg0)
+      set -euo pipefail
+
+      IFACE="${1:-wg0}"
+      CONF="/etc/wireguard/${IFACE}.conf"
+
+      if [[ ! -f "$CONF" ]]; then
+        echo "WireGuard config not found: $CONF" >&2
+        exit 1
+      fi
+
+      ENDPOINT_LINE="$(awk -F'=' '/^[[:space:]]*Endpoint[[:space:]]*=/{gsub(/[[:space:]\r]/,"",$2); print $2}' "$CONF" | head -n1 || true)"
+      if [[ -z "${ENDPOINT_LINE:-}" ]]; then
+        echo "No Endpoint found in $CONF. Killswitch will block handshake unless LAN is allowed." >&2
+      fi
+
+      HOST=""
+      PORT=""
+      if [[ -n "${ENDPOINT_LINE:-}" ]]; then
+        HOST="${ENDPOINT_LINE%:*}"
+        PORT="${ENDPOINT_LINE##*:}"
+      fi
+
+      EP_IPv4=""
+      EP_IPv6=""
+      if [[ -n "${HOST:-}" ]]; then
+        while read -r ip _; do
+          if [[ "$ip" == *:* ]]; then
+            [[ -z "$EP_IPv6" ]] && EP_IPv6="$ip"
+          else
+            [[ -z "$EP_IPv4" ]] && EP_IPv4="$ip"
+          fi
+        done < <(getent ahosts "$HOST" || true)
+      fi
+
+      ALLOW_LAN_CIDR="{{ wg_killswitch_allow_lan_cidr | default('') }}"
+
+      NFT_SCRIPT="$(mktemp)"
+      trap 'rm -f "$NFT_SCRIPT"' EXIT
+
+      {
+        echo 'table inet wgks {'
+        echo '  chain output {'
+        echo '    type filter hook output priority 0; policy drop;'
+        echo '    iifname "lo" accept'
+        echo "    oifname \"${IFACE}\" accept"
+        echo '    ct state established,related accept'
+        if [[ -n "$EP_IPv4" && -n "${PORT:-}" ]]; then
+          echo "    ip daddr ${EP_IPv4} udp dport ${PORT} accept"
+        fi
+        if [[ -n "$EP_IPv6" && -n "${PORT:-}" ]]; then
+          echo "    ip6 daddr ${EP_IPv6} udp dport ${PORT} accept"
+        fi
+        if [[ -n "$ALLOW_LAN_CIDR" ]]; then
+          echo "    ip daddr ${ALLOW_LAN_CIDR} accept"
+        fi
+        echo '  }'
+        echo '}'
+      } > "$NFT_SCRIPT"
+
+      if nft list table inet wgks >/dev/null 2>&1; then
+        nft delete table inet wgks || true
+      fi
+      nft -f "$NFT_SCRIPT"
+
+      echo "Killswitch enabled (table inet wgks)."
+      nft list table inet wgks || true
+
+- name: Install killswitch "down" script
+  become: true
+  ansible.builtin.copy:
+    dest: /usr/local/lib/wireguard-killswitch-down.sh
+    mode: "0755"
+    owner: root
+    group: root
+    content: |
+      #!/usr/bin/env bash
+      set -euo pipefail
+      nft delete table inet wgks 2>/dev/null || true
+      echo "Killswitch disabled (table inet wgks removed)."
+
+- name: Install helper commands wg-on / wg-off
+  become: true
+  when: wg_install_helpers | bool
+  block:
+    - name: Install wg-on
+      ansible.builtin.copy:
+        dest: /usr/local/bin/wg-on
+        mode: "0755"
+        owner: root
+        group: root
+        content: |
+          #!/usr/bin/env bash
+          set -euo pipefail
+          IFACE="${1:-{{ wg_interface }}}"
+          systemctl start "wg-quick@${IFACE}"
+          systemctl enable "wg-quick@${IFACE}" >/dev/null 2>&1 || true
+          systemctl --no-pager --full status "wg-quick@${IFACE}" || true
+          echo "WireGuard ${IFACE} is ON (killswitch active)."
+
+    - name: Install wg-off
+      ansible.builtin.copy:
+        dest: /usr/local/bin/wg-off
+        mode: "0755"
+        owner: root
+        group: root
+        content: |
+          #!/usr/bin/env bash
+          set -euo pipefail
+          IFACE="${1:-{{ wg_interface }}}"
+          systemctl stop "wg-quick@${IFACE}" || true
+          systemctl disable "wg-quick@${IFACE}" >/dev/null 2>&1 || true
+          /usr/local/lib/wireguard-killswitch-down.sh || true
+          echo "WireGuard ${IFACE} is OFF (killswitch removed)."
+
+- name: Check if interface config exists
+  become: true
+  ansible.builtin.stat:
+    path: "{{ wg_conf_dir }}/{{ wg_interface }}.conf"
+  register: wg_conf_2
+
+- name: Enable wg-quick@{{ wg_interface }} (only if config exists and requested)
+  become: true
+  ansible.builtin.systemd:
+    name: "wg-quick@{{ wg_interface }}"
+    enabled: true
+  when:
+    - wg_enable_service | bool
+    - wg_conf_2.stat.exists
+
+- name: Start (or restart) wg-quick@{{ wg_interface }} (only if config exists and requested)
+  become: true
+  ansible.builtin.systemd:
+    name: "wg-quick@{{ wg_interface }}"
+    state: restarted
+  when:
+    - wg_enable_service | bool
+    - wg_conf_2.stat.exists
+```
+
+### FILE: .claude/settings.local.json ===
+```json
+{
+  "permissions": {
+    "allow": [
+      "Bash(claude mcp list:*)",
+      "Bash(claude mcp)",
+      "mcp__filesystem__list_allowed_directories",
+      "mcp__filesystem__directory_tree",
+      "mcp__filesystem__list_directory",
+      "mcp__filesystem__read_text_file"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
+```
+
+--- END OF DUMP ---
+109 files processed, 158074 bytes total source‑code size.
+
+## JSON manifest (for downstream indexing)
+```json
+[
+  {
+    "path": "fedora.yml",
+    "lines": 13,
+    "sha256": "138995bd5650121e83450182fc58011147f31434bd7879c6e598eaf8157986d4"
+  },
+  {
+    "path": "arch.yml",
+    "lines": 72,
+    "sha256": "5492f5a3e99657b969864f2f65b613649bf624dd5e3bcdd42d9b59a2dd54afc5"
+  },
+  {
+    "path": "ansible.cfg",
+    "lines": 5,
+    "sha256": "df800739cb1e210d74297eab2dbe2028cd141ad477aeb8efc2e191628986e841"
+  },
+  {
+    "path": "macos.yml",
+    "lines": 13,
+    "sha256": "ed345095ea8e4129517c3a550af8a7fe7563e1df2711877e8e5df28cb3c3ab3a"
+  },
+  {
+    "path": "requirements-arch.yml",
+    "lines": 5,
+    "sha256": "07f9438f4d0db3f352676d55b9b95096951871eb56a5d66a5678c77cf80312d7"
+  },
+  {
+    "path": "bootstrap.sh",
+    "lines": 121,
+    "sha256": "747960b42e55598e622c43b8c36b5737e9801bdcbb74a18a493af5da87fb3dac"
+  },
+  {
+    "path": "inventory",
+    "lines": 12,
+    "sha256": "6ac3234338b6df0040dfd64713081e4c5a90af999eefd7d28d1e1c5b8f122a0f"
+  },
+  {
+    "path": "requirements-common.yml",
+    "lines": 4,
+    "sha256": "abe3c216248da5912e4e477eaab690b7425fe8b3c145e3b5402114d4c7ab87dc"
+  },
+  {
+    "path": "debian.yml",
+    "lines": 13,
+    "sha256": "073cb5cb865f1a74b2a621ebdcad3ff770a1f36594c2aabeccdc409201ae99ae"
+  },
+  {
+    "path": "rename.sh",
+    "lines": 3,
+    "sha256": "6280a6828776a3b46116caca6dfe8ebebc220295960b295720f8352eb233354d"
+  },
+  {
+    "path": ".claude.md",
+    "lines": 286,
+    "sha256": "492b32d412f7e6301de2adaa8b26798026eb7be655af46047bef829b8f4a3aec"
+  },
+  {
+    "path": ".gitignore",
+    "lines": 5,
+    "sha256": "05c61857909765018b58e128fe713bd9ce3b03655a27c7345c37917f4306e0b6"
+  },
+  {
+    "path": "README.md",
+    "lines": 19,
+    "sha256": "34fa6007dca29478949da1a53a82fbc5be3b33e0f8a2c2119ac82c130f4693e7"
+  },
+  {
+    "path": "host_vars/debian-config.yml",
+    "lines": 15,
+    "sha256": "11d04ecdbf4f19d9c813f9fdeb1b50e60a1802b059a8cc2603bc124723a6b5a2"
+  },
+  {
+    "path": "host_vars/fedora-config.yml",
+    "lines": 16,
+    "sha256": "6461d486135932bb6f279e562bba0eb1ac47f7392210998a18616318fe1928f4"
+  },
+  {
+    "path": "host_vars/arch-config.yml",
+    "lines": 281,
+    "sha256": "d17f11ed1f897090c9646ff2aab6cc2afd7ad00883c4b1d7e1f0733a99196628"
+  },
+  {
+    "path": "host_vars/macos-config.yml",
+    "lines": 15,
+    "sha256": "3a341bb9ef00791b97e926288a22d18da8128a12681ad396aa70ab709061db45"
+  },
+  {
+    "path": "group_vars/all.yml",
+    "lines": 25,
+    "sha256": "efffeb56c7ffe9b2d12c4b045356c97bb00800b0b7477d7804cbb119e8a44ba2"
+  },
+  {
+    "path": "roles/thunderbird_headless/defaults/main.yml",
+    "lines": 35,
+    "sha256": "8c02ab6329d4b22bdc61ea9d0a4d8b10baff4b97c8d05df6b5c53873e6cd88f5"
+  },
+  {
+    "path": "roles/thunderbird_headless/meta/main.yml",
+    "lines": 12,
+    "sha256": "ca07139bfb0199cffe571fcfdc26f6743e768126c6e127cf52ca0814afc4d01d"
+  },
+  {
+    "path": "roles/thunderbird_headless/templates/thunderbird-gui-wrapper.sh.j2",
+    "lines": 22,
+    "sha256": "04e33ed15d49567d2d56f883ecfaa0f2802a2347dad335f333d2cde1f1e4a3a6"
+  },
+  {
+    "path": "roles/thunderbird_headless/templates/thunderbird-headless.service.j2",
+    "lines": 34,
+    "sha256": "444ef8d00508cb1313e92f6a35f22a3c7bb308fa59be3b5eebd4169100b2912f"
+  },
+  {
+    "path": "roles/thunderbird_headless/templates/thunderbird.desktop.j2",
+    "lines": 168,
+    "sha256": "b90112213322e9170db571938101fe7fd05e34ae58581470e306b88503226d78"
+  },
+  {
+    "path": "roles/thunderbird_headless/templates/thunderbird-headless-refresh.service.j2",
+    "lines": 20,
+    "sha256": "fd8bba6e1433a2de324a41faa308f512088de611f9b22436fe7ae418c1c46f5a"
+  },
+  {
+    "path": "roles/thunderbird_headless/templates/thunderbird-headless-refresh.timer.j2",
+    "lines": 13,
+    "sha256": "ba2b3004a45b75e45741984cb519ed0430b0cefdc8d3eb822dc03430b0ae78a2"
+  },
+  {
+    "path": "roles/thunderbird_headless/tasks/main.yml",
+    "lines": 160,
+    "sha256": "2effd5042939746227ebe8dcf46f1243dc3a8cecf0159ffd93afffee945d0add"
+  },
+  {
+    "path": "roles/thunderbird_headless/handlers/main.yml",
+    "lines": 14,
+    "sha256": "5cd8f6204bc2e87cac31075c4ad8aca1ff13c5064e209e30c28efe22a4c4f923"
+  },
+  {
+    "path": "roles/mcp_github/defaults/main.yml",
+    "lines": 24,
+    "sha256": "68ff4b1e283204e9b481784087458facb6e98c5aa5ba726978626744f1c6d4cf"
+  },
+  {
+    "path": "roles/mcp_github/templates/docker-compose.mcp-github.yml.j2",
+    "lines": 26,
+    "sha256": "990467aa9cfa66e97273ea8e8fef48ae597596408f957fd8030c173e13799808"
+  },
+  {
+    "path": "roles/mcp_github/templates/mcp-github.service.j2",
+    "lines": 20,
+    "sha256": "01642962c40b167c74b2a515c9b2b60b8edde7fd1983c61b1b2576fac978ed26"
+  },
+  {
+    "path": "roles/mcp_github/tasks/main.yml",
+    "lines": 111,
+    "sha256": "bf2adeab61a93c797ea262f345ebd91865780c5fb05e3d223f78121b5302beeb"
+  },
+  {
+    "path": "roles/mcp_github/handlers/main.yml",
+    "lines": 20,
+    "sha256": "d60efff945278c9c84807f0f031275fe3026c935941a4a88af2f7b5a8f6694cb"
+  },
+  {
+    "path": "roles/mcp_hub_ui/defaults/main.yml",
+    "lines": 33,
+    "sha256": "07e78f2ff42486ffa09fe1a2c9067ed83fdf2b2b08f94736d61f96f22833d3d4"
+  },
+  {
+    "path": "roles/mcp_hub_ui/templates/mcp-hub-ui.service.j2",
+    "lines": 17,
+    "sha256": "ccc34d65ec0c96f706ea1986eb495dc4f5f4332461f4f8a8b47961fed3f28ffd"
+  },
+  {
+    "path": "roles/mcp_hub_ui/tasks/main.yml",
+    "lines": 139,
+    "sha256": "415d67170eabb9f9dc1ea0cb83cc0740cd5b562ca6965fecf2bf636a0212de0d"
+  },
+  {
+    "path": "roles/repos/tasks/main.yml",
+    "lines": 44,
+    "sha256": "6927bb640ba2447bccb4e9ad37e8da445fa397080ec5281caec9d35c1144194e"
+  },
+  {
+    "path": "roles/links/tasks/main.yml",
+    "lines": 26,
+    "sha256": "b31cf5778404f9f8a272543a6e73978ce16cf20ece30fdf23ab5f618683af501"
+  },
+  {
+    "path": "roles/dotfiles/tasks/main.yml",
+    "lines": 23,
+    "sha256": "d47d7a3766f5a7fde9e86f51b8b6e52168823ee765ae89fbb6a4526e95ae413b"
+  },
+  {
+    "path": "roles/claude_desktop_mcp_filesystem/defaults/main.yml",
+    "lines": 25,
+    "sha256": "b66ac27682c7f75da31af7e847e11923701178629d3f2c8f0dbfe6e3c3ebee53"
+  },
+  {
+    "path": "roles/claude_desktop_mcp_filesystem/templates/claude_desktop_config.json.j2",
+    "lines": 1,
+    "sha256": "47594efea0148ea815a1c8d4feeae90f9d15e2dd98bb778666a17d2ad796a4f2"
+  },
+  {
+    "path": "roles/claude_desktop_mcp_filesystem/tasks/main.yml",
+    "lines": 159,
+    "sha256": "ebc61b87eb40d8548d264f7000e3a11a61ce6455ce92d51ec4d1ba26ce07d6cd"
+  },
+  {
+    "path": "roles/mcp_filesystem/defaults/main.yml",
+    "lines": 28,
+    "sha256": "650dad1240fdb525e74879e2b23f94625e11b9addddbbcbdd79d3eef84f3464b"
+  },
+  {
+    "path": "roles/mcp_filesystem/templates/docker-compose.mcp-filesystem.yml.j2",
+    "lines": 28,
+    "sha256": "7865bdfdcc447d7baff08d2e1569d909c0e595ea49d2e0c1c258d9f2d6852f2f"
+  },
+  {
+    "path": "roles/mcp_filesystem/templates/mcp-filesystem.service.j2",
+    "lines": 20,
+    "sha256": "24b5dfe346705879117e8d3265e2977fc1148129c8d1797fcf44531c324c7391"
+  },
+  {
+    "path": "roles/mcp_filesystem/tasks/main.yml",
+    "lines": 86,
+    "sha256": "737522c28da33460bc295a9cd7d362d359a1bf43ce391abf490f9204ae636641"
+  },
+  {
+    "path": "roles/mcp_filesystem/handlers/main.yml",
+    "lines": 20,
+    "sha256": "33294474bca136a0e4c24b409e396dd166b20bf834f651e81f8c75b6e94a9475"
+  },
+  {
+    "path": "roles/npm_global/defaults/main.yml",
+    "lines": 20,
+    "sha256": "0cdfbd134dffca63402c89c71c66a9b07c226e410ed2a9faba2ffb9610631f58"
+  },
+  {
+    "path": "roles/npm_global/tasks/main.yml",
+    "lines": 47,
+    "sha256": "98d6ad8e929999a64808ba75b9502c8143e63e4df7f860589286609f7f23e903"
+  },
+  {
+    "path": "roles/zsh/tasks/main.yml",
+    "lines": 33,
+    "sha256": "04c03791d9bf00760ed1be08520a0a52f639f063dd0c7839b8583ac56df38658"
+  },
+  {
+    "path": "roles/luarocks311/tasks/main.yml",
+    "lines": 40,
+    "sha256": "9c5be3aa1584097eb1c2a642ca1d3abae74d939cfd900ff197f89dee3c1e911e"
+  },
+  {
+    "path": "roles/rust/tasks/main.yml",
+    "lines": 13,
+    "sha256": "9746284a4483e38553d5ceb6c7ecbb938e98cb51512812921610b5a87fd90a2f"
+  },
+  {
+    "path": "roles/nftables/defaults/main.yml",
+    "lines": 5,
+    "sha256": "7df028c3485310beda1811900e3ccbd7a99122ca50b207a0a48ca33e53f2f4d8"
+  },
+  {
+    "path": "roles/nftables/templates/nftables.conf.j2",
+    "lines": 43,
+    "sha256": "4a391a4cdb80b3723fd433cfd7da2a7b3c07ba421cd754b024e96d7449962e82"
+  },
+  {
+    "path": "roles/nftables/tasks/main.yml",
+    "lines": 20,
+    "sha256": "c8a5705e6b090f50e9b10dd82fd8eb77c3728e1b721bf15e7ab88479a71b3449"
+  },
+  {
+    "path": "roles/nftables/handlers/main.yml",
+    "lines": 5,
+    "sha256": "e4da6e462eabf8e34e2b33f0e2f4e8e8cb9effbcf59bd79827a2826b494e6817"
+  },
+  {
+    "path": "roles/hwdev_serial/defaults/main.yml",
+    "lines": 47,
+    "sha256": "586634024d7ec15eeb3819339b2fee6f9affc7a79755b33a3e649e5a474a29fd"
+  },
+  {
+    "path": "roles/hwdev_serial/files/99-serial-dev.rules",
+    "lines": 25,
+    "sha256": "d4034cab8f85a11a9394d5ce0c99ea96605765bab17c2eb4dede8d6839c1d09f"
+  },
+  {
+    "path": "roles/hwdev_serial/tasks/main.yml",
+    "lines": 59,
+    "sha256": "0542d925d9ff61cda667f094e13a7fd8189877817d05c383535e8fa256daf8a4"
+  },
+  {
+    "path": "roles/hwdev_serial/handlers/main.yml",
+    "lines": 26,
+    "sha256": "4c2c16be2938f57fb7735f8553f6cbe76ed5183f703c696e2f44683f05b478a2"
+  },
+  {
+    "path": "roles/dns/defaults/main.yml",
+    "lines": 29,
+    "sha256": "2c3824509462daf42b58db43a9007f0501e41389e3f2cac062ee18cdfd7cd81e"
+  },
+  {
+    "path": "roles/dns/tasks/main.yml",
+    "lines": 177,
+    "sha256": "1ba50610542577ac6a853791a0d307fb323c16279759eef4aafcc35a8cfa7ba1"
+  },
+  {
+    "path": "roles/dns/handlers/main.yml",
+    "lines": 19,
+    "sha256": "616f2bdd8edf4214a3375e764a811dbf0befc037e87a3bc482310b45aba7b939"
+  },
+  {
+    "path": "roles/homebrew/tasks/main.yml",
+    "lines": 7,
+    "sha256": "40aa59e8f1caaa018463bc9678916353fde7bc4a533ef1ebe1c3a4d9637ab12e"
+  },
+  {
+    "path": "roles/aur/tasks/main.yml",
+    "lines": 75,
+    "sha256": "aa63bbaa2c478d9912a45cbe3486283981083ba818dbe9320bc8360cb8bd27f5"
+  },
+  {
+    "path": "roles/claude_code/defaults/main.yml",
+    "lines": 19,
+    "sha256": "6f1457bd0724c573ca0d67befea0dbd30c966fce46c95abe508bef38b08ed358"
+  },
+  {
+    "path": "roles/claude_code/templates/claude-config.json.j2",
+    "lines": 79,
+    "sha256": "2b78e17c12c886cf43b4855faacf4f2be6c9f1b56b718914fe19a42390c634c1"
+  },
+  {
+    "path": "roles/claude_code/templates/register-mcp-servers.sh.j2",
+    "lines": 25,
+    "sha256": "9f1eaa622f2253dbb61109202106f38ec40565cb87241828bf3a230221bd186d"
+  },
+  {
+    "path": "roles/claude_code/tasks/main.yml",
+    "lines": 115,
+    "sha256": "5aa5e7ae8878423e8e5462b08fae5b934f931cab55c5bf128d7fe871a370d698"
+  },
+  {
+    "path": "roles/claude_code/handlers/main.yml",
+    "lines": 7,
+    "sha256": "dc1f51dc024efca413902c06c495ea23a8228a0a1401f8296e105c4805747be4"
+  },
+  {
+    "path": "roles/docker_mcp/defaults/main.yml",
+    "lines": 25,
+    "sha256": "85f5c143066a267c08abbb7a5ed64487e0453767fa6358474ca7144065889dc5"
+  },
+  {
+    "path": "roles/docker_mcp/templates/mcp-docker.service.j2",
+    "lines": 21,
+    "sha256": "9d67578c5ed581ff2621c75727f7b99fc4cffebbd5b38aa59beb36f52ee4259a"
+  },
+  {
+    "path": "roles/docker_mcp/templates/docker-compose.mcp.yml.j2",
+    "lines": 12,
+    "sha256": "149ef83287a671033b08b30ba724c01aa717ef04e21fd5c98be83026d90dc9e9"
+  },
+  {
+    "path": "roles/docker_mcp/tasks/main.yml",
+    "lines": 173,
+    "sha256": "54da3dc4120de2bbc603826d75da93caad956d7fe0b9b20ac5402b7326f56533"
+  },
+  {
+    "path": "roles/copy/tasks/main.yml",
+    "lines": 46,
+    "sha256": "a1f4955a5d9c3707417990106c2456c03cbe3011752ddc7c7c76c3cabf5d1b54"
+  },
+  {
+    "path": "roles/acpi/tasks/main.yml",
+    "lines": 133,
+    "sha256": "7ed634e307d32407a4858df1f3ec1a8b594cde12b338421b29d17f413c06ff1d"
+  },
+  {
+    "path": "roles/dnf/tasks/main.yml",
+    "lines": 50,
+    "sha256": "8d95fef544af9fe8e81e4d3cf6e96c61f3a1eeddf12522705ad30f7dd850f719"
+  },
+  {
+    "path": "roles/fonts/tasks/main.yml",
+    "lines": 14,
+    "sha256": "0edf81178b823f5527340364cd1c2deb2daf60a2a90ad6fba4437502f3ff9194"
+  },
+  {
+    "path": "roles/mcp_semgrep/defaults/main.yml",
+    "lines": 32,
+    "sha256": "ebc49c9802d09bd61b2120ae328d372bb5353c7568dbbe3e317074457bc2f973"
+  },
+  {
+    "path": "roles/mcp_semgrep/templates/mcp-semgrep.service.j2",
+    "lines": 20,
+    "sha256": "4db4aa276fb90cc97d60be175cbfcdc8ad925ea3ad59cc4ae0b063983520207f"
+  },
+  {
+    "path": "roles/mcp_semgrep/templates/docker-compose.mcp-semgrep.yml.j2",
+    "lines": 33,
+    "sha256": "8d9aa56f81272b5d1ed319713667d900d5c436ce63ee9e075b9cbf14159dd4e5"
+  },
+  {
+    "path": "roles/mcp_semgrep/tasks/main.yml",
+    "lines": 87,
+    "sha256": "f5a9ee4af2c0e57c905d57ca22e21570bf22e190bc159a345b6d43c8c945afb4"
+  },
+  {
+    "path": "roles/mcp_semgrep/handlers/main.yml",
+    "lines": 20,
+    "sha256": "041b2e4e2a1cf6c17da7e33edf7ac4ad95d5dfce2c9c7079d7874869eb781ad5"
+  },
+  {
+    "path": "roles/apparmor/defaults/main.yml",
+    "lines": 7,
+    "sha256": "0720a18cfe229463798f3318e653f5318ca504b56888e26faa6d373839595002"
+  },
+  {
+    "path": "roles/apparmor/templates/apparmor-notify.desktop.j2",
+    "lines": 7,
+    "sha256": "aa1d9ed1789f68a885a9db29c5316d2fc4653e49cbbac4f4a9e8241095d0edde"
+  },
+  {
+    "path": "roles/apparmor/tasks/main.yml",
+    "lines": 174,
+    "sha256": "af4a6e43d27b1f53369ee8dec592607c7ecdfce4ea990087b6247bef4d87fe2a"
+  },
+  {
+    "path": "roles/apparmor/handlers/main.yml",
+    "lines": 4,
+    "sha256": "16edadf6e3651b1b2f8b26d3b09a95b383845d8965d903caa7d115a7885f7e20"
+  },
+  {
+    "path": "roles/mcp_ref/defaults/main.yml",
+    "lines": 21,
+    "sha256": "fe7bfc6a73897a686ea964f4da2fe8f17ba0a3296f4a9661bd9fe9688db2c132"
+  },
+  {
+    "path": "roles/mcp_ref/templates/docker-compose.mcp-ref.yml.j2",
+    "lines": 24,
+    "sha256": "0a4bd353e835bace331d74cbdddd8cf454fb421ea9d12af03c68807da0664b4a"
+  },
+  {
+    "path": "roles/mcp_ref/templates/mcp-ref.service.j2",
+    "lines": 20,
+    "sha256": "408753200567d247bf68cecc92e649297288f03da4b96331c115b60bb5a7ef0f"
+  },
+  {
+    "path": "roles/mcp_ref/tasks/main.yml",
+    "lines": 87,
+    "sha256": "da347553b4a882cabee16537007e6fd1e56b4be04798a84fca397cdf9cef5b0b"
+  },
+  {
+    "path": "roles/mcp_ref/handlers/main.yml",
+    "lines": 20,
+    "sha256": "d93dcf4238b34d7f10a6efab199aca0507d9afff478af9cde56da1b8bffd418d"
+  },
+  {
+    "path": "roles/folders/tasks/main.yml",
+    "lines": 21,
+    "sha256": "7d007c18e548244d5a6765b8eb1b36c34f82c9d15f11243984b986d289b05fa2"
+  },
+  {
+    "path": "roles/tmux/tasks/main.yml",
+    "lines": 8,
+    "sha256": "8c9313c2e64863a21a0f2ca4ac3ed69640c75a0f89bc98cd07c975dd03ba182b"
+  },
+  {
+    "path": "roles/audio/tasks/main.yml",
+    "lines": 24,
+    "sha256": "69796aa4bdd8f46d769b1253bf17129772c45a10130d514ed924a675541b4f95"
+  },
+  {
+    "path": "roles/docker_engine/defaults/main.yml",
+    "lines": 20,
+    "sha256": "e5e5a4917a71e31f90990e16092e902ae40d372a03611ed53a1e9b3b308e2a02"
+  },
+  {
+    "path": "roles/docker_engine/tasks/main.yml",
+    "lines": 95,
+    "sha256": "f2c9fd7fa217c349d2c8909ec7eed1231953094a929ea6fa9126c4e9fcee5b78"
+  },
+  {
+    "path": "roles/docker_engine/handlers/main.yml",
+    "lines": 7,
+    "sha256": "3957dc2f161a941909eb5569c5c556c3664ffa57f558bbd5608b0924d14e0e38"
+  },
+  {
+    "path": "roles/permissions/tasks/main.yml",
+    "lines": 34,
+    "sha256": "66fc9c8fb73b8805c5c9f1a87820e46700dda8c1474d663a31fd9fd706e581a3"
+  },
+  {
+    "path": "roles/hyprland/tasks/main.yml",
+    "lines": 9,
+    "sha256": "15e75774de98a8358d05cd52abf8deb740a821b51a2d880bcf069bfc596c89e9"
+  },
+  {
+    "path": "roles/aur-packages/tasks/main.yml",
+    "lines": 64,
+    "sha256": "94f1e597052351703329b2bc4f89c00c9d5a6a2aeb7db3f94087d24ce7298b76"
+  },
+  {
+    "path": "roles/nvim/tasks/main.yml",
+    "lines": 59,
+    "sha256": "ce70e155077980e1a700017460ea197f8b621a92dfd6ea19678f6e9a87265efa"
+  },
+  {
+    "path": "roles/sddm/tasks/main.yml",
+    "lines": 6,
+    "sha256": "e4b73aa3cd9147d42e7ae8dd4722ec5ae7923239ce896647fa037b7c8dd333fd"
+  },
+  {
+    "path": "roles/pacman/tasks/main.yml",
+    "lines": 73,
+    "sha256": "ea613e533730dec6e2ede2cbcbc535af9adebc4e708a0bc3130a60c8af8c5938"
+  },
+  {
+    "path": "roles/apt/tasks/main.yml",
+    "lines": 31,
+    "sha256": "3d720432f47df78cd5e6c5350dbc451701d4d4c17cd1fc8826c118922c1fafc6"
+  },
+  {
+    "path": "roles/claude_desktop_wayland/defaults/main.yml",
+    "lines": 33,
+    "sha256": "1de952704cc0adc0e6c783e174f8992aca85c1de1731e37635dd7b52b50f25ad"
+  },
+  {
+    "path": "roles/claude_desktop_wayland/tasks/main.yml",
+    "lines": 131,
+    "sha256": "63e41b529728e173eff55cc3762be63ed449987072fbb615d37d3def0c529dc9"
+  },
+  {
+    "path": "roles/wireguard/defaults/main.yml",
+    "lines": 36,
+    "sha256": "c871baddbf55f7edc8c72d3e6c4d8ca2246d0c55cbe0a7bcba0a38a1422e1718"
+  },
+  {
+    "path": "roles/wireguard/tasks/main.yml",
+    "lines": 231,
+    "sha256": "3e8009f55f0efd0a215ccaf424d516c200364f9320c781dcb8cf6ea4ca1b9187"
+  },
+  {
+    "path": ".claude/settings.local.json",
+    "lines": 14,
+    "sha256": "4a05bf6e296c6fe5c2079ade75a7fd89e1015deeef28287fc69c4db564d7e783"
+  }
+]
+```
