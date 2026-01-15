@@ -1,0 +1,43 @@
+---
+# Arch Linux Workstation Playbook
+- hosts: workstation
+  become: true
+  vars_files:
+    - config.yml
+
+  roles:
+    - { role: repos, when: configure_repos, tags: ["repos"] }
+    - { role: folders, tags: ["folders"] }
+    - { role: pacman, tags: ["pacman"] }
+    - { role: rust, tags: ["rust"] }
+    - { role: aur, tags: ["aur"] }
+    - { role: aur-packages, tags: ["aur-packages"] }
+    - { role: audio, tags: ["audio"] }
+    - { role: acpi, tags: ["acpi"] }
+    - { role: zsh, tags: ["zsh"] }
+    - { role: nvim, tags: ["nvim"] }
+    - { role: tmux, tags: ["tmux"] }
+    - { role: fonts, tags: ["fonts"] }
+    - { role: links, tags: ["links"] }
+    - { role: copy, tags: ["copy"] }
+    - { role: dotfiles, tags: ["dotfiles"] }
+    - { role: sddm, tags: ["sddm"] }
+    - { role: hyprland, tags: ["hyprland"] }
+    - { role: permissions, tags: ["permissions"] }
+    - { role: luarocks311, tags: ["luarocks311"] }
+    - role: thunderbird_headless
+      tags: ["thunderbird"]
+      vars:
+        thunderbird_enable_lingering: true
+        thunderbird_refresh_method: "timer"
+        thunderbird_refresh_interval: "1min"
+    - { role: dns, tags: ["dns"] }
+    - { role: nftables, tags: ["nftables"] }
+    - { role: apparmor, tags: ["apparmor"] }
+    - { role: wireguard, tags: ["wireguard"] }
+    - { role: docker_engine, tags: ["docker"] }
+    - { role: npm, tags: ["npm"] }
+    - { role: terraform, tags: ["terraform"] }
+    - { role: mcp, tags: ["mcp"] }
+    - { role: claude_desktop_wayland, tags: ["claude"] }
+    - { role: claude_code, tags: ["claude-code"] }

@@ -1,6 +1,36 @@
-# Variables for playbooks for Arch Linux
+---
+# Arch Linux Workstation Configuration
+# Unified config file (replaces group_vars/all.yml + host_vars/arch-config.yml)
 
-# --- Pacman Packages ---
+# =============================================================================
+# User Configuration
+# =============================================================================
+target_user: henning
+dotfiles_home: "/home/{{ target_user }}"
+
+# =============================================================================
+# Feature Toggles
+# =============================================================================
+configure_dotfiles: true
+configure_extras: true
+configure_repos: true
+
+# =============================================================================
+# Dotfiles Repository
+# =============================================================================
+dotfiles_repo: "https://github.com/henningmyhrvold/dotfiles.git"
+dotfiles_repo_version: "main"
+dotfiles_repo_accept_hostkey: true
+dotfiles_repo_local_destination: "{{ dotfiles_home }}/src/dotfiles"
+
+downloads: "{{ dotfiles_home }}/.ansible-downloads"
+
+git_repositories:
+  - "{{ dotfiles_repo }}"
+
+# =============================================================================
+# Pacman Packages (Official Repositories)
+# =============================================================================
 pacman_installed_packages:
   # --- Wayland ---
   - wayland
@@ -28,7 +58,6 @@ pacman_installed_packages:
   - pipewire-pulse
   - wireplumber
   - pavucontrol
-  # --- Possibly only thinkpad essensial ---
   - sof-firmware
   - alsa-ucm-conf
   - vlc
@@ -109,7 +138,6 @@ pacman_installed_packages:
   - npm
   - direnv
   - terraform
-  - direnv
   - docker
   - docker-buildx
   - docker-compose
@@ -126,7 +154,9 @@ pacman_installed_packages:
   - minicom
   - tftp-hpa
 
-# --- AUR Packages ---
+# =============================================================================
+# AUR Packages
+# =============================================================================
 aur_installed_packages:
   - claude-code
   - oh-my-zsh-git
@@ -137,61 +167,21 @@ aur_installed_packages:
   - omnissa-horizon-client
   - claude-desktop-native
   - cool-retro-term
-  - tio             # HW dev: Modern serial console
-  - kermit          # HW dev: A VTE-based, simple and froggy terminal emulator
+  - tio
+  - kermit
 
-# --- NPM Packages ---
+# =============================================================================
+# NPM Global Packages
+# =============================================================================
 npm_global_packages:
   - mcp-hub@latest
   - '@modelcontextprotocol/server-filesystem@latest'
   - '@modelcontextprotocol/server-github@latest'
   - '@upstash/context7-mcp@latest'
 
-# --- Dotfiles Configuration ---
-configure_dotfiles: true
-
-# --- DNS ---
-dns_provider: "systemd-resolved"
-dns_remove_conflicts: true
-dns_configure_networkmanager: true
-
-# Serial role settings
-hwdev_openwrt_tooling: true
-
-# MCP Filesystem claude desktop readable directories
-filesystem_allowed_directories:
-  - "/home/henning/src/dotfiles"
-  - "/home/henning/src/dotfiles-playbook"
-
-# ============================================================================
-# Claude Code MCP Configuration
-# ============================================================================
-
-# Which MCP servers to enable
-mcp_filesystem_enabled: true
-mcp_github_enabled: true
-mcp_obsidian_enabled: true
-mcp_ref_enabled: true
-mcp_semgrep_enabled: true
-
-# Filesystem MCP - directories Claude Code can access
-mcp_filesystem_allowed_dirs:
-  - "/home/henning/src"
-  - "/home/henning/projects"
-  - "/home/henning/Documents"
-
-# Obsidian MCP - vault location
-mcp_obsidian_vault_path: "/home/henning/Documents/ObsidianVault"
-
-# Semgrep MCP - directories to scan
-mcp_semgrep_scan_dirs:
-  - "/home/henning/src"
-
-# MCP Common settings
-mcp_network_mode: "host"
-mcp_enable_lingering: true
-
-# These directories will be created if they don't exist.
+# =============================================================================
+# Folders to Create
+# =============================================================================
 create_folders:
   - { path: "{{ dotfiles_home }}/Pictures" }
   - { path: "{{ dotfiles_home }}/Pictures/wallpapers" }
@@ -215,7 +205,9 @@ create_folders:
   - { path: "{{ dotfiles_home }}/.zsh" }
   - { path: "{{ dotfiles_home }}/.vim" }
 
-# Defines symlinks from the dotfiles repo to the home directory.
+# =============================================================================
+# Dotfiles Symlinks
+# =============================================================================
 dotfiles_links:
   - { src: "zsh/.zshrc", dest: ".zshrc" }
   - { src: "zsh/.zsh_profile", dest: ".zsh_profile" }
@@ -239,43 +231,46 @@ dotfiles_links:
   - { src: "wofi/config", dest: ".config/wofi/config" }
   - { src: "wofi/style.css", dest: ".config/wofi/style.css" }
   - { src: "dunst/dunstrc", dest: ".config/dunst/dunstrc" }
-  - { src: "dunst/mocha.conf", dest: ".config/dunst/mocha.conf" }
   - { src: "fonts/fonts.conf", dest: ".config/fontconfig/fonts.conf" }
-  - { src: "mcp/docker-compose.mcp.yml", dest: ".config/mcp/docker-compose.mcp.yml" }
-  - { src: "mcp/mcphub.json", dest: ".config/mcp/mcphub.json" }
-  - { src: "mcp/hub.json", dest: ".config/mcp/hub.json" }
-  - { src: "claude/claude-logo.png", dest: "Pictures/icons/claude-logo.png" }
-  - { src: "claude/claude-logo2.png", dest: "Pictures/icons/claude-logo2.png" }
-  - { src: "cool-retro-term/cool-retro-term-my-futuristic.json", dest: ".config/cool-retro-term/cool-retro-term-my-futuristic.json"}
+  - { src: "cool-retro-term/cool-retro-term-my-futuristic.json", dest: ".config/cool-retro-term/cool-retro-term-my-futuristic.json" }
 
-regular_links:
-  - { src: "/usr/share/zsh-theme-powerlevel10k", dest: "/usr/share/oh-my-zsh/custom/themes/powerlevel10k" }
-  - { src: "{{ dotfiles_home }}/src/dotfiles/sddm/sddm.conf", dest: "/etc/sddm.conf" }
-  #- { src: "{{ dotfiles_home }}/src/dotfiles/wallpapers/neonrain.png", dest: "{{ dotfiles_home }}/Pictures/wallpapers/neonrain.png" }
-  #- { src: "{{ dotfiles_home }}/src/dotfiles/claude/claude-logo.png", dest: "{{ dotfiles_home }}/Pictures/icons/claude-logo.png" }
-  #- { src: "{{ dotfiles_home }}/src/dotfiles/claude/claude-logo2.png", dest: "{{ dotfiles_home }}/Pictures/icons/claude-logo2.png" }
-  #- { src: "{{ dotfiles_home }}/src/dotfiles/claude/claude_desktop_config.json", dest: "{{ dotfiles_home }}/.config/Claude/claude_desktop_config.json" }
+# =============================================================================
+# DNS Configuration
+# =============================================================================
+dns_provider: "systemd-resolved"
+dns_remove_conflicts: true
+dns_configure_networkmanager: true
 
-copy:
-  - { src: "{{ dotfiles_home }}/src/dotfiles/sddm/catppuccin-mocha/", dest: "/usr/share/sddm/themes/catppuccin-mocha/" }
-  - { src: "/usr/share/zsh/plugins/zsh-autosuggestions/", dest: "/usr/share/oh-my-zsh/custom/plugins/zsh-autosuggestions/" }
-  - { src: "{{ dotfiles_home }}/src/dotfiles/nvim/lua/", dest: "{{ dotfiles_home }}/.config/nvim/lua/" }
+# =============================================================================
+# Serial/HW Development
+# =============================================================================
+hwdev_openwrt_tooling: true
 
-# --- Git Repositories ---
-git_repositories_external:
-  - https://aur.archlinux.org/paru-git.git
-  - https://github.com/FrozenVoid/C-techniques.git
-  - https://github.com/andreasfertig/programming-with-cpp20.git
-  - https://github.com/paultuckey/example-todo-app-rust-htmx.git
-  - https://github.com/pi-hole/pi-hole.git
-  - https://github.com/golang/example.git
-  - https://github.com/ProgrammingRust/examples.git
+# =============================================================================
+# MCP Configuration (Claude Desktop)
+# =============================================================================
+filesystem_allowed_directories:
+  - "/home/henning/src/dotfiles"
+  - "/home/henning/src/dotfiles-playbook"
 
-# --- Scripts to make executable ---
-dotfiles_files_binaries:
-  - "wofi/powermenu.sh"
-  - "wofi/wifimenu.sh"
-  - "waybar/meetings.py"
-  - "waybar/email_unread.sh"
-  - "tmux-sessionizer/tmux-sessionizer.sh"
-  - "tmux-sessionizer/tmux-status-color.sh"
+# =============================================================================
+# Claude Code MCP Configuration
+# =============================================================================
+mcp_filesystem_enabled: true
+mcp_github_enabled: true
+mcp_obsidian_enabled: true
+mcp_ref_enabled: true
+mcp_semgrep_enabled: true
+
+mcp_filesystem_allowed_dirs:
+  - "/home/henning/src"
+  - "/home/henning/projects"
+  - "/home/henning/Documents"
+
+mcp_obsidian_vault_path: "/home/henning/Documents/ObsidianVault"
+
+mcp_semgrep_scan_dirs:
+  - "/home/henning/src"
+
+mcp_network_mode: "host"
+mcp_enable_lingering: true
