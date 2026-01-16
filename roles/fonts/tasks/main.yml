@@ -19,6 +19,18 @@
   failed_when: false
   tags: ["fonts", "packages"]
 
+# Temporarily allow passwordless pacman for AUR installation
+- name: Allow target user to run pacman without password (for AUR)
+  ansible.builtin.lineinfile:
+    path: /etc/sudoers.d/fonts-aur-temp
+    line: '{{ fonts_user }} ALL=(ALL) NOPASSWD: /usr/bin/pacman *'
+    create: true
+    mode: '0440'
+    validate: /usr/sbin/visudo -cf %s
+  become: true
+  when: paru_check.rc == 0
+  tags: ["fonts", "packages"]
+
 - name: Install font packages from AUR
   kewlfft.aur.aur:
     name: "{{ item }}"
@@ -27,6 +39,14 @@
   loop: "{{ fonts_aur_packages }}"
   become: true
   become_user: "{{ fonts_user }}"
+  when: paru_check.rc == 0
+  tags: ["fonts", "packages"]
+
+- name: Remove temporary sudoers rule for AUR
+  ansible.builtin.file:
+    path: /etc/sudoers.d/fonts-aur-temp
+    state: absent
+  become: true
   when: paru_check.rc == 0
   tags: ["fonts", "packages"]
 
