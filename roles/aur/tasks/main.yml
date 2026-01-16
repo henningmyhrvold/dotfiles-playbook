@@ -1,24 +1,27 @@
 ---
+# AUR Role - Installs paru AUR helper
+# This is a foundational role that other roles depend on for AUR packages
+
 - name: Ensure target user is in wheel group
-  user:
+  ansible.builtin.user:
     name: "{{ target_user }}"
     groups: wheel
-    append: yes
+    append: true
   become: true
   tags: ['aur']
-  
+
 - name: Backup original sudoers file
   ansible.builtin.copy:
     src: /etc/sudoers
     dest: /etc/sudoers.ansible_backup
-    owner: "{{ 'root' }}"
+    owner: root
     mode: "0644"
-    remote_src: yes
+    remote_src: true
   become: true
   tags: ['aur']
 
 - name: Allow wheel group to sudo without password
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: /etc/sudoers
     regexp: '^# %wheel ALL=\(ALL:ALL\) ALL'
     line: '%wheel ALL=(ALL:ALL) NOPASSWD: ALL'
@@ -28,9 +31,40 @@
 
 - name: Install paru build dependencies
   community.general.pacman:
-    name: rust
+    name:
+      - base-devel
+      - git
+      - rust
     state: present
   become: true
+  tags: ['aur']
+
+- name: Check if paru is already installed
+  ansible.builtin.command: which paru
+  register: paru_installed
+  changed_when: false
+  failed_when: false
+  tags: ['aur']
+
+- name: Create src/external directory
+  ansible.builtin.file:
+    path: "/home/{{ target_user }}/src/external"
+    state: directory
+    owner: "{{ target_user }}"
+    group: "{{ target_user }}"
+    mode: "0755"
+  become: true
+  when: paru_installed.rc != 0
+  tags: ['aur']
+
+- name: Clone paru-git repository
+  ansible.builtin.git:
+    repo: "https://aur.archlinux.org/paru-git.git"
+    dest: "/home/{{ target_user }}/src/external/paru-git"
+    force: false
+  become: true
+  become_user: "{{ target_user }}"
+  when: paru_installed.rc != 0
   tags: ['aur']
 
 - name: Build paru package (no install or dep sync)
@@ -39,37 +73,37 @@
     chdir: "/home/{{ target_user }}/src/external/paru-git"
   become: true
   become_user: "{{ target_user }}"
-  args:
-    creates: "/home/{{ target_user }}/src/external/paru-git/paru-git*.pkg.tar.zst"
+  when: paru_installed.rc != 0
   tags: ['aur']
 
 - name: Find built paru package
-  find:
+  ansible.builtin.find:
     paths: "/home/{{ target_user }}/src/external/paru-git"
     patterns: "*.pkg.tar.zst"
   register: paru_package
   become: true
+  when: paru_installed.rc != 0
   tags: ['aur']
 
 - name: Select main (non-debug) paru package
-  set_fact:
+  ansible.builtin.set_fact:
     main_paru_package: "{{ paru_package.files | rejectattr('path', 'contains', '-debug-') | first }}"
+  when: paru_installed.rc != 0 and paru_package.files | length > 0
   tags: ['aur']
 
 - name: Install paru package as root
-  command: "pacman -U --noconfirm {{ main_paru_package.path }}"
-  args:
-    creates: /usr/bin/paru
+  ansible.builtin.command: "pacman -U --noconfirm {{ main_paru_package.path }}"
   become: true
+  when: paru_installed.rc != 0 and main_paru_package is defined
   tags: ['aur']
-  
+
 - name: Revert sudoers to original
   ansible.builtin.copy:
     src: /etc/sudoers.ansible_backup
     dest: /etc/sudoers
-    owner: "{{ 'root' }}"
+    owner: root
     mode: "0644"
-    remote_src: yes
+    remote_src: true
     validate: /usr/sbin/visudo -cf %s
   become: true
   tags: ['aur']

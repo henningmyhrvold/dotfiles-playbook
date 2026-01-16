@@ -1,21 +1,24 @@
 ---
+# AUR Packages Role - Installs AUR packages from config.yml
+# This is a utility role for batch AUR package installation
+
 - name: Backup original sudoers file for pacman configuration
   ansible.builtin.copy:
     src: /etc/sudoers
     dest: /etc/sudoers.pacman_backup
     owner: root
     mode: "0644"
-    remote_src: yes
+    remote_src: true
   become: true
-  tags: ['aur']
+  tags: ['aur-packages']
 
 - name: Allow target user to run pacman without password
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: /etc/sudoers
     line: '{{ target_user }} ALL=(ALL) NOPASSWD: /usr/bin/pacman *'
     validate: /usr/sbin/visudo -cf %s
   become: true
-  tags: ['aur']
+  tags: ['aur-packages']
 
 - name: Install packages from aur_installed_packages list
   kewlfft.aur.aur:
@@ -26,13 +29,14 @@
   become: true
   become_user: "{{ target_user }}"
   when: aur_installed_packages is defined
-  tags: ['aur']
+  tags: ['aur-packages']
 
 - name: Update repo packages first (faster and reduces AUR work)
   community.general.pacman:
     update_cache: true
     upgrade: true
   become: true
+  tags: ['aur-packages']
 
 - name: Update AUR packages (retry on transient AUR RPC errors)
   ansible.builtin.command:
@@ -51,6 +55,7 @@
     and ('timed out' not in (paru_upgrade.stderr | default('')))
     and ('Temporary failure' not in (paru_upgrade.stderr | default('')))
   changed_when: "'there is nothing to do' not in (paru_upgrade.stdout | default(''))"
+  tags: ['aur-packages']
 
 - name: Revert sudoers after pacman configuration
   ansible.builtin.copy:
@@ -58,7 +63,7 @@
     dest: /etc/sudoers
     owner: root
     mode: "0644"
-    remote_src: yes
+    remote_src: true
     validate: /usr/sbin/visudo -cf %s
   become: true
-  tags: ['aur']
+  tags: ['aur-packages']

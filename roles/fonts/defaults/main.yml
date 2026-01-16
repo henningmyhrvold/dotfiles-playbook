@@ -1,0 +1,36 @@
+---
+# Fonts Role - Self-contained
+# Installs fonts and refreshes font cache
+
+fonts_user: "{{ target_user | default(ansible_user_id) }}"
+fonts_home: "/home/{{ fonts_user }}"
+
+# =============================================================================
+# Package Installation
+# =============================================================================
+fonts_pacman_packages:
+  - fontconfig
+  - noto-fonts
+  - noto-fonts-emoji
+  - ttf-cascadia-code-nerd
+  - ttf-dejavu
+  - ttf-liberation
+
+fonts_aur_packages:
+  - ttf-meslo-nerd-font-powerlevel10k
+
+# =============================================================================
+# Directories to Create
+# =============================================================================
+fonts_folders:
+  - "{{ fonts_home }}/.config/fontconfig"
+  - "{{ fonts_home }}/.local/share/fonts"
+
+# =============================================================================
+# Dotfiles for fonts.conf
+# =============================================================================
+fonts_dotfiles_repo: "{{ dotfiles_repo | default('https://github.com/henningmyhrvold/dotfiles.git') }}"
+fonts_dotfiles_dest: "{{ fonts_home }}/src/dotfiles"
+
+fonts_links:
+  - { src: "fonts/fonts.conf", dest: ".config/fontconfig/fonts.conf" }

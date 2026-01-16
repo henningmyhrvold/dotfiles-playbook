@@ -1,4 +1,20 @@
 ---
+# Audio Role - Self-contained tasks
+# Installs PipeWire and enables audio services
+
+# =============================================================================
+# Package Installation
+# =============================================================================
+- name: Install audio packages from pacman
+  community.general.pacman:
+    name: "{{ audio_pacman_packages }}"
+    state: present
+  become: true
+  tags: ["audio", "packages"]
+
+# =============================================================================
+# Service Configuration
+# =============================================================================
 - name: Enable and start PipeWire service for the user
   ansible.builtin.systemd:
     name: pipewire.service
@@ -6,6 +22,7 @@
     enabled: true
     scope: user
   become: false
+  tags: ["audio", "services"]
 
 - name: Enable and start PipeWire Pulse service for the user
   ansible.builtin.systemd:
@@ -14,6 +31,7 @@
     enabled: true
     scope: user
   become: false
+  tags: ["audio", "services"]
 
 - name: Enable and start WirePlumber service for the user
   ansible.builtin.systemd:
@@ -22,3 +40,4 @@
     enabled: true
     scope: user
   become: false
+  tags: ["audio", "services"]

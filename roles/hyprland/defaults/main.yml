@@ -1,0 +1,81 @@
+---
+# Hyprland Role - Self-contained
+# Installs and configures Hyprland Wayland compositor
+
+hyprland_user: "{{ target_user | default(ansible_user_id) }}"
+hyprland_home: "/home/{{ hyprland_user }}"
+
+# =============================================================================
+# Package Installation
+# =============================================================================
+hyprland_pacman_packages:
+  # Wayland Core
+  - wayland
+  - wlr-randr
+  - xorg-xwayland
+  - xdg-desktop-portal
+  - xdg-desktop-portal-hyprland
+  - xdg-desktop-portal-gtk
+  - gtk3
+  - xdg-utils
+  - qt5-wayland
+  - qt6-wayland
+  # Hyprland
+  - hyprland
+  - hyprpaper
+  - hypridle
+  - hyprlock
+  - hyprutils
+  # UI Components
+  - waybar
+  - wofi
+  - dunst
+  - libnotify
+  # Screenshot
+  - grim
+  - slurp
+  # System
+  - brightnessctl
+  - cliphist
+  - polkit-kde-agent
+  - libinput
+
+# =============================================================================
+# Directories to Create
+# =============================================================================
+hyprland_folders:
+  - "{{ hyprland_home }}/.config/hypr"
+  - "{{ hyprland_home }}/.config/waybar"
+  - "{{ hyprland_home }}/.config/wofi"
+  - "{{ hyprland_home }}/.config/dunst"
+  - "{{ hyprland_home }}/Pictures"
+  - "{{ hyprland_home }}/Pictures/wallpapers"
+  - "{{ hyprland_home }}/Pictures/icons"
+
+# =============================================================================
+# Dotfiles
+# =============================================================================
+hyprland_dotfiles_repo: "{{ dotfiles_repo | default('https://github.com/henningmyhrvold/dotfiles.git') }}"
+hyprland_dotfiles_dest: "{{ hyprland_home }}/src/dotfiles"
+
+hyprland_links:
+  # Hyprland
+  - { src: "hypr/hyprland.conf", dest: ".config/hypr/hyprland.conf" }
+  - { src: "hypr/hyprlock.conf", dest: ".config/hypr/hyprlock.conf" }
+  - { src: "hypr/hypridle.conf", dest: ".config/hypr/hypridle.conf" }
+  - { src: "hypr/hyprpaper.conf", dest: ".config/hypr/hyprpaper.conf" }
+  # Waybar
+  - { src: "waybar/config.jsonc", dest: ".config/waybar/config.jsonc" }
+  - { src: "waybar/style.css", dest: ".config/waybar/style.css" }
+  - { src: "waybar/email_unread.sh", dest: ".config/waybar/email_unread.sh" }
+  - { src: "waybar/meetings.py", dest: ".config/waybar/meetings.py" }
+  # Wofi
+  - { src: "wofi/config", dest: ".config/wofi/config" }
+  - { src: "wofi/style.css", dest: ".config/wofi/style.css" }
+  # Dunst
+  - { src: "dunst/dunstrc", dest: ".config/dunst/dunstrc" }
+
+# Scripts that need execute permissions
+hyprland_executables:
+  - "{{ hyprland_home }}/.config/waybar/email_unread.sh"
+  - "{{ hyprland_home }}/.config/waybar/meetings.py"

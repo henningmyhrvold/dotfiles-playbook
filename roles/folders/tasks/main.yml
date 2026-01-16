@@ -1,3 +1,6 @@
+---
+# Folders Role - Creates additional directories from config.yml
+
 # Task for user-owned directories
 - name: Create user-owned directories
   ansible.builtin.file:
@@ -7,6 +10,7 @@
   loop: "{{ create_folders | selectattr('path', 'match', '^/home/') | list }}"
   become: true
   become_user: "{{ target_user }}"
+  when: create_folders is defined
   tags: ["folders"]
 
 # Task for system directories
@@ -18,4 +22,5 @@
     mode: "0755"
   loop: "{{ create_folders | selectattr('path', 'match', '^/usr/|^/etc/') | list }}"
   become: true
+  when: create_folders is defined
   tags: ["folders"]

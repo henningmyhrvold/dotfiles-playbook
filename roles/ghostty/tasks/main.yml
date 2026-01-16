@@ -1,0 +1,58 @@
+---
+# Ghostty Role - Self-contained tasks
+# Installs and configures Ghostty terminal emulator
+
+# =============================================================================
+# Package Installation
+# =============================================================================
+- name: Install Ghostty from pacman
+  community.general.pacman:
+    name: "{{ ghostty_pacman_packages }}"
+    state: present
+  become: true
+  tags: ["ghostty", "packages"]
+
+# =============================================================================
+# Directory Setup
+# =============================================================================
+- name: Create Ghostty directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ ghostty_user }}"
+    group: "{{ ghostty_user }}"
+    mode: "0755"
+  loop: "{{ ghostty_folders }}"
+  become: true
+  become_user: "{{ ghostty_user }}"
+  tags: ["ghostty", "folders"]
+
+# =============================================================================
+# Dotfiles
+# =============================================================================
+- name: Clone dotfiles repository for Ghostty configs
+  ansible.builtin.git:
+    repo: "{{ ghostty_dotfiles_repo }}"
+    dest: "{{ ghostty_dotfiles_dest }}"
+    force: false
+    update: false
+  become: true
+  become_user: "{{ ghostty_user }}"
+  ignore_errors: true
+  tags: ["ghostty", "dotfiles"]
+
+# =============================================================================
+# Symlinks
+# =============================================================================
+- name: Create Ghostty config symlinks
+  ansible.builtin.file:
+    src: "{{ ghostty_dotfiles_dest }}/{{ item.src }}"
+    dest: "{{ ghostty_home }}/{{ item.dest }}"
+    state: link
+    force: true
+    owner: "{{ ghostty_user }}"
+  loop: "{{ ghostty_links }}"
+  become: true
+  become_user: "{{ ghostty_user }}"
+  ignore_errors: true
+  tags: ["ghostty", "symlinks"]

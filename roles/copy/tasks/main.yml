@@ -1,9 +1,12 @@
 ---
+# Copy Role - Copies files/folders from config.yml (copy variable)
+
 - name: Stat source paths to determine files vs folders
   ansible.builtin.stat:
     path: "{{ item.src }}"
-  loop: "{{ copy }}"
+  loop: "{{ copy | default([]) }}"
   register: src_stat
+  when: copy is defined
   tags: ["copy"]
 
 - name: Ensure destination directories exist for files
@@ -12,10 +15,11 @@
     state: directory
     owner: "{{ 'root' if item.0.dest.startswith('/usr/') or item.0.dest.startswith('/etc/') else target_user }}"
     mode: "0755"
-  loop: "{{ copy | zip(src_stat.results) | selectattr('1.stat.isreg', 'equalto', true) }}"
+  loop: "{{ copy | zip(src_stat.results) | selectattr('1.stat.isreg', 'equalto', true) | list }}"
   become: true
+  when: copy is defined and src_stat.results is defined
   tags: ["copy", "files"]
-  
+
 - name: Copy individual files
   ansible.builtin.copy:
     src: "{{ item.0.src }}"
@@ -23,8 +27,9 @@
     owner: "{{ 'root' if item.0.dest.startswith('/usr/') or item.0.dest.startswith('/etc/') else target_user }}"
     mode: "0644"
     remote_src: false
-  loop: "{{ copy | zip(src_stat.results) | selectattr('1.stat.isreg', 'equalto', true) }}"
+  loop: "{{ copy | zip(src_stat.results) | selectattr('1.stat.isreg', 'equalto', true) | list }}"
   become: true
+  when: copy is defined and src_stat.results is defined
   tags: ["copy", "files"]
 
 - name: Copy full folders
@@ -41,6 +46,7 @@
       - "--no-motd"
       - "--chown={{ 'root:root' if item.0.dest.startswith('/usr/') or item.0.dest.startswith('/etc/') else target_user + ':' + target_user }}"
       - "--chmod=D0755,F0644"
-  loop: "{{ copy | zip(src_stat.results) | selectattr('1.stat.isdir', 'equalto', true) }}"
+  loop: "{{ copy | zip(src_stat.results) | selectattr('1.stat.isdir', 'equalto', true) | list }}"
   become: true
+  when: copy is defined and src_stat.results is defined
   tags: ["copy", "folders"]

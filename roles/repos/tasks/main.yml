@@ -1,44 +1,57 @@
-- name: Git - Sychronize target user's personal repositories
+---
+# Repos Role - Clones git repositories from config.yml
+
+- name: Create src directory
+  ansible.builtin.file:
+    path: "/home/{{ target_user }}/src"
+    state: directory
+    owner: "{{ target_user }}"
+    group: "{{ target_user }}"
+    mode: "0755"
+  become: true
+  tags: ["repos"]
+
+- name: Git - Synchronize target user's personal repositories
   ansible.builtin.git:
     repo: "{{ item }}"
     dest: "/home/{{ target_user }}/src/{{ item.split('/')[-1].split('.')[0] }}"
-    force: yes
-  with_items: "{{ git_repositories }}"
+    force: false
+  with_items: "{{ git_repositories | default([]) }}"
   become: true
   become_user: "{{ target_user }}"
-  tags: ["workstation-debian", "repos", "repos-personal", "workstation-arch"]
   ignore_errors: true
+  tags: ["repos", "repos-personal"]
 
 - name: Git - Create directory ~/src/external
-  file:
+  ansible.builtin.file:
     path: "/home/{{ target_user }}/src/external"
     state: directory
     owner: "{{ target_user }}"
     group: "{{ target_user }}"
-    mode: 0755
+    mode: "0755"
   become: true
   become_user: "{{ target_user }}"
-  tags: ["workstation-debian", "repos", "repos-external", "workstation-arch"]
+  tags: ["repos", "repos-external"]
 
 - name: Git - Create additional user directories
   ansible.builtin.file:
     path: "{{ item }}"
     state: directory
-    # User can rwx
     owner: "{{ target_user }}"
-    # group: "{{ target_user }}"
-    mode: "744"
+    mode: "0744"
   with_items:
     - "/home/{{ target_user }}/usr/bin"
-  tags: ["workstation-debian", "repos", "repos-external", "workstation-arch"]
+  become: true
+  tags: ["repos", "repos-external"]
 
-- name: Git - Sychronize other external repositories
+- name: Git - Synchronize other external repositories
   ansible.builtin.git:
     repo: "{{ item }}"
     dest: "/home/{{ target_user }}/src/external/{{ item.split('/')[-1].split('.git')[0] }}"
-    force: no
-  with_items: "{{ git_repositories_external }}"
+    force: false
+  with_items: "{{ git_repositories_external | default([]) }}"
   become: true
   become_user: "{{ target_user }}"
-  tags: ["workstation-debian", "repos", "repos-external", "workstation-arch"]
+  when: git_repositories_external is defined and git_repositories_external | length > 0
   ignore_errors: true
+  tags: ["repos", "repos-external"]

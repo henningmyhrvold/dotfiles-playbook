@@ -1,0 +1,15 @@
+---
+# ACPI Role - Self-contained
+# Installs and configures ACPI daemon for power management
+
+# =============================================================================
+# Package Installation
+# =============================================================================
+acpi_pacman_packages:
+  - acpid
+
+# =============================================================================
+# Service Configuration
+# =============================================================================
+acpi_service_name: acpid.service
+acpi_service_enabled: true

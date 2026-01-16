@@ -1,33 +1,102 @@
 ---
-- name: Check if Zsh is installed
-  command: which zsh
-  register: zsh_check
-  changed_when: false
-  failed_when: false
+# ZSH Role - Self-contained tasks
+# Installs Zsh, Oh-My-Zsh, Powerlevel10k, and configures everything
 
-- name: Install Zsh if not present
-  pacman:
-    name: zsh
+# =============================================================================
+# Package Installation
+# =============================================================================
+- name: Install Zsh packages from pacman
+  community.general.pacman:
+    name: "{{ zsh_pacman_packages }}"
     state: present
   become: true
-  when: zsh_check.rc != 0
+  tags: ["zsh", "packages"]
 
+- name: Check if paru is installed (for AUR)
+  ansible.builtin.command: which paru
+  register: paru_check
+  changed_when: false
+  failed_when: false
+  tags: ["zsh", "packages"]
+
+- name: Install Zsh packages from AUR
+  kewlfft.aur.aur:
+    name: "{{ item }}"
+    use: paru
+    state: present
+  loop: "{{ zsh_aur_packages }}"
+  become: true
+  become_user: "{{ zsh_user }}"
+  when: paru_check.rc == 0
+  tags: ["zsh", "packages"]
+
+# =============================================================================
+# Directory Setup
+# =============================================================================
+- name: Create Zsh directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ zsh_user }}"
+    group: "{{ zsh_user }}"
+    mode: "0755"
+  loop: "{{ zsh_folders }}"
+  become: true
+  become_user: "{{ zsh_user }}"
+  tags: ["zsh", "folders"]
+
+# =============================================================================
+# Dotfiles Repository
+# =============================================================================
+- name: Clone dotfiles repository for Zsh configs
+  ansible.builtin.git:
+    repo: "{{ zsh_dotfiles_repo }}"
+    dest: "{{ zsh_dotfiles_dest }}"
+    version: "{{ zsh_dotfiles_version }}"
+    force: false
+    update: false
+  become: true
+  become_user: "{{ zsh_user }}"
+  ignore_errors: true
+  tags: ["zsh", "dotfiles"]
+
+# =============================================================================
+# Shell Configuration
+# =============================================================================
 - name: Set Zsh as the default shell for the user
-  user:
-    name: "{{ target_user }}"
+  ansible.builtin.user:
+    name: "{{ zsh_user }}"
     shell: /bin/zsh
   become: true
+  tags: ["zsh", "shell"]
 
-- name: Ensure .zshrc is symlinked from dotfiles
-  file:
-    src: "/home/{{ target_user }}/src/dotfiles/zsh/.zshrc"
-    dest: "/home/{{ target_user }}/.zshrc"
+# =============================================================================
+# Symlinks
+# =============================================================================
+- name: Create Zsh config symlinks
+  ansible.builtin.file:
+    src: "{{ zsh_dotfiles_dest }}/{{ item.src }}"
+    dest: "{{ zsh_home }}/{{ item.dest }}"
     state: link
+    force: true
+    owner: "{{ zsh_user }}"
+  loop: "{{ zsh_links }}"
   become: true
-  become_user: "{{ target_user }}"
-  
-- name: Check current permissions before
-  command: ls -ld /usr/share/zsh-theme-powerlevel10k
-  register: before_permissions
-  become: yes
-  ignore_errors: yes 
+  become_user: "{{ zsh_user }}"
+  when: zsh_dotfiles_dest is defined
+  tags: ["zsh", "symlinks"]
+
+# =============================================================================
+# Permissions Fix for Powerlevel10k
+# =============================================================================
+- name: Ensure powerlevel10k theme directory has correct permissions
+  ansible.builtin.file:
+    path: /usr/share/zsh-theme-powerlevel10k
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+  become: true
+  when: paru_check.rc == 0
+  ignore_errors: true
+  tags: ["zsh", "permissions"]

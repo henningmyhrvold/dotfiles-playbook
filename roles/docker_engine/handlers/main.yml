@@ -1,7 +1,8 @@
 ---
+# Docker Engine Role - Handlers
+
 - name: restart docker
-  become: yes
-  service:
+  ansible.builtin.service:
     name: docker
     state: restarted
-
+  become: true

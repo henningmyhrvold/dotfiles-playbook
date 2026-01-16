@@ -1,19 +1,31 @@
 ---
-# defaults/main.yml for mcp_filesystem role
+# MCP Filesystem Role - Self-contained
+# Runs MCP Filesystem server in Docker
 
-# Owner and directories
 mcp_owner: "{{ target_user | default(ansible_user_id) }}"
-mcp_base_dir: "/home/{{ mcp_owner }}/.config"
+mcp_home: "/home/{{ mcp_owner }}"
+
+# =============================================================================
+# Docker Prerequisites
+# =============================================================================
+mcp_docker_packages:
+  - docker
+  - docker-compose
+
+# =============================================================================
+# Directory Configuration
+# =============================================================================
+mcp_base_dir: "{{ mcp_home }}/.config"
 mcp_filesystem_dir: "{{ mcp_base_dir }}/mcp-filesystem"
 
-# Allowed directories (read-only access)
-mcp_filesystem_allowed_dirs:
-  - "/home/{{ mcp_owner }}/src"
-  - "/home/{{ mcp_owner }}/projects"
-  - "/home/{{ mcp_owner }}/code"
-  - "/home/{{ mcp_owner }}/Documents"
+mcp_folders:
+  - "{{ mcp_base_dir }}"
+  - "{{ mcp_filesystem_dir }}"
+  - "{{ mcp_home }}/.config/systemd/user"
 
-# Docker configuration
+# =============================================================================
+# Docker Configuration
+# =============================================================================
 mcp_filesystem_container_name: "mcp-filesystem"
 mcp_filesystem_image: "node:20-alpine"
 mcp_network_mode: "bridge"
@@ -22,7 +34,15 @@ mcp_docker_network: "mcp-network"
 # NPM package
 mcp_filesystem_npm_package: "@modelcontextprotocol/server-filesystem"
 
-# Systemd configuration
+# Directories that the filesystem MCP server can access
+mcp_filesystem_allowed_dirs:
+  - "{{ mcp_home }}/src"
+  - "{{ mcp_home }}/projects"
+  - "{{ mcp_home }}/Documents"
+
+# =============================================================================
+# Systemd Configuration
+# =============================================================================
 mcp_filesystem_service_name: "mcp-filesystem.service"
 mcp_enable_lingering: true
 mcp_compose_pull_policy: "missing"

@@ -1,0 +1,24 @@
+---
+# Audio Role - Self-contained
+# Installs and configures PipeWire audio stack
+
+audio_user: "{{ target_user | default(ansible_user_id) }}"
+
+# =============================================================================
+# Package Installation
+# =============================================================================
+audio_pacman_packages:
+  - pipewire
+  - pipewire-pulse
+  - wireplumber
+  - pavucontrol
+  - sof-firmware
+  - alsa-ucm-conf
+
+# =============================================================================
+# Services to Enable (user-level)
+# =============================================================================
+audio_user_services:
+  - pipewire.service
+  - pipewire-pulse.service
+  - wireplumber.service

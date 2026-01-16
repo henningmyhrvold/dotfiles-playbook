@@ -1,8 +1,31 @@
 ---
+# Docker Engine Role - Self-contained
+# Installs Docker and configures it for use
+
+docker_user: "{{ target_user | default(ansible_user_id) }}"
+
+# =============================================================================
+# Package Installation
+# =============================================================================
+docker_pacman_packages:
+  - docker
+  - docker-compose
+  - docker-buildx
+  - python
+  - python-pip
+  - python-requests
+  - python-docker
+
+# =============================================================================
+# User Configuration
+# =============================================================================
 # Users to add to the docker group (append, non-destructive)
 docker_users:
-  - "{{ ansible_user_id }}"
+  - "{{ docker_user }}"
 
+# =============================================================================
+# Daemon Configuration
+# =============================================================================
 # Manage /etc/docker/daemon.json (merge-safe)
 docker_manage_daemon_json: true
 
@@ -10,11 +33,10 @@ docker_manage_daemon_json: true
 docker_enable_buildkit: true
 
 # Extra daemon.json content you want to merge in (optional)
-# Example:
-# docker_daemon_json_extra:
-#   log-driver: "json-file"
-#   log-opts:
-#     max-size: "10m"
-#     max-file: "3"
 docker_daemon_json_extra: {}
 
+# =============================================================================
+# Service Configuration
+# =============================================================================
+docker_service_name: docker.service
+docker_service_enabled: true

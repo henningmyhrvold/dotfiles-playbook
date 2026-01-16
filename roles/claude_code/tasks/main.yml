@@ -1,77 +1,117 @@
 ---
-# tasks/main.yml for claude_code role
+# Claude Code Role - Self-contained tasks
+# Installs Claude Code CLI and configures MCP servers
 
-- name: Ensure Node.js and npm are installed
+# =============================================================================
+# Package Installation
+# =============================================================================
+- name: Install Node.js and npm from pacman
   community.general.pacman:
-    name:
-      - nodejs
-      - npm
+    name: "{{ claude_code_pacman_packages }}"
     state: present
-  become: yes
-  tags: [install]
+  become: true
+  tags: ["claude-code", "packages"]
 
+- name: Check if paru is installed (for AUR)
+  ansible.builtin.command: which paru
+  register: paru_check
+  changed_when: false
+  failed_when: false
+  tags: ["claude-code", "packages"]
+
+- name: Install Claude Code from AUR
+  kewlfft.aur.aur:
+    name: "{{ item }}"
+    use: paru
+    state: present
+  loop: "{{ claude_code_aur_packages }}"
+  become: true
+  become_user: "{{ claude_code_user }}"
+  when: paru_check.rc == 0
+  tags: ["claude-code", "packages"]
+
+# =============================================================================
+# Directory Setup
+# =============================================================================
+- name: Create Claude Code directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ claude_code_user }}"
+    group: "{{ claude_code_user }}"
+    mode: "0755"
+  loop: "{{ claude_code_folders }}"
+  become: true
+  become_user: "{{ claude_code_user }}"
+  tags: ["claude-code", "folders"]
+
+# =============================================================================
+# PATH Configuration
+# =============================================================================
+- name: Ensure npm global bin is in PATH (zshrc)
+  ansible.builtin.lineinfile:
+    path: "{{ claude_code_home }}/.zshrc"
+    line: 'export PATH="{{ npm_global_prefix }}/bin:$PATH"'
+    create: true
+    state: present
+  become: true
+  become_user: "{{ claude_code_user }}"
+  tags: ["claude-code", "config"]
+
+- name: Ensure npm global bin is in PATH (bashrc)
+  ansible.builtin.lineinfile:
+    path: "{{ claude_code_home }}/.bashrc"
+    line: 'export PATH="{{ npm_global_prefix }}/bin:$PATH"'
+    create: true
+    state: present
+  become: true
+  become_user: "{{ claude_code_user }}"
+  tags: ["claude-code", "config"]
+
+# =============================================================================
+# Check Claude Code Installation
+# =============================================================================
 - name: Check if Claude Code CLI is installed
   ansible.builtin.command: which claude
   register: _claude_check
   changed_when: false
   failed_when: false
   become: true
-  become_user: "{{ claude_code_owner }}"
-  tags: [install]
+  become_user: "{{ claude_code_user }}"
+  tags: ["claude-code", "config"]
 
 - name: Display message if Claude Code not found
   ansible.builtin.debug:
     msg: |
       ⚠️  Claude Code CLI not found in PATH
-      It should be installed by the npm_global role
-      Make sure npm_global role ran before this role
+      It should be installed by the AUR packages
+      Make sure paru is installed and AUR packages ran
   when: _claude_check.rc != 0
-  tags: [install]
+  tags: ["claude-code", "config"]
 
-- name: Ensure npm global bin is in PATH (zshrc)
-  ansible.builtin.lineinfile:
-    path: "{{ claude_code_home }}/.zshrc"
-    line: 'export PATH="{{ npm_global_prefix }}/bin:$PATH"'
-    create: yes
-    state: present
-  become: true
-  become_user: "{{ claude_code_owner }}"
-  tags: [install, config]
-
-- name: Ensure npm global bin is in PATH (bashrc)
-  ansible.builtin.lineinfile:
-    path: "{{ claude_code_home }}/.bashrc"
-    line: 'export PATH="{{ npm_global_prefix }}/bin:$PATH"'
-    create: yes
-    state: present
-  become: true
-  become_user: "{{ claude_code_owner }}"
-  tags: [install, config]
-
-- name: Create Claude Code configuration directory
-  ansible.builtin.file:
-    path: "{{ claude_code_config_dir }}"
-    state: directory
-    mode: '0755'
-  become: true
-  become_user: "{{ claude_code_owner }}"
-  tags: [config]
-
+# =============================================================================
+# MCP Container Discovery
+# =============================================================================
 - name: Discover running MCP containers
   ansible.builtin.shell: |
     docker ps --format '{{ '{{' }}.Names{{ '}}' }}' | grep '^mcp-' | grep -v 'mcp-mcp-docker' || true
   register: _mcp_containers
   changed_when: false
-  tags: [config]
+  ignore_errors: true
+  tags: ["claude-code", "config"]
 
+# =============================================================================
+# MCP Configuration
+# =============================================================================
 - name: Generate Claude Code configuration from running containers
   ansible.builtin.template:
     src: claude-config.json.j2
     dest: "{{ claude_code_config_dir }}/claude.json"
     mode: '0600'
   become: true
-  become_user: "{{ claude_code_owner }}"
-  tags: [config]
+  become_user: "{{ claude_code_user }}"
+  when: _mcp_containers is defined
+  tags: ["claude-code", "config"]
 
 - name: Create MCP server registration script
   ansible.builtin.template:
@@ -79,21 +119,19 @@
     dest: "{{ claude_code_home }}/.local/bin/register-claude-mcp-servers.sh"
     mode: '0755'
   become: true
-  become_user: "{{ claude_code_owner }}"
-  tags: [config]
+  become_user: "{{ claude_code_user }}"
+  tags: ["claude-code", "config"]
 
-- name: Register MCP servers with Claude Code
-  ansible.builtin.shell: "{{ claude_code_home }}/.local/bin/register-claude-mcp-servers.sh"
-  become: true
-  become_user: "{{ claude_code_owner }}"
-  tags: [config]
-
+# =============================================================================
+# Summary
+# =============================================================================
 - name: Display Claude Code setup summary
   ansible.builtin.debug:
     msg: |
-      Configuration:
-      • Config file: {{ claude_code_config_dir }}/.claude.json
+      Claude Code Configuration:
+      • Config file: {{ claude_code_config_dir }}/claude.json
       • Registered MCP servers: {{ mcp_servers_registered | length }}
+
       Usage:
       1. Ensure MCP servers are running:
          systemctl --user status 'mcp-*'
@@ -103,13 +141,8 @@
       3. Check MCP status inside Claude:
          /mcp
 
-      Registered MCP Servers:
-      {% for server in mcp_servers_registered %}
-         • {{ server.name }}
-      {% endfor %}
-
       Manage MCP servers:
       systemctl --user status 'mcp-*'
       systemctl --user restart mcp-github
       journalctl --user -u mcp-filesystem -f
-  tags: [always]
+  tags: ["claude-code"]

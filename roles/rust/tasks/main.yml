@@ -1,13 +1,18 @@
-# Install rust
+---
+# Rust Role - Self-contained
+# Installs Rust via rustup
 
 - name: Add rustup, accept defaults
   ansible.builtin.shell: "curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y"
-  tags: ["workstation-debian", "rust", "package", "workstation-fedora"]
+  args:
+    creates: "/home/{{ target_user }}/.cargo/bin/rustup"
   become: true
   become_user: "{{ target_user }}"
+  tags: ["rust"]
 
 - name: Add rust-analyzer, clippy, rustfmt
   ansible.builtin.shell: "$HOME/.cargo/bin/rustup component add rustfmt clippy rust-analyzer"
-  tags: ["workstation-debian", "rust", "package", "workstation-fedora"]
   become: true
   become_user: "{{ target_user }}"
+  changed_when: false
+  tags: ["rust"]

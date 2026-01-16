@@ -1,15 +1,17 @@
 ---
-# Keep this role dependency-free and robust against odd inputs.
+# NPM Global Role - Installs global npm packages from config.yml
 
 - name: Check npm executable
   ansible.builtin.command: "{{ npm_global_executable }} --version"
   changed_when: false
+  tags: ["npm"]
 
 # Guard in case the list is undefined somewhere upstream
 - name: Ensure npm_global_packages is a list
   ansible.builtin.assert:
     that: npm_global_packages is iterable
     fail_msg: "npm_global_packages must be a list (strings or dict items)."
+  tags: ["npm"]
 
 # Install / remove packages directly from the list, computing spec per item.
 # Supports:
@@ -43,5 +45,4 @@
   loop: "{{ npm_global_packages }}"
   loop_control:
     label: "{{ _spec }}"
-  tags: [npm, mcp]
-
+  tags: ["npm", "mcp"]

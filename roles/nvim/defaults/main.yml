@@ -1,0 +1,48 @@
+---
+# Neovim Role - Self-contained
+# Installs Neovim with LazyVim and Python provider
+
+nvim_user: "{{ target_user | default(ansible_user_id) }}"
+nvim_home: "/home/{{ nvim_user }}"
+
+# =============================================================================
+# Package Installation
+# =============================================================================
+nvim_pacman_packages:
+  - neovim
+  - python-pynvim
+  - python-pip
+
+# =============================================================================
+# Directories to Create
+# =============================================================================
+nvim_folders:
+  - "{{ nvim_home }}/.config/nvim"
+  - "{{ nvim_home }}/.venvs"
+  - "{{ nvim_home }}/.local/share/nvim"
+
+# =============================================================================
+# LazyVim Configuration
+# =============================================================================
+nvim_lazyvim_repo: "https://github.com/LazyVim/starter"
+nvim_lazyvim_version: "main"
+
+# =============================================================================
+# Python Virtual Environment
+# =============================================================================
+nvim_venv_path: "{{ nvim_home }}/.venvs/nvim"
+nvim_venv_packages:
+  - pip
+  - pynvim
+  - debugpy
+
+# =============================================================================
+# Dotfiles (optional - for custom init.lua)
+# =============================================================================
+nvim_dotfiles_repo: "{{ dotfiles_repo | default('https://github.com/henningmyhrvold/dotfiles.git') }}"
+nvim_dotfiles_dest: "{{ nvim_home }}/src/dotfiles"
+nvim_use_custom_config: true
+
+nvim_links:
+  - { src: "nvim/init.lua", dest: ".config/nvim/init.lua" }
+  - { src: "nvim/test.lua", dest: ".config/nvim/test.lua" }

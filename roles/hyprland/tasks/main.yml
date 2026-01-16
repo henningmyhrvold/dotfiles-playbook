@@ -1,9 +1,84 @@
 ---
+# Hyprland Role - Self-contained tasks
+# Installs and configures Hyprland Wayland compositor
+
+# =============================================================================
+# Package Installation
+# =============================================================================
+- name: Install Hyprland packages from pacman
+  community.general.pacman:
+    name: "{{ hyprland_pacman_packages }}"
+    state: present
+  become: true
+  tags: ["hyprland", "packages"]
+
+# =============================================================================
+# Directory Setup
+# =============================================================================
+- name: Create Hyprland directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ hyprland_user }}"
+    group: "{{ hyprland_user }}"
+    mode: "0755"
+  loop: "{{ hyprland_folders }}"
+  become: true
+  become_user: "{{ hyprland_user }}"
+  tags: ["hyprland", "folders"]
+
+# =============================================================================
+# Dotfiles
+# =============================================================================
+- name: Clone dotfiles repository for Hyprland configs
+  ansible.builtin.git:
+    repo: "{{ hyprland_dotfiles_repo }}"
+    dest: "{{ hyprland_dotfiles_dest }}"
+    force: false
+    update: false
+  become: true
+  become_user: "{{ hyprland_user }}"
+  ignore_errors: true
+  tags: ["hyprland", "dotfiles"]
+
+# =============================================================================
+# Symlinks
+# =============================================================================
+- name: Create Hyprland config symlinks
+  ansible.builtin.file:
+    src: "{{ hyprland_dotfiles_dest }}/{{ item.src }}"
+    dest: "{{ hyprland_home }}/{{ item.dest }}"
+    state: link
+    force: true
+    owner: "{{ hyprland_user }}"
+  loop: "{{ hyprland_links }}"
+  become: true
+  become_user: "{{ hyprland_user }}"
+  ignore_errors: true
+  tags: ["hyprland", "symlinks"]
+
+# =============================================================================
+# Make Scripts Executable
+# =============================================================================
+- name: Ensure Hyprland scripts are executable
+  ansible.builtin.file:
+    path: "{{ item }}"
+    mode: "0755"
+  loop: "{{ hyprland_executables }}"
+  become: true
+  become_user: "{{ hyprland_user }}"
+  ignore_errors: true
+  tags: ["hyprland", "permissions"]
+
+# =============================================================================
+# Instructions
+# =============================================================================
 - name: Display instructions to start Hyprland
-  debug:
+  ansible.builtin.debug:
     msg: |
       Hyprland setup is complete. To start it:
       1. Source your shell config: 'source ~/.zshrc' (or restart your shell).
       2. Switch to a TTY with Ctrl+Alt+F2.
       3. Run 'Hyprland'.
-      If it doesn’t start, check logs in '~/.config/hypr/hyprland.log' or the console output.
+      If it doesn't start, check logs in '~/.config/hypr/hyprland.log' or the console output.
+  tags: ["hyprland"]

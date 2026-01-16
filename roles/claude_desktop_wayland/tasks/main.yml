@@ -1,131 +1,175 @@
 ---
-# 0. Work out which user we care about (henning) and their home (/home/henning).
-#    We derive from:
-#    - claude_desktop_users (if provided explicitly), else
-#    - target_user / dotfiles_home (from all.yml), else
-#    - ansible_user_id
-- name: Derive target user/home for Claude desktop override
-  ansible.builtin.set_fact:
-    _effective_user: >-
-      {{ (claude_desktop_users | length > 0)
-         | ternary(claude_desktop_users[0].name,
-                   (target_user | default(ansible_user_id))) }}
-    _effective_home: >-
-      {{ (claude_desktop_users | length > 0)
-         | ternary(claude_desktop_users[0].home,
-                   (dotfiles_home
-                    | default('/home/' + (target_user | default(ansible_user_id)))) ) }}
+# Claude Desktop Wayland Role - Self-contained tasks
+# Installs Claude Desktop with Wayland support
 
-# Also derive the full icon path we want to enforce in the .desktop file.
-- name: Derive icon path
-  ansible.builtin.set_fact:
-    _effective_icon_path: "{{ _effective_home }}/{{ claude_desktop_icon_relative }}"
+# =============================================================================
+# Package Installation
+# =============================================================================
+- name: Check if paru is installed (for AUR)
+  ansible.builtin.command: which paru
+  register: paru_check
+  changed_when: false
+  failed_when: false
+  tags: ["claude-desktop", "packages"]
 
-- name: Normalize claude_desktop_users list
-  ansible.builtin.set_fact:
-    _claude_users_normalized:
-      - name: "{{ _effective_user }}"
-        home: "{{ _effective_home }}"
+- name: Install Claude Desktop from AUR
+  kewlfft.aur.aur:
+    name: "{{ item }}"
+    use: paru
+    state: present
+  loop: "{{ claude_desktop_aur_packages }}"
+  become: true
+  become_user: "{{ claude_desktop_user }}"
+  when: paru_check.rc == 0
+  tags: ["claude-desktop", "packages"]
 
-# 1. Find Claude desktop files shipped in /usr/share/applications
-- name: Gather Claude desktop entries in system directory
-  ansible.builtin.find:
-    paths: "{{ claude_desktop_system_dir }}"
-    patterns: "{{ claude_desktop_patterns }}"
-    file_type: file
-  register: _claude_desktop_found
-
-# 2. Flatten to just a list of absolute paths
-- name: Flatten found files
-  ansible.builtin.set_fact:
-    _claude_desktop_system_files: "{{ _claude_desktop_found.files | map(attribute='path') | list }}"
-
-# 3. Debug if none found
-- name: No Claude desktop files found (debug hint)
-  ansible.builtin.debug:
-    msg: >-
-      No system desktop entries found under {{ claude_desktop_system_dir }}
-      matching {{ claude_desktop_patterns }}. Nothing to override.
-  when: _claude_desktop_system_files | length == 0
-
-# 4. Ensure ~/.local/share/applications exists for the target user
-- name: Ensure per-user application dir exists
+# =============================================================================
+# Directory Setup
+# =============================================================================
+- name: Create Claude Desktop directories
   ansible.builtin.file:
-    path: "{{ item.home }}/.local/share/applications"
+    path: "{{ item }}"
     state: directory
+    owner: "{{ claude_desktop_user }}"
+    group: "{{ claude_desktop_user }}"
     mode: "0755"
-    owner: "{{ item.name }}"
-    group: "{{ item.name }}"
-  loop: "{{ _claude_users_normalized }}"
+  loop: "{{ claude_desktop_folders }}"
+  become: true
+  become_user: "{{ claude_desktop_user }}"
+  tags: ["claude-desktop", "folders"]
 
-# 5. Copy each system desktop file into the per-user override location
-- name: Copy each system desktop file to user override location
+- name: Ensure user applications directory exists
+  ansible.builtin.file:
+    path: "{{ claude_desktop_home }}/.local/share/applications"
+    state: directory
+    owner: "{{ claude_desktop_user }}"
+    group: "{{ claude_desktop_user }}"
+    mode: "0755"
+  become: true
+  become_user: "{{ claude_desktop_user }}"
+  tags: ["claude-desktop", "folders"]
+
+# =============================================================================
+# Wayland Desktop Entry
+# =============================================================================
+- name: Check if system desktop file exists
+  ansible.builtin.stat:
+    path: "{{ claude_desktop_system_desktop_file }}"
+  register: _system_desktop
+  tags: ["claude-desktop", "wayland"]
+
+- name: Read system desktop file
+  ansible.builtin.slurp:
+    path: "{{ claude_desktop_system_desktop_file }}"
+  register: _desktop_content
+  when: _system_desktop.stat.exists
+  become: true
+  tags: ["claude-desktop", "wayland"]
+
+- name: Create Wayland-enabled desktop entry
   ansible.builtin.copy:
-    src: "{{ item.0 }}"
-    dest: "{{ item.1.home }}/.local/share/applications/{{ item.0 | basename }}"
+    dest: "{{ claude_desktop_user_desktop_file }}"
+    content: |
+      {{ _desktop_content.content | b64decode | regex_replace('Exec=claude-desktop', 'Exec=claude-desktop ' + claude_desktop_wayland_flags | join(' ')) }}
+    owner: "{{ claude_desktop_user }}"
+    group: "{{ claude_desktop_user }}"
     mode: "0644"
-    owner: "{{ item.1.name }}"
-    group: "{{ item.1.name }}"
-    remote_src: true
-  loop: "{{ _claude_desktop_system_files | product(_claude_users_normalized) | list }}"
-  when: _claude_desktop_system_files | length > 0
-
-# 6. Rewrite Exec= line with Wayland flags
-- name: Patch Exec= in per-user desktop overrides (regex)
-  vars:
-    _src_base: "{{ item.0 | basename }}"
-    _dst_file: "{{ item.1.home }}/.local/share/applications/{{ _src_base }}"
-    _wanted_exec: "{{ claude_desktop_per_file_exec.get(_src_base, claude_desktop_exec) }}"
-  ansible.builtin.replace:
-    path: "{{ _dst_file }}"
-    regexp: '^Exec=.*$'
-    replace: "Exec={{ _wanted_exec }}"
-  loop: "{{ _claude_desktop_system_files | product(_claude_users_normalized) | list }}"
-  when: _claude_desktop_system_files | length > 0
-
-# 7. Set Icon= line to point at the user's custom icon
-#    (~/Pictures/icons/calude-icon2.png, resolved to an absolute path)
-- name: Patch Icon= in per-user desktop overrides
-  vars:
-    _src_base: "{{ item.0 | basename }}"
-    _dst_file: "{{ item.1.home }}/.local/share/applications/{{ _src_base }}"
-  ansible.builtin.replace:
-    path: "{{ _dst_file }}"
-    regexp: '^Icon=.*$'
-    replace: "Icon={{ _effective_icon_path }}"
-  loop: "{{ _claude_desktop_system_files | product(_claude_users_normalized) | list }}"
-  when: _claude_desktop_system_files | length > 0
-
-# 8. Ensure Name= exists (if missing)
-- name: Ensure Name= exists (if missing)
-  vars:
-    _src_base: "{{ item.0 | basename }}"
-    _dst_file: "{{ item.1.home }}/.local/share/applications/{{ _src_base }}"
-  ansible.builtin.lineinfile:
-    path: "{{ _dst_file }}"
-    regexp: '^Name='
-    line: "Name=Claude"
-    insertafter: '^\[Desktop Entry\]'
-    owner: "{{ item.1.name }}"
-    group: "{{ item.1.name }}"
-  loop: "{{ _claude_desktop_system_files | product(_claude_users_normalized) | list }}"
+  become: true
+  become_user: "{{ claude_desktop_user }}"
   when:
-    - claude_desktop_rename_entry
-    - _claude_desktop_system_files | length > 0
+    - _system_desktop.stat.exists
+    - claude_desktop_wayland_enabled | bool
+  tags: ["claude-desktop", "wayland"]
 
-# 9. Add " (Wayland)" suffix to Name=
-- name: Add Wayland suffix to Name=
-  vars:
-    _src_base: "{{ item.0 | basename }}"
-    _dst_file: "{{ item.1.home }}/.local/share/applications/{{ _src_base }}"
-  ansible.builtin.replace:
-    path: "{{ _dst_file }}"
-    regexp: '^Name=(.*?)(\s*\(Wayland\))?$'
-    replace: "Name=\\1{{ claude_desktop_name_suffix }}"
-    owner: "{{ item.1.name }}"
-    group: "{{ item.1.name }}"
-  loop: "{{ _claude_desktop_system_files | product(_claude_users_normalized) | list }}"
+# =============================================================================
+# NPM for MCP
+# =============================================================================
+- name: Install npm if not present (for MCP filesystem)
+  community.general.pacman:
+    name: npm
+    state: present
+  become: true
+  tags: ["claude-desktop", "mcp"]
+
+- name: Verify npx is in PATH
+  ansible.builtin.command: which npx
+  register: npx_check
+  changed_when: false
+  failed_when: false
+  become: true
+  become_user: "{{ claude_desktop_user }}"
+  tags: ["claude-desktop", "mcp"]
+
+# =============================================================================
+# MCP Filesystem Configuration
+# =============================================================================
+- name: Check for existing Claude config
+  ansible.builtin.stat:
+    path: "{{ claude_desktop_config_dir }}/claude_desktop_config.json"
+  register: _claude_config
+  become: true
+  become_user: "{{ claude_desktop_user }}"
+  tags: ["claude-desktop", "mcp"]
+
+- name: Read existing Claude config
+  ansible.builtin.slurp:
+    path: "{{ claude_desktop_config_dir }}/claude_desktop_config.json"
+  register: _existing_config
+  when: _claude_config.stat.exists
+  become: true
+  become_user: "{{ claude_desktop_user }}"
+  tags: ["claude-desktop", "mcp"]
+
+- name: Parse existing config (handle invalid JSON)
+  ansible.builtin.set_fact:
+    _current_config: "{{ _existing_config.content | b64decode | from_json }}"
   when:
-    - claude_desktop_rename_entry
-    - _claude_desktop_system_files | length > 0
+    - _claude_config.stat.exists
+    - _existing_config.content is defined
+  ignore_errors: true
+  register: _parse_result
+  tags: ["claude-desktop", "mcp"]
 
+- name: Create MCP filesystem config
+  ansible.builtin.set_fact:
+    _mcp_config:
+      mcpServers:
+        filesystem:
+          command: npx
+          args: "{{ ['-y', filesystem_server_package] + filesystem_allowed_directories }}"
+  tags: ["claude-desktop", "mcp"]
+
+- name: Merge MCP config with existing
+  ansible.builtin.set_fact:
+    _final_config: "{{ (_current_config | default({})) | combine(_mcp_config, recursive=True) }}"
+  tags: ["claude-desktop", "mcp"]
+
+- name: Write Claude Desktop config with MCP
+  ansible.builtin.copy:
+    dest: "{{ claude_desktop_config_dir }}/claude_desktop_config.json"
+    content: "{{ _final_config | to_nice_json }}"
+    owner: "{{ claude_desktop_user }}"
+    group: "{{ claude_desktop_user }}"
+    mode: "0600"
+  become: true
+  become_user: "{{ claude_desktop_user }}"
+  tags: ["claude-desktop", "mcp"]
+
+# =============================================================================
+# Summary
+# =============================================================================
+- name: Display Claude Desktop setup summary
+  ansible.builtin.debug:
+    msg: |
+      Claude Desktop setup complete!
+
+      Wayland: {{ 'Enabled' if claude_desktop_wayland_enabled else 'Disabled' }}
+      Config: {{ claude_desktop_config_dir }}/claude_desktop_config.json
+
+      MCP Filesystem allowed directories:
+      {% for dir in filesystem_allowed_directories %}
+        - {{ dir }}
+      {% endfor %}
+
+      To launch: Use the application menu or run 'claude-desktop'
+  tags: ["claude-desktop"]

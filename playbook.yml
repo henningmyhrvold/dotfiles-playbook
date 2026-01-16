@@ -1,43 +1,81 @@
 ---
 # Arch Linux Workstation Playbook
+# All roles are self-contained and can be run independently
+#
+# Usage examples:
+#   ./bootstrap.sh                              # Run everything
+#   ansible-playbook playbook.yml --tags zsh   # Run only zsh role
+#   ansible-playbook playbook.yml --tags "zsh,nvim,tmux"  # Run multiple
+#   ansible-playbook playbook.yml --skip-tags mcp  # Skip MCP roles
+
 - hosts: workstation
   become: true
   vars_files:
     - config.yml
 
   roles:
-    - { role: repos, when: configure_repos, tags: ["repos"] }
-    - { role: folders, tags: ["folders"] }
-    - { role: pacman, tags: ["pacman"] }
-    - { role: rust, tags: ["rust"] }
-    - { role: aur, tags: ["aur"] }
-    - { role: aur-packages, tags: ["aur-packages"] }
-    - { role: audio, tags: ["audio"] }
-    - { role: acpi, tags: ["acpi"] }
-    - { role: zsh, tags: ["zsh"] }
-    - { role: nvim, tags: ["nvim"] }
-    - { role: tmux, tags: ["tmux"] }
-    - { role: fonts, tags: ["fonts"] }
-    - { role: links, tags: ["links"] }
-    - { role: copy, tags: ["copy"] }
-    - { role: dotfiles, tags: ["dotfiles"] }
-    - { role: sddm, tags: ["sddm"] }
-    - { role: hyprland, tags: ["hyprland"] }
-    - { role: permissions, tags: ["permissions"] }
-    - { role: luarocks311, tags: ["luarocks311"] }
+    # =========================================================================
+    # Core System Setup (recommended to run first on fresh install)
+    # =========================================================================
+    - { role: pacman, tags: ["pacman", "core", "packages"] }
+    - { role: aur, tags: ["aur", "core", "packages"] }
+
+    # =========================================================================
+    # Self-Contained Application Roles
+    # Each role installs its own packages and configures everything it needs
+    # =========================================================================
+
+    # Development Tools
+    - { role: rust, tags: ["rust", "dev"] }
+    - { role: nvim, tags: ["nvim", "dev", "editor"] }
+    - { role: tmux, tags: ["tmux", "dev", "terminal"] }
+    - { role: ghostty, tags: ["ghostty", "terminal"] }
+    - { role: luarocks311, tags: ["luarocks311", "dev"] }
+
+    # Shell
+    - { role: zsh, tags: ["zsh", "shell"] }
+
+    # Desktop Environment
+    - { role: hyprland, tags: ["hyprland", "desktop", "wayland"] }
+    - { role: sddm, tags: ["sddm", "desktop", "dm"] }
+    - { role: fonts, tags: ["fonts", "desktop"] }
+    - { role: audio, tags: ["audio", "desktop"] }
+
+    # System Services
+    - { role: acpi, tags: ["acpi", "system"] }
+    - { role: dns, tags: ["dns", "network"] }
+    - { role: nftables, tags: ["nftables", "network", "firewall"] }
+    - { role: apparmor, tags: ["apparmor", "security"] }
+    - { role: wireguard, tags: ["wireguard", "network", "vpn"] }
+
+    # Containerization
+    - { role: docker_engine, tags: ["docker", "containers"] }
+
+    # Applications
     - role: thunderbird_headless
-      tags: ["thunderbird"]
+      tags: ["thunderbird", "mail"]
       vars:
         thunderbird_enable_lingering: true
         thunderbird_refresh_method: "timer"
         thunderbird_refresh_interval: "1min"
-    - { role: dns, tags: ["dns"] }
-    - { role: nftables, tags: ["nftables"] }
-    - { role: apparmor, tags: ["apparmor"] }
-    - { role: wireguard, tags: ["wireguard"] }
-    - { role: docker_engine, tags: ["docker"] }
-    - { role: npm, tags: ["npm"] }
-    - { role: terraform, tags: ["terraform"] }
-    - { role: mcp, tags: ["mcp"] }
-    - { role: claude_desktop_wayland, tags: ["claude"] }
-    - { role: claude_code, tags: ["claude-code"] }
+
+    # AI Tools
+    - { role: claude_desktop_wayland, tags: ["claude", "claude-desktop", "ai"] }
+    - { role: claude_code, tags: ["claude-code", "ai", "dev"] }
+
+    # MCP Servers (each self-contained with Docker)
+    - { role: mcp_filesystem, tags: ["mcp", "mcp-filesystem"], when: mcp_filesystem_enabled | default(true) }
+    - { role: mcp_github, tags: ["mcp", "mcp-github"], when: mcp_github_enabled | default(true) }
+    - { role: mcp_ref, tags: ["mcp", "mcp-ref"], when: mcp_ref_enabled | default(true) }
+
+    # =========================================================================
+    # Optional Utility Roles (for batch operations)
+    # These can be used alongside self-contained roles for extra configuration
+    # =========================================================================
+    - { role: repos, when: configure_repos | default(false), tags: ["repos", "utility"] }
+    - { role: folders, tags: ["folders", "utility"] }
+    - { role: links, tags: ["links", "utility"] }
+    - { role: copy, tags: ["copy", "utility"] }
+    - { role: dotfiles, tags: ["dotfiles", "utility"] }
+    - { role: aur-packages, tags: ["aur-packages", "utility", "packages"] }
+    - { role: npm_global, tags: ["npm", "utility", "packages"] }

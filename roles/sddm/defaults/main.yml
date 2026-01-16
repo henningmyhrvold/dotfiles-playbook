@@ -1,0 +1,15 @@
+---
+# SDDM Role - Self-contained
+# Installs and enables SDDM display manager
+
+# =============================================================================
+# Package Installation
+# =============================================================================
+sddm_pacman_packages:
+  - sddm
+
+# =============================================================================
+# Service Configuration
+# =============================================================================
+sddm_service_name: sddm.service
+sddm_service_enabled: true

@@ -1,9 +1,40 @@
 ---
-# tasks/main.yml for mcp_github role
+# MCP GitHub Role - Self-contained tasks
+# Runs MCP GitHub server in Docker
 
+# =============================================================================
+# Docker Prerequisites
+# =============================================================================
+- name: Install Docker packages from pacman
+  community.general.pacman:
+    name: "{{ mcp_docker_packages }}"
+    state: present
+  become: true
+  tags: ["mcp-github", "packages"]
+
+- name: Ensure Docker is running
+  ansible.builtin.service:
+    name: docker
+    state: started
+    enabled: true
+  become: true
+  tags: ["mcp-github", "docker"]
+
+- name: Ensure user is in docker group
+  ansible.builtin.user:
+    name: "{{ mcp_owner }}"
+    groups: docker
+    append: true
+  become: true
+  tags: ["mcp-github", "docker"]
+
+# =============================================================================
+# GitHub Token Check
+# =============================================================================
 - name: Check if GitHub token is available
   ansible.builtin.set_fact:
     _github_token_available: "{{ github_token is defined and github_token | length > 0 }}"
+  tags: ["mcp-github", "config"]
 
 - name: Display warning if GitHub token is missing
   ansible.builtin.debug:
@@ -16,33 +47,51 @@
       1. Get token from https://github.com/settings/tokens
       2. Add to ~/.zshrc: export GITHUB_TOKEN="ghp_..."
       3. Run: source ~/.zshrc
-      4. Re-run playbook with: ansible-playbook arch.yml --tags mcp_github
+      4. Re-run playbook with: ansible-playbook playbook.yml --tags mcp-github
   when: not _github_token_available
+  tags: ["mcp-github", "config"]
 
-- name: Ensure MCP github directory exists
+# =============================================================================
+# Directory Setup
+# =============================================================================
+- name: Create MCP directories
   ansible.builtin.file:
-    path: "{{ mcp_github_dir }}"
+    path: "{{ item }}"
     state: directory
+    owner: "{{ mcp_owner }}"
+    group: "{{ mcp_owner }}"
     mode: "0755"
+  loop: "{{ mcp_folders }}"
   become: true
   become_user: "{{ mcp_owner }}"
+  tags: ["mcp-github", "folders"]
 
+# =============================================================================
+# Docker Network
+# =============================================================================
 - name: Create Docker network for MCP servers
   community.docker.docker_network:
     name: "{{ mcp_docker_network }}"
     state: present
   become: true
+  tags: ["mcp-github", "docker"]
 
-- name: Deploy Docker Compose file for github MCP
+# =============================================================================
+# Docker Compose
+# =============================================================================
+- name: Deploy Docker Compose file for GitHub MCP
   ansible.builtin.template:
     src: docker-compose.mcp-github.yml.j2
     dest: "{{ mcp_github_dir }}/docker-compose.mcp-github.yml"
+    owner: "{{ mcp_owner }}"
+    group: "{{ mcp_owner }}"
     mode: "0644"
   become: true
   become_user: "{{ mcp_owner }}"
   notify: restart mcp github
+  tags: ["mcp-github", "compose"]
 
-- name: Ensure github MCP service is running
+- name: Ensure GitHub MCP service is running
   community.docker.docker_compose_v2:
     project_src: "{{ mcp_github_dir }}"
     files:
@@ -51,43 +100,47 @@
     pull: "{{ mcp_compose_pull_policy }}"
   become: true
   become_user: "{{ mcp_owner }}"
-  when: _github_token_available  # Only start if token exists
+  when: _github_token_available
+  tags: ["mcp-github", "compose"]
 
+# =============================================================================
+# Systemd User Service
+# =============================================================================
 - name: Enable lingering for {{ mcp_owner }}
   ansible.builtin.command: "loginctl enable-linger {{ mcp_owner }}"
   when: mcp_enable_lingering | bool
   changed_when: false
   failed_when: false
   become: true
+  tags: ["mcp-github", "systemd"]
 
-- name: Ensure systemd user directory exists
-  ansible.builtin.file:
-    path: "~/.config/systemd/user"
-    state: directory
-    mode: "0755"
-  become: true
-  become_user: "{{ mcp_owner }}"
-
-- name: Install systemd user service for github MCP
+- name: Install systemd user service for GitHub MCP
   ansible.builtin.template:
     src: mcp-github.service.j2
-    dest: "~/.config/systemd/user/{{ mcp_github_service_name }}"
+    dest: "{{ mcp_home }}/.config/systemd/user/{{ mcp_github_service_name }}"
+    owner: "{{ mcp_owner }}"
+    group: "{{ mcp_owner }}"
     mode: "0644"
   become: true
   become_user: "{{ mcp_owner }}"
   notify: reload systemd user
+  tags: ["mcp-github", "systemd"]
 
-- name: Enable github MCP service (but don't start without token)
+- name: Enable GitHub MCP service
   ansible.builtin.systemd:
     name: "{{ mcp_github_service_name }}"
     scope: user
-    enabled: yes
-    daemon_reload: yes
+    enabled: true
+    daemon_reload: true
     state: "{{ 'started' if _github_token_available else 'stopped' }}"
   become: true
   become_user: "{{ mcp_owner }}"
+  tags: ["mcp-github", "systemd"]
 
-- name: Register github MCP server for claude_code
+# =============================================================================
+# Register MCP Server
+# =============================================================================
+- name: Register GitHub MCP server for claude_code
   ansible.builtin.set_fact:
     mcp_servers_registered: "{{ mcp_servers_registered | default([]) + [mcp_github_info] }}"
   vars:
@@ -104,8 +157,10 @@
       env: "{{ {'GITHUB_PERSONAL_ACCESS_TOKEN': github_token} if _github_token_available else {} }}"
   delegate_to: localhost
   delegate_facts: true
-  when: _github_token_available  # Only register if token exists
+  when: _github_token_available
+  tags: ["mcp-github", "register"]
 
 - name: Display GitHub MCP status
   ansible.builtin.debug:
     msg: "{{ 'GitHub MCP configured and started' if _github_token_available else 'GitHub MCP files created but NOT started (missing token)' }}"
+  tags: ["mcp-github"]

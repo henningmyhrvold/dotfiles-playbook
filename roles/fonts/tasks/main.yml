@@ -1,14 +1,83 @@
-# Create ~/.fonts directory if it does not exist of target user
-- name: Create ~/.fonts directory if it does not exist of target user
-  ansible.builtin.file:
-    path: /home/{{ target_user }}/.fonts
-    state: directory
-    mode: "0755"
-    owner: "{{ target_user }}"
-    group: "{{ target_user }}"    
-  tags: ['fonts']
+---
+# Fonts Role - Self-contained tasks
+# Installs fonts and refreshes font cache
 
-# Update font cache assuming package manager fonts were updated
+# =============================================================================
+# Package Installation
+# =============================================================================
+- name: Install font packages from pacman
+  community.general.pacman:
+    name: "{{ fonts_pacman_packages }}"
+    state: present
+  become: true
+  tags: ["fonts", "packages"]
+
+- name: Check if paru is installed (for AUR)
+  ansible.builtin.command: which paru
+  register: paru_check
+  changed_when: false
+  failed_when: false
+  tags: ["fonts", "packages"]
+
+- name: Install font packages from AUR
+  kewlfft.aur.aur:
+    name: "{{ item }}"
+    use: paru
+    state: present
+  loop: "{{ fonts_aur_packages }}"
+  become: true
+  become_user: "{{ fonts_user }}"
+  when: paru_check.rc == 0
+  tags: ["fonts", "packages"]
+
+# =============================================================================
+# Directory Setup
+# =============================================================================
+- name: Create font directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ fonts_user }}"
+    group: "{{ fonts_user }}"
+    mode: "0755"
+  loop: "{{ fonts_folders }}"
+  become: true
+  become_user: "{{ fonts_user }}"
+  tags: ["fonts", "folders"]
+
+# =============================================================================
+# Dotfiles
+# =============================================================================
+- name: Clone dotfiles repository for font configs
+  ansible.builtin.git:
+    repo: "{{ fonts_dotfiles_repo }}"
+    dest: "{{ fonts_dotfiles_dest }}"
+    force: false
+    update: false
+  become: true
+  become_user: "{{ fonts_user }}"
+  ignore_errors: true
+  tags: ["fonts", "dotfiles"]
+
+- name: Create font config symlinks
+  ansible.builtin.file:
+    src: "{{ fonts_dotfiles_dest }}/{{ item.src }}"
+    dest: "{{ fonts_home }}/{{ item.dest }}"
+    state: link
+    force: true
+    owner: "{{ fonts_user }}"
+  loop: "{{ fonts_links }}"
+  become: true
+  become_user: "{{ fonts_user }}"
+  ignore_errors: true
+  tags: ["fonts", "symlinks"]
+
+# =============================================================================
+# Font Cache Refresh
+# =============================================================================
 - name: Update font cache
   ansible.builtin.command: fc-cache -fv
-  tags: ['fonts']
+  become: true
+  become_user: "{{ fonts_user }}"
+  changed_when: false
+  tags: ["fonts", "cache"]

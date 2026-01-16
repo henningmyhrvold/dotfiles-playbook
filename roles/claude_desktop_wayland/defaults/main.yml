@@ -1,33 +1,49 @@
 ---
-# Who should get the override .desktop launcher?
-# We build this dynamically in tasks if you don't override it.
-# You can still override claude_desktop_users in host_vars if you ever want multiple users.
-claude_desktop_users: []
+# Claude Desktop Wayland Role - Self-contained
+# Installs Claude Desktop with Wayland support
 
-# Directory where system desktop files live.
-claude_desktop_system_dir: "/usr/share/applications"
+claude_desktop_user: "{{ target_user | default(ansible_user_id) }}"
+claude_desktop_home: "/home/{{ claude_desktop_user }}"
 
-# Patterns to match Claude's .desktop files.
-claude_desktop_patterns:
-  - "claude*.desktop"
-  - "Claude*.desktop"
-  - "claude-*.desktop"
+# =============================================================================
+# Package Installation
+# =============================================================================
+claude_desktop_aur_packages:
+  - claude-desktop-native
 
-# The Exec= line we want: enforce Wayland rendering so text is sharp.
-claude_desktop_exec: >-
-  env ELECTRON_OZONE_PLATFORM_HINT=wayland OZONE_PLATFORM=wayland
-  XDG_CURRENT_DESKTOP=Hyprland GTK_USE_PORTAL=1
-  claude-desktop-native --ozone-platform=wayland
-  --enable-features=UseOzonePlatform,WaylandWindowDecorations,WaylandFractionalScaleV1
-  --enable-wayland-ime --force-device-scale-factor=1 %u
+# =============================================================================
+# Directory Configuration
+# =============================================================================
+claude_desktop_config_dir: "{{ claude_desktop_home }}/.config/Claude"
 
+claude_desktop_folders:
+  - "{{ claude_desktop_config_dir }}"
 
-# Optional map of per-file overrides:
-#   { "claude-desktop-native.desktop": "<custom Exec...>" }
-claude_desktop_per_file_exec: {}
+# =============================================================================
+# Desktop Entry Configuration
+# =============================================================================
+# Choose whether to enable Wayland native mode
+claude_desktop_wayland_enabled: true
 
-# Cosmetic rename in launchers
-claude_desktop_rename_entry: true
-claude_desktop_name_suffix: " (Wayland)"
+# Electron flags for Wayland
+claude_desktop_wayland_flags:
+  - "--enable-features=UseOzonePlatform"
+  - "--ozone-platform=wayland"
 
-claude_desktop_icon_relative: "Pictures/icons/claude-logo2.png"
+# Desktop file paths
+claude_desktop_system_desktop_file: "/usr/share/applications/claude-desktop.desktop"
+claude_desktop_user_desktop_file: "{{ claude_desktop_home }}/.local/share/applications/claude-desktop.desktop"
+
+# =============================================================================
+# MCP Filesystem Configuration
+# =============================================================================
+filesystem_allowed_directories:
+  - "{{ claude_desktop_home }}/src/dotfiles"
+  - "{{ claude_desktop_home }}/src/dotfiles-playbook"
+
+# NPM registry for the MCP server package
+filesystem_server_package: "@modelcontextprotocol/server-filesystem"
+
+# Whether to handle invalid JSON gracefully
+claude_handle_invalid_json: true
+claude_backup_config: true

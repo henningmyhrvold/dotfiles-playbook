@@ -1,55 +1,63 @@
 ---
-# 1) Packages for Docker + the Ansible docker modules on Arch
-- name: Install Docker and dependencies (Arch)
-  become: yes
-  pacman:
-    name:
-      - docker
-      - docker-compose        # compose v2; fine on Arch
-      - docker-buildx         # <-- Buildx plugin (required for BuildKit builds)
-      - python
-      - python-pip
-      - python-requests       # required by community.docker
-      - python-docker         # Docker SDK for Python
+# Docker Engine Role - Self-contained tasks
+# Installs Docker and configures it for use
+
+# =============================================================================
+# Package Installation
+# =============================================================================
+- name: Install Docker and dependencies from pacman
+  community.general.pacman:
+    name: "{{ docker_pacman_packages }}"
     state: present
-    update_cache: yes
+    update_cache: true
+  become: true
+  tags: ["docker", "packages"]
 
-# 2) Ensure docker service enabled/started
-- name: Enable & start docker
-  become: yes
-  service:
-    name: docker
-    enabled: true
+# =============================================================================
+# Service Configuration
+# =============================================================================
+- name: Enable and start docker service
+  ansible.builtin.service:
+    name: "{{ docker_service_name }}"
+    enabled: "{{ docker_service_enabled }}"
     state: started
+  become: true
+  tags: ["docker", "services"]
 
-# 3) Ensure /etc/docker exists
+# =============================================================================
+# Docker Configuration Directory
+# =============================================================================
 - name: Ensure /etc/docker exists
-  become: yes
-  file:
+  ansible.builtin.file:
     path: /etc/docker
     state: directory
     mode: "0755"
+  become: true
+  tags: ["docker", "config"]
 
-# 4) Optionally manage daemon.json (merge-safe)
+# =============================================================================
+# Daemon Configuration (merge-safe)
+# =============================================================================
 - name: Stat existing /etc/docker/daemon.json
-  become: yes
-  stat:
+  ansible.builtin.stat:
     path: /etc/docker/daemon.json
   register: docker_daemon_json_stat
+  become: true
   when: docker_manage_daemon_json
+  tags: ["docker", "config"]
 
 - name: Read existing /etc/docker/daemon.json (if present)
-  become: yes
-  slurp:
+  ansible.builtin.slurp:
     path: /etc/docker/daemon.json
   register: docker_daemon_json_slurp
+  become: true
   when:
     - docker_manage_daemon_json
     - docker_daemon_json_stat.stat.exists
+  tags: ["docker", "config"]
 
 - name: Build target daemon.json dict
-  become: yes
-  set_fact:
+  ansible.builtin.set_fact:
     docker_daemon_json_target: >-
       {{
         (
@@ -63,33 +71,40 @@
           )
         | combine(docker_daemon_json_extra, recursive=True)
       }}
+  become: true
   when: docker_manage_daemon_json
+  tags: ["docker", "config"]
 
 - name: Write /etc/docker/daemon.json (merge-safe)
-  become: yes
-  copy:
+  ansible.builtin.copy:
     dest: /etc/docker/daemon.json
     mode: "0644"
     content: "{{ docker_daemon_json_target | to_nice_json }}"
+  become: true
   notify: restart docker
   when: docker_manage_daemon_json
+  tags: ["docker", "config"]
 
 # Ensure handlers run right now so other roles see the new daemon settings
 - name: Restart docker immediately if daemon.json changed
-  meta: flush_handlers
+  ansible.builtin.meta: flush_handlers
+  tags: ["docker", "config"]
 
-# 5) Ensure users are in the docker group (append, idempotent)
+# =============================================================================
+# User Group Configuration
+# =============================================================================
 - name: Ensure docker group exists
-  become: yes
-  group:
+  ansible.builtin.group:
     name: docker
     state: present
+  become: true
+  tags: ["docker", "users"]
 
 - name: Add users to docker group
-  become: yes
-  user:
+  ansible.builtin.user:
     name: "{{ item }}"
     groups: docker
     append: true
   loop: "{{ docker_users | default([]) }}"
-
+  become: true
+  tags: ["docker", "users"]

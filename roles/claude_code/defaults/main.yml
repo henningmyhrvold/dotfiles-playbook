@@ -1,19 +1,47 @@
 ---
-# defaults/main.yml for claude_code role
-# Installs Claude Code CLI and manages central configuration
+# Claude Code Role - Self-contained
+# Installs Claude Code CLI and configures MCP servers
 
-# Claude Code CLI installation
-claude_code_npm_package: "@anthropic-ai/claude-code"
+claude_code_user: "{{ target_user | default(ansible_user_id) }}"
+claude_code_home: "/home/{{ claude_code_user }}"
 
-# Owner (should match MCP servers)
-claude_code_owner: "{{ mcp_owner | default(target_user | default(ansible_user_id)) }}"
+# =============================================================================
+# Package Installation
+# =============================================================================
+claude_code_pacman_packages:
+  - nodejs
+  - npm
 
-# Use the owner's home directory explicitly
-claude_code_home: "/home/{{ claude_code_owner }}"
+claude_code_aur_packages:
+  - claude-code
+
+# =============================================================================
+# NPM Configuration
+# =============================================================================
 npm_global_prefix: "{{ claude_code_home }}/.npm-global"
 
-# Directory configuration
+# =============================================================================
+# Directory Configuration
+# =============================================================================
 claude_code_config_dir: "{{ claude_code_home }}/.claude"
 
-# This will be populated by MCP server roles registering themselves
+claude_code_folders:
+  - "{{ claude_code_home }}/.npm-global"
+  - "{{ claude_code_home }}/.npm-global/bin"
+  - "{{ claude_code_config_dir }}"
+  - "{{ claude_code_home }}/.local/bin"
+
+# =============================================================================
+# MCP Configuration
+# These will be populated by MCP server roles registering themselves
+# =============================================================================
 mcp_servers_registered: []
+
+# GitHub token for MCP GitHub server (from environment)
+github_token: "{{ lookup('env', 'GITHUB_TOKEN') }}"
+
+# MCP filesystem allowed directories
+mcp_filesystem_allowed_dirs:
+  - "{{ claude_code_home }}/src"
+  - "{{ claude_code_home }}/projects"
+  - "{{ claude_code_home }}/Documents"

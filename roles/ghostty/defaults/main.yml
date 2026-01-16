@@ -1,0 +1,27 @@
+---
+# Ghostty Role - Self-contained
+# Installs and configures Ghostty terminal emulator
+
+ghostty_user: "{{ target_user | default(ansible_user_id) }}"
+ghostty_home: "/home/{{ ghostty_user }}"
+
+# =============================================================================
+# Package Installation
+# =============================================================================
+ghostty_pacman_packages:
+  - ghostty
+
+# =============================================================================
+# Directories to Create
+# =============================================================================
+ghostty_folders:
+  - "{{ ghostty_home }}/.config/ghostty"
+
+# =============================================================================
+# Dotfiles
+# =============================================================================
+ghostty_dotfiles_repo: "{{ dotfiles_repo | default('https://github.com/henningmyhrvold/dotfiles.git') }}"
+ghostty_dotfiles_dest: "{{ ghostty_home }}/src/dotfiles"
+
+ghostty_links:
+  - { src: "ghostty/config", dest: ".config/ghostty/config" }

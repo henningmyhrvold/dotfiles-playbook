@@ -1,6 +1,23 @@
+---
+# SDDM Role - Self-contained tasks
+# Installs and enables SDDM display manager
+
+# =============================================================================
+# Package Installation
+# =============================================================================
+- name: Install SDDM from pacman
+  community.general.pacman:
+    name: "{{ sddm_pacman_packages }}"
+    state: present
+  become: true
+  tags: ["sddm", "packages"]
+
+# =============================================================================
+# Service Configuration
+# =============================================================================
 - name: Enable SDDM service
   ansible.builtin.service:
-    name: sddm
-    enabled: true
+    name: "{{ sddm_service_name }}"
+    enabled: "{{ sddm_service_enabled }}"
   become: true
-  tags: ["sddm"]
+  tags: ["sddm", "services"]

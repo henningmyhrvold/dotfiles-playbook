@@ -1,4 +1,7 @@
 ---
+# LuaRocks 3.11 Role - Self-contained
+# Installs LuaRocks for Lua 5.1
+
 - name: Install prerequisites using pacman
   become: true
   community.general.pacman:
@@ -9,32 +12,41 @@
       - curl
       - openssl
     state: present
+  tags: ["luarocks311", "packages"]
 
 - name: Download LuaRocks source archive
   ansible.builtin.get_url:
     url: https://luarocks.org/releases/luarocks-3.11.1.tar.gz
     dest: /tmp/luarocks-3.11.1.tar.gz
     mode: '0644'
+  tags: ["luarocks311"]
 
 - name: Extract LuaRocks archive
   ansible.builtin.unarchive:
     src: /tmp/luarocks-3.11.1.tar.gz
     dest: /tmp
     remote_src: true
+  tags: ["luarocks311"]
 
 - name: Configure LuaRocks build for Lua 5.1
   ansible.builtin.command:
     cmd: ./configure --prefix=/usr --with-lua=/usr --lua-version=5.1 --lua-suffix=5.1 --with-lua-interpreter=lua5.1
     chdir: /tmp/luarocks-3.11.1
   changed_when: false
+  tags: ["luarocks311"]
 
 - name: Build LuaRocks
   ansible.builtin.command:
     cmd: make
     chdir: /tmp/luarocks-3.11.1
+  changed_when: false
+  tags: ["luarocks311"]
 
 - name: Install LuaRocks
   become: true
   ansible.builtin.command:
     cmd: make install
     chdir: /tmp/luarocks-3.11.1
+  args:
+    creates: /usr/bin/luarocks
+  tags: ["luarocks311"]
