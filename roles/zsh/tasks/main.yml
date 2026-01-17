@@ -143,7 +143,6 @@
     src: /usr/share/zsh-theme-powerlevel10k
     dest: "{{ zsh_home }}/.oh-my-zsh/custom/themes/powerlevel10k"
     state: link
-    owner: "{{ zsh_user }}"
   become: true
   become_user: "{{ zsh_user }}"
   when: paru_check.rc == 0
@@ -154,7 +153,6 @@
     src: /usr/share/zsh/plugins/zsh-autosuggestions
     dest: "{{ zsh_home }}/.oh-my-zsh/custom/plugins/zsh-autosuggestions"
     state: link
-    owner: "{{ zsh_user }}"
   become: true
   become_user: "{{ zsh_user }}"
   tags: ["zsh", "oh-my-zsh"]
