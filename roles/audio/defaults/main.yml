@@ -2,7 +2,7 @@
 # Audio Role - Self-contained
 # Installs and configures PipeWire audio stack
 
-audio_user: "{{ target_user | default(ansible_facts["user_id"]) }}"
+audio_user: "{{ target_user | default(ansible_facts['user_id']) }}"
 
 # =============================================================================
 # Package Installation

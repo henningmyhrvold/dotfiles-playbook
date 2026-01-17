@@ -2,7 +2,7 @@
 # Fonts Role - Self-contained
 # Installs fonts and refreshes font cache
 
-fonts_user: "{{ target_user | default(ansible_facts["user_id"]) }}"
+fonts_user: "{{ target_user | default(ansible_facts['user_id']) }}"
 fonts_home: "/home/{{ fonts_user }}"
 
 # =============================================================================

@@ -1,4 +1,4 @@
-thunderbird_user: "{{ target_user | default(ansible_facts["user_id"]) }}"
+thunderbird_user: "{{ target_user | default(ansible_facts['user_id']) }}"
 
 thunderbird_manage_packages: true
 thunderbird_packages:

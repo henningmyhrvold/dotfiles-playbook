@@ -2,7 +2,7 @@
 # Hyprland Role - Self-contained
 # Installs and configures Hyprland Wayland compositor
 
-hyprland_user: "{{ target_user | default(ansible_facts["user_id"]) }}"
+hyprland_user: "{{ target_user | default(ansible_facts['user_id']) }}"
 hyprland_home: "/home/{{ hyprland_user }}"
 
 # =============================================================================

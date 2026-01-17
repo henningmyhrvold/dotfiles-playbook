@@ -2,7 +2,7 @@
 # MCP GitHub Role - Self-contained
 # Runs MCP GitHub server in Docker
 
-mcp_owner: "{{ target_user | default(ansible_facts["user_id"]) }}"
+mcp_owner: "{{ target_user | default(ansible_facts['user_id']) }}"
 mcp_home: "/home/{{ mcp_owner }}"
 
 # =============================================================================

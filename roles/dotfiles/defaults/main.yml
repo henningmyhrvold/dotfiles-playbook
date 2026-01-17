@@ -2,7 +2,7 @@
 # Dotfiles Role - Self-contained
 # Clones dotfiles repo and creates symlinks
 
-dotfiles_user: "{{ target_user | default(ansible_facts["user_id"]) }}"
+dotfiles_user: "{{ target_user | default(ansible_facts['user_id']) }}"
 dotfiles_home: "/home/{{ dotfiles_user }}"
 
 # =============================================================================
