@@ -120,3 +120,41 @@
   when: paru_check.rc == 0
   ignore_errors: true
   tags: ["zsh", "permissions"]
+
+# =============================================================================
+# Oh-My-Zsh Custom Plugin/Theme Symlinks
+# =============================================================================
+- name: Ensure Oh-My-Zsh custom directories exist
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ zsh_user }}"
+    group: "{{ zsh_user }}"
+    mode: "0755"
+  loop:
+    - "{{ zsh_home }}/.oh-my-zsh/custom/plugins"
+    - "{{ zsh_home }}/.oh-my-zsh/custom/themes"
+  become: true
+  become_user: "{{ zsh_user }}"
+  tags: ["zsh", "oh-my-zsh"]
+
+- name: Symlink powerlevel10k from AUR to Oh-My-Zsh custom themes
+  ansible.builtin.file:
+    src: /usr/share/zsh-theme-powerlevel10k
+    dest: "{{ zsh_home }}/.oh-my-zsh/custom/themes/powerlevel10k"
+    state: link
+    owner: "{{ zsh_user }}"
+  become: true
+  become_user: "{{ zsh_user }}"
+  when: paru_check.rc == 0
+  tags: ["zsh", "oh-my-zsh"]
+
+- name: Symlink zsh-autosuggestions from pacman to Oh-My-Zsh custom plugins
+  ansible.builtin.file:
+    src: /usr/share/zsh/plugins/zsh-autosuggestions
+    dest: "{{ zsh_home }}/.oh-my-zsh/custom/plugins/zsh-autosuggestions"
+    state: link
+    owner: "{{ zsh_user }}"
+  become: true
+  become_user: "{{ zsh_user }}"
+  tags: ["zsh", "oh-my-zsh"]

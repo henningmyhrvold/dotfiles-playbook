@@ -46,7 +46,9 @@
     force: false
   become: true
   become_user: "{{ nvim_user }}"
-  when: not nvim_config.stat.exists
+  when:
+    - not nvim_config.stat.exists
+    - not (nvim_use_custom_config | default(false))
   tags: ["nvim", "lazyvim"]
 
 # =============================================================================
@@ -79,7 +81,7 @@
   tags: ["nvim", "venv"]
 
 # =============================================================================
-# Custom Config Symlinks (Optional)
+# Custom Config Symlinks
 # =============================================================================
 - name: Clone dotfiles repository for Neovim configs
   ansible.builtin.git:
@@ -93,6 +95,15 @@
   ignore_errors: true
   tags: ["nvim", "dotfiles"]
 
+- name: Remove existing nvim config directory for custom config
+  ansible.builtin.file:
+    path: "{{ nvim_home }}/.config/nvim"
+    state: absent
+  become: true
+  become_user: "{{ nvim_user }}"
+  when: nvim_use_custom_config | default(false)
+  tags: ["nvim", "dotfiles"]
+
 - name: Create Neovim config symlinks
   ansible.builtin.file:
     src: "{{ nvim_dotfiles_dest }}/{{ item.src }}"
@@ -104,5 +115,4 @@
   become: true
   become_user: "{{ nvim_user }}"
   when: nvim_use_custom_config | default(false)
-  ignore_errors: true
   tags: ["nvim", "symlinks"]

@@ -37,12 +37,11 @@ nvim_venv_packages:
   - debugpy
 
 # =============================================================================
-# Dotfiles (optional - for custom init.lua)
+# Dotfiles
 # =============================================================================
 nvim_dotfiles_repo: "{{ dotfiles_repo | default('https://github.com/henningmyhrvold/dotfiles.git') }}"
 nvim_dotfiles_dest: "{{ nvim_home }}/src/dotfiles"
 nvim_use_custom_config: true
 
 nvim_links:
-  - { src: "nvim/init.lua", dest: ".config/nvim/init.lua" }
-  - { src: "nvim/test.lua", dest: ".config/nvim/test.lua" }
+  - { src: "nvim", dest: ".config/nvim" }
