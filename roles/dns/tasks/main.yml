@@ -2,7 +2,7 @@
 - name: Assert Arch Linux (to avoid surprises)
   ansible.builtin.assert:
     that:
-      - ansible_distribution | lower == "archlinux"
+      - ansible_facts["distribution"] | lower == "archlinux"
     fail_msg: "This dns role currently targets Arch Linux."
     success_msg: "Arch Linux detected."
 

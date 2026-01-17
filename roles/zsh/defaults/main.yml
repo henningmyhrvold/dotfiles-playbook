@@ -2,7 +2,7 @@
 # ZSH Role - Self-contained
 # Installs and configures Zsh with Oh-My-Zsh and Powerlevel10k
 
-zsh_user: "{{ target_user | default(ansible_user_id) }}"
+zsh_user: "{{ target_user | default(ansible_facts["user_id"]) }}"
 zsh_home: "/home/{{ zsh_user }}"
 
 # =============================================================================

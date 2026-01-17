@@ -2,7 +2,7 @@
 # Ghostty Role - Self-contained
 # Installs and configures Ghostty terminal emulator
 
-ghostty_user: "{{ target_user | default(ansible_user_id) }}"
+ghostty_user: "{{ target_user | default(ansible_facts["user_id"]) }}"
 ghostty_home: "/home/{{ ghostty_user }}"
 
 # =============================================================================

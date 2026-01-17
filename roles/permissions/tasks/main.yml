@@ -28,7 +28,7 @@
     owner: root
     group: root
     mode: "0440"
-    line: '{{ ansible_user_id }} ALL=(ALL) NOPASSWD: /sbin/reboot'
+    line: '{{ ansible_facts["user_id"] }} ALL=(ALL) NOPASSWD: /sbin/reboot'
     validate: 'visudo -cf %s'
   become: yes
   tags: ["permissions"]

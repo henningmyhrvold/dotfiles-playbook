@@ -76,7 +76,6 @@
     state: present
     pull: "{{ mcp_compose_pull_policy }}"
   become: true
-  become_user: "{{ mcp_owner }}"
   tags: ["mcp-filesystem", "compose"]
 
 # =============================================================================

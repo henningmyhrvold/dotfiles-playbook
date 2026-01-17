@@ -2,7 +2,7 @@
 # Claude Code Role - Self-contained
 # Installs Claude Code CLI and configures MCP servers
 
-claude_code_user: "{{ target_user | default(ansible_user_id) }}"
+claude_code_user: "{{ target_user | default(ansible_facts["user_id"]) }}"
 claude_code_home: "/home/{{ claude_code_user }}"
 
 # =============================================================================

@@ -1,6 +1,6 @@
 ---
 # Who should own and run the compose stack (must have access to Docker)
-mcp_owner: "{{ target_user | default(ansible_user_id) }}"
+mcp_owner: "{{ target_user | default(ansible_facts["user_id"]) }}"
 
 # Where to put things
 mcp_project_dir: "/home/{{ mcp_owner }}/.config/mcp"

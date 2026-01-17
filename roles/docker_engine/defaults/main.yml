@@ -2,7 +2,7 @@
 # Docker Engine Role - Self-contained
 # Installs Docker and configures it for use
 
-docker_user: "{{ target_user | default(ansible_user_id) }}"
+docker_user: "{{ target_user | default(ansible_facts["user_id"]) }}"
 
 # =============================================================================
 # Package Installation

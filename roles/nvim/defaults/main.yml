@@ -2,7 +2,7 @@
 # Neovim Role - Self-contained
 # Installs Neovim with LazyVim and Python provider
 
-nvim_user: "{{ target_user | default(ansible_user_id) }}"
+nvim_user: "{{ target_user | default(ansible_facts["user_id"]) }}"
 nvim_home: "/home/{{ nvim_user }}"
 
 # =============================================================================

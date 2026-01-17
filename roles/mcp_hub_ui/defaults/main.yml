@@ -8,7 +8,7 @@ mcp_hub_ui_port: 7801
 mcp_hub_ui_bin: /usr/bin/mcp-hub
 
 # User that will own & run the user service (defaults to your mcp_owner if set)
-mcp_hub_ui_user: "{{ mcp_owner | default(ansible_user_id) }}"
+mcp_hub_ui_user: "{{ mcp_owner | default(ansible_facts["user_id"]) }}"
 
 # Enable lingering so user services can run without an active login session
 mcp_hub_ui_enable_lingering: true
