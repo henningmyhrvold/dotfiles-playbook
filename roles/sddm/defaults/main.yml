@@ -1,6 +1,9 @@
 ---
 # SDDM Role - Self-contained
-# Installs and enables SDDM display manager
+# Installs and enables SDDM display manager with Catppuccin theme
+
+sddm_user: "{{ target_user | default(ansible_facts['user_id']) }}"
+sddm_home: "/home/{{ sddm_user }}"
 
 # =============================================================================
 # Package Installation
@@ -13,3 +16,18 @@ sddm_pacman_packages:
 # =============================================================================
 sddm_service_name: sddm.service
 sddm_service_enabled: true
+
+# =============================================================================
+# Dotfiles Repository
+# =============================================================================
+sddm_dotfiles_repo: "{{ dotfiles_repo | default('https://github.com/henningmyhrvold/dotfiles.git') }}"
+sddm_dotfiles_dest: "{{ sddm_home }}/src/dotfiles"
+
+# =============================================================================
+# Configuration Paths
+# =============================================================================
+sddm_config_src: "{{ sddm_dotfiles_dest }}/sddm/sddm.conf"
+sddm_config_dest: "/etc/sddm.conf"
+
+sddm_theme_src: "{{ sddm_dotfiles_dest }}/sddm/catppuccin-mocha/"
+sddm_theme_dest: "/usr/share/sddm/themes/catppuccin-mocha/"

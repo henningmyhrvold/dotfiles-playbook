@@ -1,6 +1,6 @@
 ---
 # SDDM Role - Self-contained tasks
-# Installs and enables SDDM display manager
+# Installs and enables SDDM display manager with Catppuccin theme
 
 # =============================================================================
 # Package Installation
@@ -11,6 +11,56 @@
     state: present
   become: true
   tags: ["sddm", "packages"]
+
+# =============================================================================
+# Dotfiles Repository
+# =============================================================================
+- name: Clone dotfiles repository for SDDM configs
+  ansible.builtin.git:
+    repo: "{{ sddm_dotfiles_repo }}"
+    dest: "{{ sddm_dotfiles_dest }}"
+    force: false
+    update: false
+  become: true
+  become_user: "{{ sddm_user }}"
+  ignore_errors: true
+  tags: ["sddm", "dotfiles"]
+
+# =============================================================================
+# Configuration Symlink
+# =============================================================================
+- name: Create symlink for SDDM config
+  ansible.builtin.file:
+    src: "{{ sddm_config_src }}"
+    dest: "{{ sddm_config_dest }}"
+    state: link
+    force: true
+  become: true
+  tags: ["sddm", "config"]
+
+# =============================================================================
+# Theme Installation (Copy)
+# =============================================================================
+- name: Ensure SDDM themes directory exists
+  ansible.builtin.file:
+    path: /usr/share/sddm/themes
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+  become: true
+  tags: ["sddm", "themes"]
+
+- name: Copy Catppuccin theme to SDDM themes directory
+  ansible.builtin.copy:
+    src: "{{ sddm_theme_src }}"
+    dest: "{{ sddm_theme_dest }}"
+    remote_src: true
+    owner: root
+    group: root
+    mode: "0755"
+  become: true
+  tags: ["sddm", "themes"]
 
 # =============================================================================
 # Service Configuration
